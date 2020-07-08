@@ -70,7 +70,7 @@ Cette semaine sera consacrée  à l'approfondissement de diverses thématiques (
 
 Les compte rendu des éditions précédentes sont disponibles 
 
-  - [Finist'R 2018](https://stateofther.github.io/finistR2019/)
+  - [Finist'R 2019](https://stateofther.github.io/finistR2019/)
   - [Finist'R 2018](https://stateofther.github.io/finistR2018/)
   - [Finist'R 2017](https://stateofther.github.io/finistR2017/)
 
@@ -79,8 +79,3 @@ Les compte rendu des éditions précédentes sont disponibles
 ## Programme 
 
 Des idées
-
-  - Enseignement distanciel de R
-  - Représentations/visualisation de graphes
-  - Classes R6 pour GrossBM
-  - Distill
