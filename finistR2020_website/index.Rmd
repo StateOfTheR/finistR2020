@@ -16,7 +16,7 @@ library(DT)
 ## Où ? Quand ?
 
 
-La station biologique de Roscoff va accueillir  la quatrième édition du R Bootcamp  du groupe  [State Of The R](https://stateofther.github.io/) **du 22 août  au 28 août 2019**.
+La station biologique de Roscoff va accueillir  la quatrième édition du R Bootcamp  du groupe  [State Of The R](https://stateofther.github.io/) **du 22 août  au 28 août 2020**.
 
 <iframe src="https://www.google.com/maps/embed?pb=!1m17!1m11!1m3!1d863.0230997053625!2d-3.987533179360306!3d48.72647094495075!2m2!1f0!2f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4813e153cbdda967%3A0x6cd2956ee2bb8cfb!2sStation+Biologique+de+Roscoff!5e1!3m2!1sfr!2sfr!4v1557410926937!5m2!1sfr!2sfr" width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
 
