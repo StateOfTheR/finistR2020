@@ -29,7 +29,11 @@ Le mercredi 8 juillet 2020.
   - Enseignement distanciel de R
   - Représentations/visualisation de graphes
   - Classes R6 pour GrossBM
-  - Distill
+  - templates markdown, Distill (pour le journal de la sfds avec Julien)
+  - modèles de survie
+  - séries temporelles “tidy” (<https://github.com/tidyverts>)
+  - personnalisation de tidymodels
+  - docker
 
 # Programme
 
