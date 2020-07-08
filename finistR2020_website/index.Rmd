@@ -1,0 +1,86 @@
+---
+title: "FinistR : bootcamp R à Roscoff"
+date: "du 24 au 28 août 2020"
+output: 
+  html_document:
+   toc: true
+   toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, cache = TRUE)
+library(tidyverse)
+library(DT)
+```
+
+## Où ? Quand ?
+
+
+La station biologique de Roscoff va accueillir  la quatrième édition du R Bootcamp  du groupe  [State Of The R](https://stateofther.github.io/) **du 22 août  au 28 août 2019**.
+
+<iframe src="https://www.google.com/maps/embed?pb=!1m17!1m11!1m3!1d863.0230997053625!2d-3.987533179360306!3d48.72647094495075!2m2!1f0!2f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4813e153cbdda967%3A0x6cd2956ee2bb8cfb!2sStation+Biologique+de+Roscoff!5e1!3m2!1sfr!2sfr!4v1557410926937!5m2!1sfr!2sfr" width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
+
+
+## Qui
+
+- Aubert	Julie
+- Barbillon	Pierre
+- Bichat	Antoine
+- Chabert Liddell	Saint-Clair
+- Chiquet	Julien
+- Donnet	Sophie
+- Etienne	Marie-Pierre
+- Gloaguen	Pierre
+- Navaro	Pierre
+- Mariadassou	Mahendra
+ 
+<!-- ![Équipe finistR2019](img/finistr_team_2019.jpeg) -->
+
+<!-- ### 1er rang -->
+
+<!-- - [Timothée Tabouy](https://tabouyt.github.io/) (UMR MIA Paris) -->
+<!-- - [Marie Perrot](https://www6.inra.fr/mia-paris/Equipes/Membres/Marie-Perrot-Dockes) (UMR MIA Paris) -->
+<!-- - [Martina  Sundqvist](https://www6.inra.fr/mia-paris/Equipes/Membres/Martina-Sundqvist) (UMR MIA Paris) -->
+<!-- - [Raphaëlle Momal](https://rmomal.github.io/)(UMR MIA Paris) -->
+
+<!-- ### 2ème rang -->
+
+<!-- - [Félix Cheysson](Félix Cheysson • Research - Institut Pasteur) (UMR MIA Paris) -->
+<!-- - [Antoine Bichat](https://github.com/abichat) (UMR Maiage - INRA) -->
+<!-- - [Marie-Pierre Étienne](https://marieetienne.github.io/) (IRMAR - Agrocampus Ouest) -->
+<!-- - [Sophie Donnet](https://www6.inra.fr/mia-paris/Equipes/Membres/Sophie-Donnet) (UMR MIA Paris - INRA),  -->
+<!-- - [Julie Aubert](https://www6.inra.fr/mia-paris/Equipes/Membres/Julie-Aubert) (UMR MIA Paris - INRA),  -->
+<!-- - [Marie Morvan](https://irmar.univ-rennes1.fr/interlocuteurs/marie-morvan) (IRMAR - Université de Rennes 1),  -->
+<!-- - [Marine Marjou](https://informatique-mia.inra.fr/biosp/homepage-marine-marjou) (UMR BioSP - INRA),  -->
+<!-- - [Claire Gayral](http://pbil.univ-lyon1.fr/members/cgayral) (UMR CNRS 5558 - LBBE),  -->
+
+
+<!-- ### 3ème rang -->
+
+<!-- - [Gabriel Lang](https://www6.inra.fr/mia-paris/Equipes/Membres/Gabriel-Lang) (UMR MIA Paris - Agroparistech) -->
+<!-- - [Pierre Barbillon](https://www6.inra.fr/mia-paris/Equipes/Membres/Pierre-Barbillon) (UMR MIA Paris - Agroparistech) -->
+<!-- - [Pierre Gestraud](https://science.curie.fr/members/pierre-gestraud/) (Institut Curie) -->
+<!-- - [Pierre Gloaguen](https://papayoun.github.io/) (UMR MIA Paris - Agroparistech) -->
+<!-- - [Pierre Navaro](https://irmar.univ-rennes1.fr/interlocuteurs/pierre-navaro) (IRMAR - CNRS) -->
+
+
+## Quoi
+
+Cette semaine sera consacrée  à l'approfondissement de diverses thématiques (méthodologiques, techniques) autour du logiciel `R`: ce site proposera un compte rendu des différents thèmes abordés. Les participants collaborent tous au contenu de ce site lors d'ateliers organisés en petits groupes.
+
+Les compte rendu des éditions précédentes sont disponibles 
+
+  - [Finist'R 2018](https://stateofther.github.io/finistR2019/)
+  - [Finist'R 2018](https://stateofther.github.io/finistR2018/)
+  - [Finist'R 2017](https://stateofther.github.io/finistR2017/)
+
+
+
+## Programme 
+
+Des idées
+
+  - Enseignement distanciel de R
+  - Représentations/visualisation de graphes
+  - Classes R6 pour GrossBM
+  - Distill
