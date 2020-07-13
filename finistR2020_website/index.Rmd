@@ -23,6 +23,7 @@ La station biologique de Roscoff va accueillir  la quatrième édition du R Boot
 
 ## Qui
 
+- Alglave Baptiste
 - Aubert	Julie
 - Barbillon	Pierre
 - Bichat	Antoine
@@ -31,8 +32,10 @@ La station biologique de Roscoff va accueillir  la quatrième édition du R Boot
 - Donnet	Sophie
 - Etienne	Marie-Pierre
 - Gloaguen	Pierre
-- Navaro	Pierre
+- Le Minh Tam
 - Mariadassou	Mahendra
+- Massiot Gaspard
+- Navaro	Pierre
  
 <!-- ![Équipe finistR2019](img/finistr_team_2019.jpeg) -->
 
