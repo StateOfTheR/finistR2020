@@ -29,11 +29,21 @@ Le mercredi 8 juillet 2020.
   - Enseignement distanciel de R
   - Représentations/visualisation de graphes
   - Classes R6 pour GrossBM
-  - templates markdown, Distill (pour le journal de la sfds avec Julien)
+  - templates markdown, Distill (pour le journal de la sfds avec Julien, interface avec autre langage)
   - modèles de survie
   - séries temporelles "tidy" (https://github.com/tidyverts)
   - personnalisation de tidymodels
   - docker
+  - github action (faciliter la génération finale du siteweb)  développement R avec git, intégration continue
+  - modele mixte
+  - autograd, tmb, pytorch
+  - curly bracket, gestion des noms de variable dynamique
+  - modèle mixte  et outils pour les gam.
+  - application shiny (https://plmshift.math.cnrs.fr/,)
+  - intégration R/
+  -  [Equations différentielles et autres EDPs](https://pure.knaw.nl/ws/portalfiles/portal/462308/Soetaert_ea_4748.pdf)
+
+
 
 
 # Programme

@@ -36,6 +36,7 @@ La station biologique de Roscoff va accueillir  la quatrième édition du R Boot
 - Mariadassou	Mahendra
 - Massiot Gaspard
 - Navaro	Pierre
+- Neuvial Pierre ?
  
 <!-- ![Équipe finistR2019](img/finistr_team_2019.jpeg) -->
 
