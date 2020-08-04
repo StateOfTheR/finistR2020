@@ -31,6 +31,8 @@ Le mercredi 8 juillet 2020.
   - Classes R6 pour GrossBM
   - templates markdown, Distill (pour le journal de la sfds avec Julien,
     interface avec autre langage)
+  - Utilisation de github pour la gestion de projets étudiants
+    [section 39](https://happygitwithr.com/classroom-overview.html)
   - modèles de survie
   - séries temporelles “tidy” (<https://github.com/tidyverts>)
   - personnalisation de tidymodels
