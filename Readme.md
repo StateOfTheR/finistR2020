@@ -13,41 +13,66 @@ de cette veille logiciel de manière à progresser collectivement dans
 l’utilisation du logiciel mais surtout dans la production d’outils
 statistiques à destination de la communauté.
 
-La restitution se fait sous forme de site web. Le site de l’édition 2019
-est dicponible [ici](https://stateofther.github.io/finistR2019/)
+La restitution se fait sous forme de site web. Le site de l’édition 2020
+[sera disponible ici](https://stateofther.github.io/finistR2020/)
 
 # Participants
 
-L’atelier accueille un maximum de 20 personnes cette année. Les
-personnes intéressées par l’atelier peuvent contacter les organisateurs
-à <stateofr@gmail.com>
-
-# Idées de programme
-
-Le mercredi 8 juillet 2020.
-
-  - Enseignement distanciel de R
-  - Représentations/visualisation de graphes
-  - Classes R6 pour GrossBM
-  - templates markdown, Distill (pour le journal de la sfds avec Julien,
-    interface avec autre langage)
-  - Utilisation de github pour la gestion de projets étudiants
-    [section 39](https://happygitwithr.com/classroom-overview.html)
-  - modèles de survie
-  - séries temporelles “tidy” (<https://github.com/tidyverts>)
-  - personnalisation de tidymodels
-  - docker
-  - github action (faciliter la génération finale du siteweb)
-    développement R avec git, intégration continue
-  - modele mixte
-  - autograd, tmb, pytorch
-  - curly bracket, gestion des noms de variable dynamique
-  - modèle mixte et outils pour les gam.
-  - application shiny (<https://plmshift.math.cnrs.fr/>,)
-  - intégration R/
-  - [Equations différentielles et autres
-    EDPs](https://pure.knaw.nl/ws/portalfiles/portal/462308/Soetaert_ea_4748.pdf)
+  - Alglave Baptiste
+  - Aubert Julie
+  - Barbillon Pierre
+  - Bichat Antoine
+  - Chabert Liddell Saint-Clair
+  - Chiquet Julien
+  - Donnet Sophie
+  - Étienne Marie-Pierre
+  - Gloaguen Pierre
+  - Le Minh Tam
+  - Mariadassou Mahendra
+  - Massiot Gaspard
+  - Navaro Pierre
+  - Neuvial Pierre
 
 # Programme
 
-Le programme est défini collectivement par les participants.
+Le programme sera défini collectivement par les participants lors de la
+semaine d’ateliers.
+
+## Idées d’ateliers
+
+  - Enseignement
+      - Enseignement distanciel de R
+      - Github et Gestion de projets étudiants
+        [section 39](https://happygitwithr.com/classroom-overview.html)
+  - Intégration continue and Co
+      - github action (faciliter la génération finale du siteweb)  
+      - développement R avec git/github
+      - Rhub, usethis, publication de package
+  - Langage R avancé, tidyverse
+      - curly bracket, gestion des noms de variable dynamique
+      - rlang, c’est quoi ?
+      - deuxième édition de Advanced R (<https://adv-r.hadley.nz/>)
+      - Classes R6
+      - application shiny sur <https://plmshift.math.cnrs.fr/>
+  - Communication scientfique
+      - Représentations/visualisation de graphes
+      - templates markdown, Distill
+      - interface avec autre langage (Reticulate)
+  - Outils Statistiques et computationnel
+      - autograd, tmb, pytorch
+      - séries temporelles (<https://github.com/tidyverts>)
+      - personnalisation de tidymodels
+      - modèles de survie
+      - modele mixte, GAM
+      - intégration en R/
+      - [Equations différentielles et autres
+        EDPs](https://pure.knaw.nl/ws/portalfiles/portal/462308/Soetaert_ea_4748.pdf)
+
+## Idées de projet à mettre en place sur la semaine
+
+  - Package interfaçant R à [https://github.com/kthohr/optim](optimLib)
+  - Classes R6 pour [GroßBM](https://github.com/GrossSBM)
+  - Templates d’articles et gestion des actions de relcture pour
+    [Computo](https://github.com/journal-french-statistical-society/)
+  - Réalisation du [site web de
+    Finist’R 2020](https://stateofther.github.io/finistR2020/)
