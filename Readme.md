@@ -60,8 +60,9 @@ semaine d’ateliers.
       - Représentations/visualisation de graphes
       - markdown avancé ([distill](https://rstudio.github.io/distill/),
         [thesisdown](https://github.com/ismayc/thesisdown), …)
-      - interface avec autre langage (Reticulate, intégration R/Python
-        <https://rstudio.com/solutions/r-and-python/>, rstudio connect)
+      - intégration R/Python
+        <https://rstudio.com/solutions/r-and-python/>,
+        <https://solutions.rstudio.com/python/overview/>
   - Outils Statistiques et computationnel
       - autograd, tmb, pytorch
       - [séries temporelles](https://github.com/tidyverts)
