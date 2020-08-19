@@ -49,26 +49,28 @@ Le programme sera défini collectivement par les participants lors de la semaine
     - github action (faciliter la génération finale du siteweb)  
     - développement R avec git/github
     - Rhub, usethis, publication de package
+    - docker
 
   - Langage R avancé, tidyverse
     - curly bracket, gestion des noms de variable dynamique
     - rlang, c'est quoi ?
     - deuxième édition de Advanced R (https://adv-r.hadley.nz/)
     - Classes R6 
+    - RcppParallel
     - application shiny sur https://plmshift.math.cnrs.fr/
 
-  - Communication scientfique 
+  - Communication, interface 
     - Représentations/visualisation de graphes
-    - templates markdown, Distill
-    - interface avec autre langage (Reticulate)
+    - markdown avancé  ([distill](https://rstudio.github.io/distill/), [thesisdown](https://github.com/ismayc/thesisdown), ...)
+    - interface avec autre langage (Reticulate, intégration R/Python)
 
   - Outils Statistiques et computationnel  
     - autograd, tmb, pytorch
-    - séries temporelles (https://github.com/tidyverts)
-    - personnalisation de tidymodels
+    - [séries temporelles](https://github.com/tidyverts)
+    - [personalisation de tidymodels](https://www.tidymodels.org/learn/develop/)
     - modèles de survie
     - modele mixte, GAM
-    - intégration en R/
+    - intégration en R
     -  [Equations différentielles et autres EDPs](https://pure.knaw.nl/ws/portalfiles/portal/462308/Soetaert_ea_4748.pdf)
 
 ## Idées de projet à mettre en place sur la semaine
