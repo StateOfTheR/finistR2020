@@ -17,29 +17,47 @@ Sources:
 - [Presentation](https://gdurif.perso.math.cnrs.fr/files/material/slides_useR_2020_Durif_KeOps.pdf) of [Ghislain Durif](https://gdurif.perso.math.cnrs.fr/) at useR! 2020
 - [Documentation of KeOps](https://www.kernel-operations.io/keops/introduction/why_using_keops.html)
 
-KeOps can be used on a broad class of optimization problems. But at heart, the main motivation behind this library is the need to compute fast and scalable Gaussian convolutions (**RBF kernel products**). For **very large values** of $M$and $N$, given :
+[KeOps](http://www.kernel-operations.io/) stands for "Kernel Operations". [RKeOps](https://cran.r-project.org/package=rkeops) is an R package interfacing the KeOps library. 
+
+The main motivation behind KeOps is the need to compute fast and scalable Gaussian convolutions (**RBF kernel products**). For **very large values** of $M$and $N$, given :
 
 - a **target** point cloud $(x_i)_{i=1}^M \in  \mathbb R^{M \times D}$,
 - a **source** point cloud $(y_j)_{j=1}^N \in  \mathbb R^{N \times D}$,
 - a **signal** $(b_j)_{j=1}^N \in  \mathbb R^{N}$ attached to the $y_j$'s,
 
-KeOps allows you to compute efficiently
-the array $(a_i)_{i=1}^M \in  \mathbb R^{M}$ given by
+KeOps allows you to compute efficiently the array $(a_i)_{i=1}^M \in  \mathbb R^{M}$ given by
 
 $$ a_i =  \sum_j K(x_i,y_j) b_j,  \qquad i=1,\cdots,M,$$
+where $K$ is e.g. the Gaussian Kernel: $K(x,y) = \exp\left(-\Vert x_i - y_j \Vert^2/(2\sigma^2) \right)$.
 
-where $K(x_i,y_j) = \exp(-\|x_i - y_j\|^2 / 2 \sigma^2)$.
-On top of this, thanks to KeOps' **automatic differentiation** module,
-you can also get access to the gradient of the $a_i$'s with respect to the $x_i$'s:
+These types of operations involve *reductions* of very large arrays e.g. row-wise or column-wise matrix sums:
 
-$$   a_i' =  \sum_j \partial_x K(x_i,y_j) b_j,  \qquad i=1,\cdots,M,$$
+```{r fig-reduction, echo=FALSE}
+knitr::include_graphics("img/rkeops_fig-1.png")
+```
+
+### Automatic differentiation
+
+Thanks to KeOps' **automatic differentiation** module, you can also get access to the gradient of the $a_i$'s with respect to the $x_i$'s:
+
+$$   a_i' =  \sum_{j=1}^N \partial_x K(x_i,y_j) b_j,  \qquad i=1,\cdots,M,$$
 
 without having to code
 the formula $\partial_x K(x_i,y_j) = -\tfrac{1}{\sigma^2}(x_i - y_j) \exp(-\|x_i - y_j\|^2 / 2 \sigma^2)$!
 
 
+Performing such calculations is useful because kernels are widely used in Statistics and Learning:
 
+- Kernel density estimation
+- Classification/Regression: SVM, K-NN, etc...
+- Kernel embeddings to compare distributions 
+- Interpolation and Kriging
+- Optimal Transport
 
+### Scalability
+
+KeOps combines online map-reduce schemes with GPU to obtain high performance for large matrices.
+ 
 ## Installation
 
 Reference: [Installation page](https://www.kernel-operations.io/keops/R/using_rkeops.html)
