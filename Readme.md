@@ -76,7 +76,7 @@ semaine d’ateliers.
 
 ## Idées de projet à mettre en place sur la semaine
 
-  - Package interfaçant R à [https://github.com/kthohr/optim](optimLib)
+  - Package interfaçant R à [optimLib](https://github.com/kthohr/optim)
   - Classes R6 pour [GroßBM](https://github.com/GrossSBM)
   - Templates d’articles et gestion des actions de relcture pour
     [Computo](https://github.com/journal-french-statistical-society/)
