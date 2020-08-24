@@ -1,0 +1,135 @@
+---
+title: "RKeOps"
+author: "P. Neuvial"
+date: "24/08/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Motivation: scalable kernel operations
+
+Sources: 
+
+- [Presentation](https://gdurif.perso.math.cnrs.fr/files/material/slides_useR_2020_Durif_KeOps.pdf) of [Ghislain Durif](https://gdurif.perso.math.cnrs.fr/) at useR! 2020
+- [Documentation of KeOps](https://www.kernel-operations.io/keops/introduction/why_using_keops.html)
+
+KeOps can be used on a broad class of optimization problems. But at heart, the main motivation behind this library is the need to compute fast and scalable Gaussian convolutions (**RBF kernel products**). For **very large values** of $M$and $N$, given :
+
+- a **target** point cloud $(x_i)_{i=1}^M \in  \mathbb R^{M \times D}$,
+- a **source** point cloud $(y_j)_{j=1}^N \in  \mathbb R^{N \times D}$,
+- a **signal** $(b_j)_{j=1}^N \in  \mathbb R^{N}$ attached to the $y_j$'s,
+
+KeOps allows you to compute efficiently
+the array $(a_i)_{i=1}^M \in  \mathbb R^{M}$ given by
+
+$$ a_i =  \sum_j K(x_i,y_j) b_j,  \qquad i=1,\cdots,M,$$
+
+where $K(x_i,y_j) = \exp(-\|x_i - y_j\|^2 / 2 \sigma^2)$.
+On top of this, thanks to KeOps' **automatic differentiation** module,
+you can also get access to the gradient of the $a_i$'s with respect to the $x_i$'s:
+
+$$   a_i' =  \sum_j \partial_x K(x_i,y_j) b_j,  \qquad i=1,\cdots,M,$$
+
+without having to code
+the formula $\partial_x K(x_i,y_j) = -\tfrac{1}{\sigma^2}(x_i - y_j) \exp(-\|x_i - y_j\|^2 / 2 \sigma^2)$!
+
+
+
+
+## Installation
+
+Reference: [Installation page](https://www.kernel-operations.io/keops/R/using_rkeops.html)
+
+*The package is only available from UNIX-type platforms*
+
+Installation (on my Mac) requires [`cmake`](https://cmake.org/). The [`cmake` download page](https://cmake.org/download) provides a GUI (CMake.app), so I used:
+
+```
+brew install cmake
+```
+
+Then one can run
+
+```{r install, eval=FALSE}
+if (!require("rkeops")) {
+    install.packages("rkeops")
+}
+```
+
+successfully. 
+
+
+
+## Getting started
+
+```{r load-package}
+library("rkeops")
+```
+
+RKeOps allows to define and compile new operators that run computations on GPU.
+
+```{r gaussian-convolution}
+# implementation of a convolution with a Gaussian kernel
+formula = "Sum_Reduction(Exp(-s * SqNorm2(x - y)) * b, 0)"
+# input arguments
+args = c("x = Vi(3)",      # vector indexed by i (of dim 3)
+         "y = Vj(3)",      # vector indexed by j (of dim 3)
+         "b = Vj(6)",      # vector indexed by j (of dim 6)
+         "s = Pm(1)")      # parameter (scalar)
+```
+
+So far, so good but at the compilation step I get an error with `cmake`:
+
+```
+# compilation
+> op <- keops_kernel(formula, args)
+Compiling headersb72ec1124da8340d0118a99af in /Users/pneuvial/Library/R/4.0/library/rkeops:
+       formula: Sum_Reduction(Exp(-s * SqNorm2(x - y)) * b, 0)
+       aliases: decltype(Vi(0,3)) x ;decltype(Vj(1,3)) y ;decltype(Vj(2,6)) b ;decltype(Pm(3,1)) s ;
+       dtype  : float
+...
+Error in compile_formula(formula, var_aliases$var_aliases, dllname) : 
+  Error during cmake call.
+```
+
+so I filed an [issue](https://github.com/getkeops/keops/issues/89).
+
+We can still go a bit further:
+
+```{r after-compilation}
+# data and parameter values
+nx <- 100
+ny <- 150
+X <- matrix(runif(nx*3), nrow=nx)   # matrix 100 x 3
+Y <- matrix(runif(ny*3), nrow=ny)   # matrix 150 x 3
+B <- matrix(runif(ny*6), nrow=ny)   # matrix 150 x 6
+s <- 0.2
+```
+
+Next we turn on gpu computation:
+
+```{r}
+# run computations on GPU (to be used only if relevant)
+use_gpu()
+```
+
+The next step (provided that compilation worked above) will be:
+
+```{r eval=FALSE}
+# computation (order of the input arguments should be similar to `args`)
+res <- op(list(X, Y, B, s))
+res
+
+```
+
+
+## Session information
+
+```{r session-information}
+sessionInfo()
+```
+
