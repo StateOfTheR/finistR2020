@@ -9,6 +9,13 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+## Modèles additifs généralisés
+
+Un modèle additif généralisé est un GLM dans lequel le prédicteur linéaire fait intervenir une somme de fonctions régulières des covariables.
+Les modèles additifs généralisés ont une structure de la forme suivante
+$$g(\mu_i)=A_i\theta+\sum_j f_j(x_{ji}),\, Y_i\sim\text{EF}(\mu_i,\phi)$$
+où $Y_i$ est la variable réponse et $\text{EF}(\mu_i,\phi)$ est une distribution de famille exponentielle de moyenne $\mu_i$ et de paramètre d'échelle $\phi$ et $A_i\theta$ représente une componente paramétrique dans la modélisation.
+
 ## Base de splines 
 
 On veut construire une base de $k$ fonctions splines $(s_1, \ldots, s_k)$. Pour ceci, ondéfinit $k$ noeuds, par défaut les extréminités correspondent à $x_{min}$ et $x_{max}$.
