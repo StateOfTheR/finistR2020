@@ -1,0 +1,141 @@
+---
+title: "Revisiting PLNmodels output with htmlwidgets"
+subtitle: "The Oaks Powdery Mildew Data Set"
+author: "Julien Chiquet"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    self_contained: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  screenshot.force = FALSE, 
+  echo = TRUE,
+  rows.print = 5,
+  fig.width = 10, 
+  fig.height = 10,
+  message = FALSE, 
+  warning = FALSE)
+```
+
+
+## Preliminaries
+
+The packages required for the analysis are **PLNmodels** plus some others for data manipulation and representation:
+
+```{r dependencies}
+library(PLNmodels)
+library(tidyverse)
+library(ggplot2)
+library(DT)
+library(scatterD3)
+library(plotly)
+library(edgebundleR)
+library(threejs)
+library(networkD3)
+nb_cores <- 4
+```
+
+The data at play are due to
+
+```{r loading}
+data(oaks)
+datatable(oaks$Abundance[, 1:5] )
+```
+
+## PLNmodels Analyses 
+
+### PCA analysis
+
+```{r principal component analysis, cache = TRUE, warning = FALSE, results='hide'}
+my_PCAs_nocov <- PLNPCA(Abundance ~ 1 + offset(log(Offset)), data = oaks, ranks = 1:30, control_main = list(cores = nb_cores))
+my_PCAs_cov   <- PLNPCA(Abundance ~ 0 + tree + offset(log(Offset)), data = oaks, ranks = 1:30, control_main = list(cores = nb_cores))
+```
+
+### Sparse precision matrix (Network)
+
+```{r network analysis, cache = TRUE, results='hide'}
+my_networks <- PLNnetwork(Abundance ~ 0 + tree + offset(log(Offset)), data = oaks, control_main = list(trace = 2))
+```
+
+## Outputs and Vizualisation
+
+### Principal Components Map 
+
+#### threejs
+
+```{r threejs}
+coord <- my_PCAs_nocov$getBestModel()$scores[, 1:3]
+group <- rainbow(3)[as.numeric(oaks$tree)]
+scatterplot3js(coord, col = group, size = 0.25, pch = ".", grid = FALSE, bg = "black")
+```
+
+#### plotly
+
+```{r plotly}
+colnames(coord) <- c("PC1", "PC2", "PC3")
+coord <- data.frame(coord)
+coord$tree <- oaks$tree
+fig <- plot_ly(
+  coord, x = ~PC1, y = ~PC2, z = ~PC3, color = ~tree, size = .35,
+  text = ~paste('status:', tree)) %>% 
+  layout(title = "Individual Factor Map of the Oaks powdery Mildew data set",
+         scene = list(xaxis = list(title = 'PC1'),
+                      yaxis = list(title = 'PC2'),
+                      zaxis = list(title = 'PC3'))
+  )
+fig
+```
+
+#### Biplot with factoextras
+
+```{r biplot factoextra}
+my_PCA_tree <- my_PCAs_cov$getBestModel()
+t(tcrossprod(my_PCA_tree$model_par$B, my_PCA_tree$var_par$M)) %>%
+  prcomp(center = FALSE, scale. = FALSE) %>%
+  factoextra::fviz_pca_biplot(select.var = list(contrib = 10), col.ind  = oaks$distTOground,
+                              title = "Biplot after correction (10 most contributing species, samples colored by distance to ground)") +
+  labs(col = "distance (cm)") + scale_color_viridis_c()
+```
+
+
+#### ScatterD3
+
+```{r scatterD3 LDA}
+rownames(coord) <- rownames(oaks$Abundance)
+coord$names <- rownames(coord)
+scatterD3(data = coord, x = PC1, y = PC2, lab = names,
+          col_var = tree, symbol_var = tree,
+          xlab = "PC1", ylab = "PC2", col_lab = "tree",
+          symbol_lab = "tree", lasso = TRUE)
+```
+
+### Networks
+
+```{r net selection}
+my_net <- my_networks$getBestModel('EBIC')
+```
+
+#### EdgebundleR
+
+
+```{r edgbundle, results='asis'}
+g <- my_net$plot_network(output = "igraph", plot = FALSE)
+edgebundle(g)
+```
+
+#### networkD3
+
+```{r networkD3, results='asis'}
+# Convert to object suitable for networkD3
+d3 <- igraph_to_networkD3(g, group = sapply(strsplit(colnames(oaks$Abundance), "_"), function(x) x[[1]]))
+
+# Create force directed network plot
+forceNetwork(Links = d3$links, Nodes = d3$nodes, 
+             Source = 'source', Target = 'target', 
+             NodeID = 'name', Group = 'group', opacity = 0.4)
+```
+
+
+  
