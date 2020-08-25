@@ -208,8 +208,6 @@ df_lorenz <-
 
 df_lorenz
 
-library(GGally)
-
 ggpairs(df_lorenz,
         lower = list(continuous = wrap("points", size = 0.1)))
 ```
@@ -217,8 +215,9 @@ ggpairs(df_lorenz,
 ### EDO classique: Réaction de Belousov-Zhabotinskii
 
 Il s'agit d'une récation chimique exhibant des motifs périodiques.
-
+<center>
 <iframe width="560" height="315" src="https://www.youtube.com/embed/PpyKSRo8Iec" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</center>
 
 $$
 \begin{align}
