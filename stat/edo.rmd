@@ -12,7 +12,9 @@ output: html_document
 Le CRAN propose une [Task View](https://cran.r-project.org/web/views/DifferentialEquations.html) sur les équations différentielles.
 
 Une équation différentielle est une équation entre une ou plusieurs fonctions inconnues et leurs dérivées. Cette équation décrit comment une fonction varie en fonction d'une ou de plusieurs variables (souvent le temps ou l'espace) et en fonction des dérivées de cette fonction.
-Il y différentes facon de classifier les équations différentielles :
+
+Il y différentes facon de classifier les équations différentielles:
+
 - les équations peuvent être stochastique (la quantité inconue est aléatoire) ou déterministe (la quantité inconnue est déterministe).
 - les équations peuvent porter sur des fonctions à une seule variable (équation différentielle ordinaire) ou à plusieurs variables (équation aux dérivées partielles).
 - les équations peuvent inclure des fonctions dont la dérivée a un certain pas de temps dépend de la dérivée à un pas de temps précédent (équation différentielle à retard ou differential equations delay), ou alors des fonctions algébriques (i.e. il existe une ou plusieurs relations algébriques entre les variables du système - équation différentielle algébrique).
@@ -71,7 +73,7 @@ params <- c(a = 1)
 y0     <- c(1)
 times  <- seq(0, 1, by = 0.01)
 PD     <- matrix(0, nrow = 1, ncol = 1)
-out    <- ode(y0, times, model, parms = params, jacfun = jac)
+out_atome <- ode(y0, times, model, parms = params, jacfun = jac)
 ```
 
 Le résultat est une matrice:
@@ -82,7 +84,7 @@ On peut vérifier que la solution numérique (en bleu) est confondue avec la sol
 
 ```{r}
 plot_data <-
-  data.frame(out) %>%
+  data.frame(out_atome) %>%
   rename(numeric = X1) %>%
   mutate(analytic = exp(-time)) %>%
   pivot_longer(cols = -time,
@@ -101,7 +103,7 @@ ggplot(plot_data, aes(x = time, y = y, color = type)) +
 On peut diagnostiquer la réussite de l'intégration numérique via la commande `diagnostics`
 
 ```{r}
-diagnostics(out)
+diagnostics(out_atome)
 ```
 
 ### EDO classique: le modèle SIR
@@ -143,7 +145,7 @@ xstart <- c(S = 999,I = 1,R = 0)
 
 Solving with ODE
 ```{r}
-out <-
+out_sir <-
   ode(func = closed.sir.model,
       y = xstart,
       times = times,
@@ -153,7 +155,7 @@ out <-
 ```
 And plot
 ```{r}
-out %>%
+out_sir %>%
   gather(variable,value,-time) %>%
   ggplot(aes(x = time,y = value,color = variable)) +
   geom_line(size = 2) +
@@ -324,7 +326,7 @@ state         <- c(APHIDS = APHIDS)
 
 on peut alors laisser la densité évoluer sur 200 jours avec un rendu par jour:
 ```{r}
-out <- ode.1D(state, times = 0:200, Aphid, parms = params,
+out_aphide <- ode.1D(state, times = 0:200, Aphid, parms = params,
               nspec = 1, names = "Aphid")
 ```
 
@@ -332,7 +334,7 @@ Le résultat est comme auparavant une matrice avec la première colonne pour le 
 
 On peut utiliser ce résultat pour voir la diffusion des aphides dans les plantes au cours du temps:
 ```{r}
-out %>%
+out_aphide %>%
   data.frame %>%
   pivot_longer(cols = -time,
                names_to = "location",
@@ -506,21 +508,21 @@ plotly::plot_ly(udf, x = sol$t, y = sol$u, type = 'scatter', mode = 'lines')
 On chercher mainenant à estimer les paramètres structurels d'un système diférentiel à partir d'observations bruitées. On l'applique sur le SIR.
 
 ```{r}
-sigma = 20
-noisy <- out;
-noisy$S  <- pmax(out$S  + rnorm(length(times),0,sigma),0)
-noisy$I  <- pmax(out$I  + rnorm(length(times),0,sigma),0)
-noisy$R  <- pmax(out$R  + rnorm(length(times),0,sigma),0)
+sigma <- 20
+noisy <- out_sir
+noisy$S <- pmax(out_sir$S + rnorm(length(out_sir$time), 0, sigma), 0)
+noisy$I <- pmax(out_sir$I + rnorm(length(out_sir$time), 0, sigma), 0)
+noisy$R <- pmax(out_sir$R + rnorm(length(out_sir$time), 0, sigma), 0)
 
 
 noisy %>%
-  gather(variable,value,-time) %>%
-  ggplot(aes(x = time,y = value,color = variable)) +
+  gather(variable, value, -time) %>%
+  ggplot(aes(x = time, y = value, color = variable)) +
   geom_point(size = 2) +
   theme_classic() +
-  labs(x = 'time (yr)',y = 'number of individuals')
+  labs(x = 'time (yr)', y = 'number of individuals')
 
-observ <- noisy[,2:4]
+observ <- noisy[, 2:4]
 ```
 
 Utiliser une méthode des moindres carrés habituelles est rendue compliquée par le fait que la fonction de régression $f$ est solution d'une quat diff donc n'a pas de solution explicite. De plus, chaque évaluation de la fonction (par un schéma numérique) est couteux d'un point de vue computationnel.
@@ -529,17 +531,35 @@ Une autre approche est d'exprimer $f$ dans une base (spline par exemple), cette 
 Cette méthode qui date de 2007, est implémentée dans le package `pcode`
 La méthode est décrite dans la [vignette](https://cran.r-project.org/web/packages/pCODE/vignettes/pcode-vignette.html) du pacakge.
 
+On définit dabord une base de décomposition pour les fonctions (package fda)
 ```{r}
 #" basis list
-knots <- seq(0,max(times),length.out=21)
+knots <- seq(0, max(times), length.out = 21)
 #order of basis functions
 norder <- 4
 #number of basis funtions
 nbasis <- length(knots) + norder - 2
 #creating Bspline basis
-basis_dim1  <- create.bspline.basis(c(0,max(times)),nbasis,norder,breaks = knots)
+basis_dim1 <- create.bspline.basis(c(0, max(times)), nbasis, 
+                                   norder, breaks = knots)
 basis = list(basis_dim1,basis_dim1,basis_dim1)
 ```
+
+Puis on optimise: 
+
+```{r, eval=FALSE}
+pcode.result <- pcode(
+  data = observ,
+  time = times,
+  ode.model = closed.sir.model,
+  par.initial = c(100, 1),
+  par.names = c('beta', 'gamma'),
+  state.names = c('S', 'I', 'R'),
+  basis.list = basis,
+  lambda = 1e2
+)
+```
+
 
 ## Jeton de reproductilité
 
