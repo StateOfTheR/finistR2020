@@ -139,7 +139,7 @@ xstart <- c(S = 999,I = 1,R = 0)
 
 Solving with ODE 
 ```{r}
-out <-
+out.SIR <-
   ode(func = closed.sir.model,
       y = xstart,
       times = times,
@@ -149,7 +149,7 @@ out <-
 ```
 And plot
 ```{r}
-out %>%
+out.SIR %>%
   gather(variable,value,-time) %>%
   ggplot(aes(x = time,y = value,color = variable)) +
   geom_line(size = 2) +
@@ -497,11 +497,11 @@ plotly::plot_ly(udf, x = sol$t, y = sol$u, type = 'scatter', mode = 'lines')
 On chercher mainenant à estimer les paramètres structurels d'un système diférentiel à partir d'observations bruitées. On l'applique sur le SIR. 
 
 ```{r}
-sigma = 20
-noisy <- out;
-noisy$S  <- pmax(out$S  + rnorm(length(times),0,sigma),0)
-noisy$I  <- pmax(out$I  + rnorm(length(times),0,sigma),0)
-noisy$R  <- pmax(out$R  + rnorm(length(times),0,sigma),0)
+sigma <-  20
+noisy <- out.SIR
+noisy$S  <- pmax(out.SIR$S  + rnorm(length(out.SIR$time),0,sigma),0)
+noisy$I  <- pmax(out.SIR$I  + rnorm(length(out.SIR$time),0,sigma),0)
+noisy$R  <- pmax(out.SIR$R  + rnorm(length(out.SIR$time),0,sigma),0)
 
 
 noisy %>%
@@ -520,6 +520,7 @@ Une autre approche est d'exprimer $f$ dans une base (spline par exemple), cette 
 Cette méthode qui date de 2007, est implémentée dans le package `pcode`
 La méthode est décrite dans la [vignette](https://cran.r-project.org/web/packages/pCODE/vignettes/pcode-vignette.html) du pacakge. 
 
+On définit dabord une base de décomposition pour les fonctions (package fda)
 ```{r}
 #" basis list
 knots <- seq(0,max(times),length.out=21)
@@ -531,6 +532,18 @@ nbasis <- length(knots) + norder - 2
 basis_dim1  <- create.bspline.basis(c(0,max(times)),nbasis,norder,breaks = knots)
 basis = list(basis_dim1,basis_dim1,basis_dim1)
 ```
+
+Puis on optimise: 
+
+```{r, eval=FALSE}
+pcode.result <- pcode(data = observ, time = times, ode.model = closed.sir.model,
+                      par.initial = c(100,1), par.names = c('beta','gamma'),state.names = c('S','I','R'),
+                      basis.list = basis, lambda = 1e2)
+```
+
+
+
+
 
 ## Jeton de reproductilité
 
