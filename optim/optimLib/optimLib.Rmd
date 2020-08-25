@@ -11,20 +11,17 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-## Motivation
+## Motivations
 
   1. Apprendre à interfacer une librarie C++ avec R en l'intégrant dans un package
     - Définition des règles de compilation
     - Utilisation de méthodes d'optimisation alternatives
-    - etc.
-  2. Disposer des implémentation alternative des méthodes d'optimisation classique 
-  3. Disposer d'implémentations de méthodes non présentes dans `optim`, comme ADAM
+  2. Disposer des implémentations alternative des méthodes d'optimisation classiques 
+  3. Disposer d'implémentation de méthodes non présentes dans `optim`, comme ADAM
 
 ## La bibliothèque `optimLib`
 
-Il s'agit d'une [bibliothèque C++ développée par Keith O'hara ](https://github.com/kthohr/optim)
-
-Les algorithmes d'optimisation implémentés incluent
+Il s'agit d'une [bibliothèque C++ développée par Keith O'hara ](https://github.com/kthohr/optim), incluant les algorithmes d'optimisation suivants:
 
 * Broyden's Method (for root finding)
 * Newton's method, BFGS, and L-BFGS
@@ -39,16 +36,16 @@ L'appel aux algorithmes se fait de la manière suivante en C++
 ```{cpp}
 algorithm_name(<initial and final values>, <objective function>, <objective function data>);
 ```
-  
+
 ## Réalisation
 
-Nous avons proposé le [package R **optimLibR** intégrant de manière minimale la librarie C++](https://github.com/StateOfTheR/optimLibR)
+Nous avons proposé une première version d'un [package R **optimLibR** intégrant de manière minimale la librarie C++](https://github.com/StateOfTheR/optimLibR)
 
 ```{r}
 library(optimLibR)
 ```
 
-Pour ce faire, les code source de la bibliothèque **optimLib** sont intégrés sous forme de ".hpp" (header only") dans le répertoire `inst/include` du package. Il suffit ensuite de déclarer correctement les variables de compilation dans les fichiers `Makevars` du répertoire ` src`.
+Pour ce faire, le code source de la bibliothèque **optimLib** est intégré sous forme de ".hpp" (header only") dans le répertoire `inst/include` du package. Il suffit ensuite de déclarer correctement les variables de compilation dans les fichiers `Makevars` du répertoire ` src`.
 
 ```{bash, eval = FALSE}
 PKG_CXXFLAGS = $(SHLIB_OPENMP_CXXFLAGS) -I../inst/include -DUSE_RCPP_ARMADILLO
@@ -73,7 +70,7 @@ This is a well-known test function with many local minima. Newton-type methods (
 ackley_function()
 ```
 
-#### Avec le `optim`
+Avec les méthodes intégrées dans la fonction `optim`, la qualité de la minimisation est variable, selon la recherche d'un optimum local ou global et du point de départ:
 
 ```{r ackely with optim}
 ackley <- function(x0) {
