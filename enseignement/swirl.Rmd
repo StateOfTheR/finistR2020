@@ -1,6 +1,6 @@
 ---
 title: "Un exemple de cours avec Swirl"
-author: "Baptiste Alglave, MP Etienne"
+author: "MP Etienne, Baptiste Alglave"
 date: "8/25/2020"
 output: html_document
 ---
@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-`swirlify` est un package permettand  de proposer des cours interactifs avec ` R` dans `RStudio`.  Ce domcument est basé sur le tuoriel [http://swirlstats.com/swirlify/index.html](http://swirlstats.com/swirlify/index.html).
+`swirlify` est un package permettant  de proposer des cours interactifs avec ` R` dans `RStudio`.  Ce domcument est basé sur le tutoriel [http://swirlstats.com/swirlify/index.html](http://swirlstats.com/swirlify/index.html).
 
 
 ## Créer un cours 
@@ -40,12 +40,11 @@ set_lesson("Démarche_statistique/Introduction_à_R/lesson.yaml")
 Cette commande ouvre le .yaml correspondant.
 
 
-On peut vouloir indiquer qu'il fut avant tout fire la leçon d'introduction à R avant d'entrer dans la leçon régression linéaire. Il faut alors ajouter un fichier MANIFEST.
+On peut vouloir indiquer qu'il faut avant tout faire la leçon d'introduction à R avant d'entrer dans la leçon régression linéaire. Il faut alors ajouter un fichier MANIFEST.
 
 ```{bash, comment = ''}
 head MANIFEST
 ```
-
 
 
 
@@ -63,7 +62,7 @@ dta <- read.table(file.path(.get_course_path(), "Démarche_statistique", "Introd
 
 
 
-Pour ajouter des nouvelles questions/interactions, on peut soi utiliser la commande `swirlify ` pour entrer dans un mode interactif et poser des questions soit utiliser en ligne de commande les  w +  q + tab.
+Pour ajouter des nouvelles questions/interactions, on peut soit utiliser la commande `swirlify ` pour entrer dans un mode interactif et poser des questions soit utiliser en ligne de commande les  w +  q + tab.
 
 
 ```{r wq_mes, eval =FALSE}
@@ -80,7 +79,7 @@ wq_multiple(output = "La table de données dta a été chargée. Parmi les varia
 ```
 
 
-On peut tout auusi bien éditer directement le fichier lesson.yaml pour obtenir le résultat suivant
+On peut tout ausi bien éditer directement le fichier lesson.yaml pour obtenir le résultat suivant
 
 ```{r show_lesson_yaml, eval = FALSE}
 - Class: meta
