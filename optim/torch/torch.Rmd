@@ -1,0 +1,109 @@
+---
+title: "torch"
+author: "JA and TLM"
+date: "8/25/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## Le package R torch
+
+Le package torch est une librairie de calcul tensoriel en R, utilisant 
+les fonctions de libtorch. Il peut aussi faire de la différentiation 
+automatique (autograd). Le package est similaire à la librairie PyTorch 
+en Python.
+
+Les instructions d'installation se trouvent sur le site 
+https://mlverse.github.io/torch/. Normalement, l'installation se fait 
+facilement :
+
+```{r, eval = FALSE}
+remotes::install_github("mlverse/torch")
+```
+
+Cependant, il faut peut-être installer/réinstaller des dépendances mal 
+gérées. On a dû réinstaller rlang et bit64 manuellement.
+
+Sur le site, des exemples d'application sont présentés avec le dataset 
+mnist. Pour l'instant, il semble que le package soit encore en 
+développement et les datasets mnist ne sont pas présents dans la branche 
+master du dépôt.
+
+## Le package R rTorch
+La librairie de deep learning PyTorch (https://pytorch.org) sous Python est très populaire. Le package rTorch est un package R qui fait l'interface entre R et PyTorch.
+
+Remarque : selon  http://eric.univ-lyon2.fr/~ricco/tanagra/fichiers/fr_Tanagra_PyTorch_PMC.pdf, le plus compliqué dans l'utilisation primaire de PyTorch, c’est la nécessité de transformer les matrices et vecteurs de données (Pandas ou Numpy) en tensor reconnus par PyTorch.
+
+We follow the instructions from  https://f0nzie.github.io/rtorch-minimal-book/ to install rTorch.
+
+### Prerequisites
+
+- Install Python Anaconda. Preferrably, for 64-bits, and above Python 3.6+.
+
+- Install R, Rtools and RStudio.
+
+- Install rTorch from CRAN or GitHub.
+
+```{r install rTorch, eval = FALSE}
+#From CRAN:
+install.packages("rTorch")
+#From GitHub, install rTorch with:
+devtools::install_github("f0nzie/rTorch")
+```
+
+#### Before loading rTorch
+
+Before start running rTorch, install a Python Anaconda environment first. Two ways are possible:
+
+
+1. From a terminal
+
+- Create a conda environment from the terminal with 
+
+```{bash, eval = FALSE}
+conda create -n myenv python=3.7
+```
+
+- Activate the new environment with `conda activate myenv`
+
+- Install the PyTorch related packages with:
+```{bash, eval = FALSE}
+conda install python=3.8.3 pytorch-cpu torchvision-cpu matplotlib pandas -c pytorch
+```
+
+The code need to be adapted with the correct version of python.
+
+
+The last part `-c pytorch` specifies the conda channel to download the PyTorch packages. Your installation may not work if you don’t indicate the channel.
+
+Now, you can load rTorch in R or RStudio.
+
+2. Automatic installation
+
+with the  function `rTorch::install_pytorch()`. This function will allow you to install a conda environment complete with all PyTorch requirements.
+
+```{r automatic_installation, eval = FALSE}
+# Automatic installation
+library(rTorch)
+rTorch::install_pytorch(method = "conda")
+```
+
+#### Testing that rTorch is up and running 
+
+
+```{r, eval = FALSE}
+library(rTorch)
+rTorch::torch_version()
+rTorch::torch_config()
+```
+Après des installations qui semblent complètes et satisfaisantes, les tests ci-dessous renvoient `NULL`, Torch n'est pas trouvé. Nous penchons pour des problèmes de chemin ou d'environnements Python.
+A noter que les essais ont été faits depuis un Mac.
+
+# Sources
+[Tutoriel PyTorch] (http://eric.univ-lyon2.fr/~ricco/tanagra/fichiers/fr_Tanagra_PyTorch_PMC.pdf)
+
+[rTorch] (https://f0nzie.github.io/rtorch-minimal-book/)
+
+
