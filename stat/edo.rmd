@@ -12,7 +12,9 @@ output: html_document
 Le CRAN propose une [Task View](https://cran.r-project.org/web/views/DifferentialEquations.html) sur les équations différentielles.
 
 Une équation différentielle est une équation entre une ou plusieurs fonctions inconnues et leurs dérivées. Cette équation décrit comment une fonction varie en fonction d'une ou de plusieurs variables (souvent le temps ou l'espace) et en fonction des dérivées de cette fonction.
-Il y différentes facon de classifier les équations différentielles :
+
+Il y différentes facon de classifier les équations différentielles:
+
 - les équations peuvent être stochastique (la quantité inconue est aléatoire) ou déterministe (la quantité inconnue est déterministe).
 - les équations peuvent porter sur des fonctions à une seule variable (équation différentielle ordinaire) ou à plusieurs variables (équation aux dérivées partielles).
 - les équations peuvent inclure des fonctions dont la dérivée a un certain pas de temps dépend de la dérivée à un pas de temps précédent (équation différentielle à retard ou differential equations delay), ou alors des fonctions algébriques (i.e. il existe une ou plusieurs relations algébriques entre les variables du système - équation différentielle algébrique).
@@ -41,6 +43,7 @@ theme_set(theme_bw())
 ### EDO simple: la désintégration atomique
 
 On cherche à résoudre $y' = ay$ avec condition initiale $y(0) = y_0$. On commence par coder l'équation différentielle:
+
 - `t` représente le temps courant
 - `Y` représente l'état courant du système
 - `parameters` stocke les paramètres du modèle (ici $a$)
@@ -75,8 +78,14 @@ out_atome <- ode(y0, times, model, parms = params, jacfun = jac)
 ```
 
 Le résultat est une matrice:
+
 - une colonne pour le temps (reprend les valeurs de `times`)
 - une colonne par dimension dans le système d'équations différentielles
+
+```{r}
+head(out_atome)
+```
+
 
 On peut vérifier que la solution numérique (en bleu) est confondue avec la solution analytique (en rouge).
 
