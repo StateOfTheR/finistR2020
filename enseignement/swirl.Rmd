@@ -1,0 +1,123 @@
+---
+title: "Un exemple de cours avec Swirl"
+author: "Baptiste Alglave, MP Etienne"
+date: "8/25/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+`swirlify` est un package permettand  de proposer des cours interactifs avec ` R` dans `RStudio`.  Ce domcument est basé sur le tuoriel [http://swirlstats.com/swirlify/index.html](http://swirlstats.com/swirlify/index.html).
+
+
+## Créer un cours 
+
+On peut créer le cours Démarche statistique dans lequel on souhaite avoir deux leçons : l'introduction à R et la leçon sur la régression simple.
+
+```{r load}
+library(swirlify)
+```
+
+
+```{r new_lesson, eval=FALSE}
+
+new_lesson("Introduction à R", "Démarche statistique")
+new_lesson("Modèle de régression", "Démarche statistique")
+```
+
+
+## Travailler sur une leçon
+
+Pour travailler sur la leçon Introduction à R, il faut spécifier la leçon sur laquelle on travaille, par la commande suivante. 
+
+```{r set_lesson, eval = FALSE}
+set_lesson("Démarche_statistique/Introduction_à_R/lesson.yaml")
+```
+
+Cette commande ouvre le .yaml correspondant.
+
+
+On peut vouloir indiquer qu'il fut avant tout fire la leçon d'introduction à R avant d'entrer dans la leçon régression linéaire. Il faut alors ajouter un fichier MANIFEST.
+
+```{bash, comment = ''}
+head MANIFEST
+```
+
+
+
+
+Le fichier `initLesson.R ` contient les commandes à éxécuter avant de lancer la leçon. Il est utile de créer une fonction qui récupère le chemin du répertoire comprenant la leçon et charcger facilement un jeu de données. 
+
+```{r fichier_initLesson,  eval = FALSE}
+.get_course_path <- function(){
+  tryCatch(swirl:::swirl_courses_dir(),
+           error = function(c) {file.path(find.package("swirl"),"Courses")}
+  )
+}
+
+dta <- read.table(file.path(.get_course_path(), "Démarche_statistique", "Introduction_à_R", "usair.txt"), sep = ';', header  = TRUE, skip = 8)
+```
+
+
+
+Pour ajouter des nouvelles questions/interactions, on peut soi utiliser la commande `swirlify ` pour entrer dans un mode interactif et poser des questions soit utiliser en ligne de commande les  w +  q + tab.
+
+
+```{r wq_mes, eval =FALSE}
+wq_message(output = " Bienvenue sur le cours d'introdution à R")
+```
+
+```{r  wq_multiple, eval =FALSE}
+
+wq_multiple(output = "La table de données dta a été chargée. Parmi les variables suivantes, laquelle fait partie de ce jeu de données ?",
+            answer_choices = "manuf;Ville;temperature",
+            correct_answer = "manuf",
+            hint = "La commande colnames permet d'afficher le nom des colonnes.")
+
+```
+
+
+On peut tout auusi bien éditer directement le fichier lesson.yaml pour obtenir le résultat suivant
+
+```{r show_lesson_yaml, eval = FALSE}
+- Class: meta
+  Course: Démarche statistique
+  Lesson: Introduction à R
+  Author: Marie-Pierre Etienne
+  Type: Standard
+  Organization: Agrocampus Ouest
+  Version: 2.4.5
+
+- Class: text
+  Output:  "Bienvenue sur le cours d' introdution à R"
+
+- Class: mult_question
+  Output: La table de données dta a été chargée. Parmi les variables suivantes, laquelle fait partie de ce jeu de données ?
+  AnswerChoices: manuf;Ville;temperature
+  CorrectAnswer: manuf
+  AnswerTests: omnitest(correctVal= 'ANS')
+  Hint: "La commande colnames permet d'afficher le nom des colonnes".
+
+```
+
+
+On peut tester la leçon
+
+```{r}
+demo_lesson()
+```
+
+
+Pour distribuer le cours il faut l'empaqueter.
+
+
+```{r}
+  swirlify::pack_course()
+
+swirl::install_course(swc_path = "~/git/finistR2020/enseignement/Démarche_statistique.swc")
+swirl()
+```
+
