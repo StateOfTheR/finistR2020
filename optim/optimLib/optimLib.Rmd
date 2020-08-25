@@ -86,6 +86,8 @@ ackley <- function(x0) {
 x0 <- c(-1,1)
 optim(x0, ackley, method = "Nelder-Mead")$par
 optim(x0, ackley, method = "SANN")$par
+optim(x0, ackley, method = "L-BFGS-B")$par
+optim(x0, ackley, method = "BFGS")$par
 ```
 
 ### Logistic regression
