@@ -143,7 +143,7 @@ xstart <- c(S = 999,I = 1,R = 0)
 
 Solving with ODE
 ```{r}
-out.SIR <-
+out_sir <-
   ode(func = closed.sir.model,
       y = xstart,
       times = times,
@@ -153,7 +153,7 @@ out.SIR <-
 ```
 And plot
 ```{r}
-out.SIR %>%
+out_sir %>%
   gather(variable,value,-time) %>%
   ggplot(aes(x = time,y = value,color = variable)) +
   geom_line(size = 2) +
@@ -506,21 +506,21 @@ plotly::plot_ly(udf, x = sol$t, y = sol$u, type = 'scatter', mode = 'lines')
 On chercher mainenant à estimer les paramètres structurels d'un système diférentiel à partir d'observations bruitées. On l'applique sur le SIR.
 
 ```{r}
-sigma <-  20
-noisy <- out.SIR
-noisy$S  <- pmax(out.SIR$S  + rnorm(length(out.SIR$time),0,sigma),0)
-noisy$I  <- pmax(out.SIR$I  + rnorm(length(out.SIR$time),0,sigma),0)
-noisy$R  <- pmax(out.SIR$R  + rnorm(length(out.SIR$time),0,sigma),0)
+sigma <- 20
+noisy <- out_sir
+noisy$S <- pmax(out_sir$S + rnorm(length(out_sir$time), 0, sigma), 0)
+noisy$I <- pmax(out_sir$I + rnorm(length(out_sir$time), 0, sigma), 0)
+noisy$R <- pmax(out_sir$R + rnorm(length(out_sir$time), 0, sigma), 0)
 
 
 noisy %>%
-  gather(variable,value,-time) %>%
-  ggplot(aes(x = time,y = value,color = variable)) +
+  gather(variable, value, -time) %>%
+  ggplot(aes(x = time, y = value, color = variable)) +
   geom_point(size = 2) +
   theme_classic() +
-  labs(x = 'time (yr)',y = 'number of individuals')
+  labs(x = 'time (yr)', y = 'number of individuals')
 
-observ <- noisy[,2:4]
+observ <- noisy[, 2:4]
 ```
 
 Utiliser une méthode des moindres carrés habituelles est rendue compliquée par le fait que la fonction de régression $f$ est solution d'une quat diff donc n'a pas de solution explicite. De plus, chaque évaluation de la fonction (par un schéma numérique) est couteux d'un point de vue computationnel.
@@ -532,26 +532,31 @@ La méthode est décrite dans la [vignette](https://cran.r-project.org/web/packa
 On définit dabord une base de décomposition pour les fonctions (package fda)
 ```{r}
 #" basis list
-knots <- seq(0,max(times),length.out=21)
+knots <- seq(0, max(times), length.out = 21)
 #order of basis functions
 norder <- 4
 #number of basis funtions
 nbasis <- length(knots) + norder - 2
 #creating Bspline basis
-basis_dim1  <- create.bspline.basis(c(0,max(times)),nbasis,norder,breaks = knots)
+basis_dim1 <- create.bspline.basis(c(0, max(times)), nbasis, 
+                                   norder, breaks = knots)
 basis = list(basis_dim1,basis_dim1,basis_dim1)
 ```
 
 Puis on optimise: 
 
 ```{r, eval=FALSE}
-pcode.result <- pcode(data = observ, time = times, ode.model = closed.sir.model,
-                      par.initial = c(100,1), par.names = c('beta','gamma'),state.names = c('S','I','R'),
-                      basis.list = basis, lambda = 1e2)
+pcode.result <- pcode(
+  data = observ,
+  time = times,
+  ode.model = closed.sir.model,
+  par.initial = c(100, 1),
+  par.names = c('beta', 'gamma'),
+  state.names = c('S', 'I', 'R'),
+  basis.list = basis,
+  lambda = 1e2
+)
 ```
-
-
-
 
 
 ## Jeton de reproductilité
