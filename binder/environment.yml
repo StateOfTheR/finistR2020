@@ -4,6 +4,9 @@ channels:
   - defaults
 dependencies:
   - r=3.6.0
+  - r-fda
+  - r-ggally
   - r-plotly
   - r-desolve
+  - r-dplyr
   - jupytext
