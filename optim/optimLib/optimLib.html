@@ -370,18 +370,17 @@ summary {
 </div>
 
 
-<div id="motivation" class="section level2">
-<h2>Motivation</h2>
+<div id="motivations" class="section level2">
+<h2>Motivations</h2>
 <ol style="list-style-type: decimal">
-<li>Apprendre à interfacer une librarie C++ avec R en l’intégrant dans un package - Définition des règles de compilation - Utilisation de méthodes d’optimisation alternatives - etc.</li>
-<li>Disposer des implémentation alternative des méthodes d’optimisation classique</li>
-<li>Disposer d’implémentations de méthodes non présentes dans <code>optim</code>, comme ADAM</li>
+<li>Apprendre à interfacer une librarie C++ avec R en l’intégrant dans un package - Définition des règles de compilation - Utilisation de méthodes d’optimisation alternatives</li>
+<li>Disposer des implémentations alternative des méthodes d’optimisation classiques</li>
+<li>Disposer d’implémentation de méthodes non présentes dans <code>optim</code>, comme ADAM</li>
 </ol>
 </div>
 <div id="la-bibliothèque-optimlib" class="section level2">
 <h2>La bibliothèque <code>optimLib</code></h2>
-<p>Il s’agit d’une <a href="https://github.com/kthohr/optim">bibliothèque C++ développée par Keith O’hara</a></p>
-<p>Les algorithmes d’optimisation implémentés incluent</p>
+<p>Il s’agit d’une <a href="https://github.com/kthohr/optim">bibliothèque C++ développée par Keith O’hara</a>, incluant les algorithmes d’optimisation suivants:</p>
 <ul>
 <li>Broyden’s Method (for root finding)</li>
 <li>Newton’s method, BFGS, and L-BFGS</li>
@@ -396,9 +395,9 @@ summary {
 </div>
 <div id="réalisation" class="section level2">
 <h2>Réalisation</h2>
-<p>Nous avons proposé le <a href="https://github.com/StateOfTheR/optimLibR">package R <strong>optimLibR</strong> intégrant de manière minimale la librarie C++</a></p>
+<p>Nous avons proposé une première version d’un <a href="https://github.com/StateOfTheR/optimLibR">package R <strong>optimLibR</strong> intégrant de manière minimale la librarie C++</a></p>
 <pre class="r"><code>library(optimLibR)</code></pre>
-<p>Pour ce faire, les code source de la bibliothèque <strong>optimLib</strong> sont intégrés sous forme de “.hpp” (header only&quot;) dans le répertoire <code>inst/include</code> du package. Il suffit ensuite de déclarer correctement les variables de compilation dans les fichiers <code>Makevars</code> du répertoire <code>src</code>.</p>
+<p>Pour ce faire, le code source de la bibliothèque <strong>optimLib</strong> est intégré sous forme de “.hpp” (header only&quot;) dans le répertoire <code>inst/include</code> du package. Il suffit ensuite de déclarer correctement les variables de compilation dans les fichiers <code>Makevars</code> du répertoire <code>src</code>.</p>
 <pre class="bash"><code>PKG_CXXFLAGS = $(SHLIB_OPENMP_CXXFLAGS) -I../inst/include -DUSE_RCPP_ARMADILLO
 PKG_LIBS= $(SHLIB_OPENMP_CXXFLAGS) $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
 CXX_STD = CXX11</code></pre>
@@ -422,8 +421,7 @@ CXX_STD = CXX11</code></pre>
 <pre><code>##              [,1]
 ## [1,] 1.035587e-16
 ## [2,] 3.246431e-16</code></pre>
-<div id="avec-le-optim" class="section level4">
-<h4>Avec le <code>optim</code></h4>
+<p>Avec les méthodes intégrées dans la fonction <code>optim</code>, la qualité de la minimisation est variable, selon la recherche d’un optimum local ou global et du point de départ:</p>
 <pre class="r"><code>ackley &lt;- function(x0) {
     x &lt;- x0[1]
     y &lt;- x0[2]
@@ -440,7 +438,6 @@ optim(x0, ackley, method = &quot;Nelder-Mead&quot;)$par</code></pre>
 <pre><code>## [1] -1.104193e-16  1.104193e-16</code></pre>
 <pre class="r"><code>optim(x0, ackley, method = &quot;BFGS&quot;)$par</code></pre>
 <pre><code>## [1] -0.9684772  0.9684772</code></pre>
-</div>
 </div>
 <div id="logistic-regression" class="section level3">
 <h3>Logistic regression</h3>
