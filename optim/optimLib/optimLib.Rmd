@@ -73,6 +73,22 @@ This is a well-known test function with many local minima. Newton-type methods (
 ackley_function()
 ```
 
+#### Avec le `optim`
+
+```{r ackely with optim}
+ackley <- function(x0) {
+    x <- x0[1]
+    y <- x0[2]
+    res <- -20*exp( -0.2*sqrt(0.5*(x*x + y*y)) ) - exp( 0.5*(cos(2*pi*x) + cos(2*pi*y)) ) + 20 + exp(1)
+    res
+}
+
+x0 <- c(-1,1)
+optim(x0, ackley, method = "Nelder-Mead")$par
+optim(x0, ackley, method = "SANN")$par
+optim(x0, ackley, method = "L-BFGS-B")$par
+optim(x0, ackley, method = "BFGS")$par
+```
 
 ### Logistic regression
 
