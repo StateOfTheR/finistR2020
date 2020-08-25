@@ -351,13 +351,13 @@ Le modèle de flemming
 ```{r}
 # DDE function
 derivs <- function(t, y, parms) {
-    if (t < 0) {
-        lag <- 19
-    } else {
-        lag <- lagvalue(t - 0.74)
-    } 
-    dy <- r * y * (1 - lag/m)
-    list(dy, dy = dy)
+  if (t < 0) {
+    lag <- 19
+  } else {
+    lag <- lagvalue(t - 0.74)
+  }
+  dy <- r * y * (1 - lag / m)
+  list(dy, dy = dy)
 }
 
 # parameters
@@ -368,12 +368,22 @@ yinit <- c(y = 19.001)
 times <- seq(-0.74, 40, by = 0.01)
 
 yout <- dede(y = yinit, times = times, func = derivs,
-    parms = NULL, atol = 1e-10)
+             parms = NULL, atol = 1e-10)
 
-plot(yout, which = 1, type = "l", lwd = 2,
-    main = "Lemming model", mfrow = c(1,2))
-    
-plot(yout[,2], yout[,3], xlab = "y", ylab = "dy", type = "l", lwd = 2)
+df_out <-
+  yout %>% 
+  as_tibble() %>% 
+  mutate_all(as.numeric) %>% 
+  mutate(yend = lead(y), dy.yend = lead(dy.y))
+
+ggplot(df_out) +
+  aes(x = time, y = y) +
+  geom_line()
+
+ggplot(df_out) +
+  aes(x = y, y = dy.y, xend = yend, yend = dy.yend) +
+  geom_segment() +
+  labs(x = "y", y = "y'")
 ```
 
 ## Estimating parameters
