@@ -495,6 +495,24 @@ plotly::plot_ly(udf, x = sol$t, y = sol$u, type = 'scatter', mode = 'lines')
 
 On chercher mainenant à estimer les paramètres structurels d'un système diférentiel à partir d'observations bruitées. On l'applique sur le SIR. 
 
+```{r}
+sigma = 20
+noisy <- out;
+noisy$S  <- pmax(out$S  + rnorm(length(times),0,sigma),0)
+noisy$I  <- pmax(out$I  + rnorm(length(times),0,sigma),0)
+noisy$R  <- pmax(out$R  + rnorm(length(times),0,sigma),0)
+
+
+noisy %>%
+  gather(variable,value,-time) %>%
+  ggplot(aes(x = time,y = value,color = variable)) +
+  geom_point(size = 2) +
+  theme_classic() +
+  labs(x = 'time (yr)',y = 'number of individuals')
+
+observ <- noisy[,2:4]
+```
+
 Utiliser une méthode des moindres carrés habituelles est rendue compliquée par le fait que la fonction de régression $f$ est solution d'une quat diff donc n'a pas de solution explicite. De plus, chaque évaluation de la fonction (par un schéma numérique) est couteux d'un point de vue computationnel. 
 
 Une autre approche est d'exprimer $f$ dans une base (spline par exemple), cette fonction devra d'une part s'ajuster aux donnnées et d'autre part être solution du système (qui est introduit comme une pénalité). 
