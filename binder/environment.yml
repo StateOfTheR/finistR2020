@@ -1,0 +1,8 @@
+channels:
+  - r
+  - conda-forge
+  - defaults
+dependencies:
+  - r=3.6.0
+  - r-plotly=4.9.2.1=r36h6115d3f_1
+  - jupytext
