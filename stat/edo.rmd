@@ -12,9 +12,7 @@ output: html_document
 Le CRAN propose une [Task View](https://cran.r-project.org/web/views/DifferentialEquations.html) sur les équations différentielles.
 
 Une équation différentielle est une équation entre une ou plusieurs fonctions inconnues et leurs dérivées. Cette équation décrit comment une fonction varie en fonction d'une ou de plusieurs variables (souvent le temps ou l'espace) et en fonction des dérivées de cette fonction.
-
-Il y différentes facon de classifier les équations différentielles:
-
+Il y différentes facon de classifier les équations différentielles :
 - les équations peuvent être stochastique (la quantité inconue est aléatoire) ou déterministe (la quantité inconnue est déterministe).
 - les équations peuvent porter sur des fonctions à une seule variable (équation différentielle ordinaire) ou à plusieurs variables (équation aux dérivées partielles).
 - les équations peuvent inclure des fonctions dont la dérivée a un certain pas de temps dépend de la dérivée à un pas de temps précédent (équation différentielle à retard ou differential equations delay), ou alors des fonctions algébriques (i.e. il existe une ou plusieurs relations algébriques entre les variables du système - équation différentielle algébrique).
@@ -43,7 +41,6 @@ theme_set(theme_bw())
 ### EDO simple: la désintégration atomique
 
 On cherche à résoudre $y' = ay$ avec condition initiale $y(0) = y_0$. On commence par coder l'équation différentielle:
-
 - `t` représente le temps courant
 - `Y` représente l'état courant du système
 - `parameters` stocke les paramètres du modèle (ici $a$)
@@ -78,14 +75,8 @@ out_atome <- ode(y0, times, model, parms = params, jacfun = jac)
 ```
 
 Le résultat est une matrice:
-
 - une colonne pour le temps (reprend les valeurs de `times`)
 - une colonne par dimension dans le système d'équations différentielles
-
-```{r}
-head(out_atome)
-```
-
 
 On peut vérifier que la solution numérique (en bleu) est confondue avec la solution analytique (en rouge).
 
@@ -152,7 +143,7 @@ xstart <- c(S = 999,I = 1,R = 0)
 
 Solving with ODE
 ```{r}
-out_sir <-
+out.SIR <-
   ode(func = closed.sir.model,
       y = xstart,
       times = times,
@@ -162,7 +153,7 @@ out_sir <-
 ```
 And plot
 ```{r}
-out_sir %>%
+out.SIR %>%
   gather(variable,value,-time) %>%
   ggplot(aes(x = time,y = value,color = variable)) +
   geom_line(size = 2) +
@@ -356,7 +347,12 @@ out_aphide %>%
 
 Cet exemple est tiré du document : https://cran.r-project.org/web/packages/deSolve/vignettes/deSolve.pdf .
 
-Le modèle de flemming
+Le modèle logistique est un modèle de dynamique de population simple dans lequel une population évolue jusqu'à atteindre un plateau suivant la fonction $x'(t)=r.x(t).[\frac{1-x(t)}{M}]$ (M est le nombre d'individus que peut suporter l'écosystème à l'équilibre). Le terme densité-dépendant $\frac{1-x(t)}{M}$ peut jouer sur l'écosystème avec un retard ce qui amène à écrire la EDR suivante : $x'(t)=r.x(t).[\frac{1-x(t - \tau)}{M}]$.
+
+Dans le cas d'une population de lemming, le lag est fixé à 9 mois (0.74 année), le temps de croissance d'un lemming jusqu'au stade adulte. Le paramètre r est fixé sur la base données expérimentales. Le paramètre M contrôlant la capacité biotique du milieu est fixé à 19.
+
+Les lignes de codes qui suivent permettent de simuler et de visualiser l'évolution d'une population de lemming. Le dernier plot représente l'évolution de $x(t)$ en fonction de $x(t-\tau)$.
+
 ```{r}
 # DDE function
 derivs <- function(t, y, parms) {
@@ -446,22 +442,21 @@ plot(sol,vars=(1,2,3))
 ## Installation des packages R
 
 
-```{r, eval=false}
+```{r, eval=F}
 install.packages("JuliaCall")
 library(JuliaCall)
 julia <- julia_setup()
 ```
 
-```{r, eval=false}
+```{r, eval=F}
 julia_call("sqrt", 2)
-
 ```
 
-```{r, eval=false}
+```{r, eval=F}
 julia_installed_package("DifferentialEquations")
 ```
 
-```{r, eval=false}
+```{r, eval=F}
 julia_library("DifferentialEquations")
 ```
 
@@ -538,7 +533,7 @@ plotly::plot_ly(udf, x = ~V1, y = ~V2, z = ~V3, type = 'scatter3d', mode = 'line
 
 ### Transformation de toutes la variables en variables Julia
 
-```{r, eval=false}
+```{r, eval=F}
 julf <- JuliaCall::julia_eval("
 function julf(du,u,p,t)
   du[1] = 10.0*(u[2]-u[1])
@@ -552,15 +547,15 @@ prob3 = JuliaCall::julia_eval("ODEProblem(julf, u0, tspan, p)")
 sol = de$solve(prob3,de$Tsit5())
 ```
 
-```{r, eval=false}
+```{r, eval=F}
 system.time({ for (i in 1:100){ de$solve(prob    ,de$Tsit5()) }})
 ```
 
-```{r, eval=false}
+```{r, eval=F}
 system.time({ for (i in 1:100){ de$solve(fastprob,de$Tsit5()) }})
 ```
 
-```{r, eval=false}
+```{r, eval=F}
 system.time({ for (i in 1:100){ de$solve(prob3   ,de$Tsit5()) }})
 ```
 
@@ -571,7 +566,7 @@ On utilise deux fonctions `f` et `g`, où `du = f(u,t)dt + g(u,t)dW_t`
 
 ## Résolution d'une SDE
 
-```{r, eval=false}
+```{r, eval=F}
 f <- function(u,p,t) {
   du1 = p[1]*(u[2]-u[1])
   du2 = u[1]*(p[2]-u[3]) - u[2]
@@ -597,7 +592,7 @@ plotly::plot_ly(udf, x = ~V1, y = ~V2, z = ~V3, type = 'scatter3d', mode = 'line
 
 ### Version avec `desolve` 
 
-```{r, eval=false}
+```{r, eval=F}
 library(deSolve)
 Lorenz <- function(t, state, parameters) {
   with(as.list(c(state, parameters)), {
@@ -619,18 +614,18 @@ lorenz_solve <- function (i){
   out <- ode(y = state, times = times, func = Lorenz, parms = parameters)
 }
 ```
-```{r, eval=false}
+```{r, eval=F}
 system.time({ lapply(1:1000,lorenz_solve) })
 ```
 
-```{r, eval=false}
+```{r, eval=F}
 prob_func <- function (prob,i,rep){
   de$remake(prob,u0=runif(3)*u0,p=runif(3)*p)
 }
 ensembleprob = de$EnsembleProblem(fastprob, prob_func = prob_func, safetycopy=FALSE)
 ```
 
-```{r, eval=false}
+```{r, eval=F}
 system.time({ de$solve(ensembleprob,de$Tsit5(),de$EnsembleSerial(),trajectories=1000,saveat=0.01) })
 
 ```
@@ -640,21 +635,21 @@ system.time({ de$solve(ensembleprob,de$Tsit5(),de$EnsembleSerial(),trajectories=
 On chercher mainenant à estimer les paramètres structurels d'un système diférentiel à partir d'observations bruitées. On l'applique sur le SIR.
 
 ```{r}
-sigma <- 20
-noisy <- out_sir
-noisy$S <- pmax(out_sir$S + rnorm(length(out_sir$time), 0, sigma), 0)
-noisy$I <- pmax(out_sir$I + rnorm(length(out_sir$time), 0, sigma), 0)
-noisy$R <- pmax(out_sir$R + rnorm(length(out_sir$time), 0, sigma), 0)
+sigma <-  20
+noisy <- out.SIR
+noisy$S  <- pmax(out.SIR$S  + rnorm(length(out.SIR$time),0,sigma),0)
+noisy$I  <- pmax(out.SIR$I  + rnorm(length(out.SIR$time),0,sigma),0)
+noisy$R  <- pmax(out.SIR$R  + rnorm(length(out.SIR$time),0,sigma),0)
 
 
 noisy %>%
-  gather(variable, value, -time) %>%
-  ggplot(aes(x = time, y = value, color = variable)) +
+  gather(variable,value,-time) %>%
+  ggplot(aes(x = time,y = value,color = variable)) +
   geom_point(size = 2) +
   theme_classic() +
-  labs(x = 'time (yr)', y = 'number of individuals')
+  labs(x = 'time (yr)',y = 'number of individuals')
 
-observ <- noisy[, 2:4]
+observ <- noisy[,2:4]
 ```
 
 Utiliser une méthode des moindres carrés habituelles est rendue compliquée par le fait que la fonction de régression $f$ est solution d'une quat diff donc n'a pas de solution explicite. De plus, chaque évaluation de la fonction (par un schéma numérique) est couteux d'un point de vue computationnel.
@@ -666,31 +661,26 @@ La méthode est décrite dans la [vignette](https://cran.r-project.org/web/packa
 On définit dabord une base de décomposition pour les fonctions (package fda)
 ```{r}
 #" basis list
-knots <- seq(0, max(times), length.out = 21)
+knots <- seq(0,max(times),length.out=21)
 #order of basis functions
 norder <- 4
 #number of basis funtions
 nbasis <- length(knots) + norder - 2
 #creating Bspline basis
-basis_dim1 <- create.bspline.basis(c(0, max(times)), nbasis, 
-                                   norder, breaks = knots)
+basis_dim1  <- create.bspline.basis(c(0,max(times)),nbasis,norder,breaks = knots)
 basis = list(basis_dim1,basis_dim1,basis_dim1)
 ```
 
 Puis on optimise: 
 
 ```{r, eval=FALSE}
-pcode.result <- pcode(
-  data = observ,
-  time = times,
-  ode.model = closed.sir.model,
-  par.initial = c(100, 1),
-  par.names = c('beta', 'gamma'),
-  state.names = c('S', 'I', 'R'),
-  basis.list = basis,
-  lambda = 1e2
-)
+pcode.result <- pcode(data = observ, time = times, ode.model = closed.sir.model,
+                      par.initial = c(100,1), par.names = c('beta','gamma'),state.names = c('S','I','R'),
+                      basis.list = basis, lambda = 1e2)
 ```
+
+
+
 
 
 ## Jeton de reproductilité
