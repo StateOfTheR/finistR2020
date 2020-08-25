@@ -14,7 +14,25 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 library(mgcv)
 library(tidyverse)
+library(MASS)
 ```
+
+
+
+
+
+
+
+```{r}
+Mods3 <- gam(accel~s(times,k=10,bs="cr"),data=mcycle)
+gam.check(Mods3)
+summary(Mods3)
+```
+
+$$Y_i = Z_i^T\theta + \sum_{j=1}^p \beta f_j(x_{i}) + \epsilon_i$$
+où les $f_j$ forment une base de spline, $Z_i$ des variables utilisées comme dans un modèle linéaire, et $x_i$ la variable pour laquelle on utilise une spline. Notons qu'on peut avoir des splines multivariés et plusieurs splines dépendant de différentes variables.
+
+
 
 
 
