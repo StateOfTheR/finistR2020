@@ -10,10 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 ## Le package R torch
 
-Le package torch est une librairie de calcul tensoriel en R, utilisant 
-les fonctions de libtorch. Il peut aussi faire de la différentiation 
-automatique (autograd). Le package est similaire à la librairie PyTorch 
-en Python.
+Le package torch est une librairie de calcul tensoriel en R, utilisant les fonctions de libtorch. Il peut aussi faire de la différentiation automatique (autograd). Le package est similaire à la librairie PyTorch en Python.
 
 Les instructions d'installation se trouvent sur le site 
 https://mlverse.github.io/torch/. Normalement, l'installation se fait 
@@ -23,13 +20,9 @@ facilement :
 remotes::install_github("mlverse/torch")
 ```
 
-Cependant, il faut peut-être installer/réinstaller des dépendances mal 
-gérées. On a dû réinstaller rlang et bit64 manuellement.
+Cependant, il faut peut-être installer/réinstaller des dépendances mal gérées. On a dû réinstaller rlang et bit64 manuellement.
 
-Sur le site, des exemples d'application sont présentés avec le dataset 
-mnist. Pour l'instant, il semble que le package soit encore en 
-développement et les datasets mnist ne sont pas présents dans la branche 
-master du dépôt.
+Sur le site, des exemples d'application sont présentés avec le dataset mnist. Pour l'instant, il semble que le package soit encore en développement et les datasets mnist ne sont pas présents dans la branchemaster du dépôt.
 
 ## Le package R rTorch
 La librairie de deep learning PyTorch (https://pytorch.org) sous Python est très populaire. Le package rTorch est un package R qui fait l'interface entre R et PyTorch.
@@ -102,8 +95,10 @@ Après des installations qui semblent complètes et satisfaisantes, les tests ci
 A noter que les essais ont été faits depuis un Mac.
 
 # Sources
-[Tutoriel PyTorch] (http://eric.univ-lyon2.fr/~ricco/tanagra/fichiers/fr_Tanagra_PyTorch_PMC.pdf)
+[Tutoriel PyTorch](http://eric.univ-lyon2.fr/~ricco/tanagra/fichiers/fr_Tanagra_PyTorch_PMC.pdf)
 
-[rTorch] (https://f0nzie.github.io/rtorch-minimal-book/)
+[rTorch](https://f0nzie.github.io/rtorch-minimal-book/)
 
+[torch](https://mlverse.github.io/torch/index.html)
 
+[Exemple torch autograd](https://mlverse.github.io/torch/articles/using-autograd.html)
