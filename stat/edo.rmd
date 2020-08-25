@@ -446,22 +446,21 @@ plot(sol,vars=(1,2,3))
 ## Installation des packages R
 
 
-```{r, eval=false}
+```{r, eval=F}
 install.packages("JuliaCall")
 library(JuliaCall)
 julia <- julia_setup()
 ```
 
-```{r, eval=false}
+```{r, eval=F}
 julia_call("sqrt", 2)
-
 ```
 
-```{r, eval=false}
+```{r, eval=F}
 julia_installed_package("DifferentialEquations")
 ```
 
-```{r, eval=false}
+```{r, eval=F}
 julia_library("DifferentialEquations")
 ```
 
@@ -538,7 +537,7 @@ plotly::plot_ly(udf, x = ~V1, y = ~V2, z = ~V3, type = 'scatter3d', mode = 'line
 
 ### Transformation de toutes la variables en variables Julia
 
-```{r, eval=false}
+```{r, eval=F}
 julf <- JuliaCall::julia_eval("
 function julf(du,u,p,t)
   du[1] = 10.0*(u[2]-u[1])
@@ -552,15 +551,15 @@ prob3 = JuliaCall::julia_eval("ODEProblem(julf, u0, tspan, p)")
 sol = de$solve(prob3,de$Tsit5())
 ```
 
-```{r, eval=false}
+```{r, eval=F}
 system.time({ for (i in 1:100){ de$solve(prob    ,de$Tsit5()) }})
 ```
 
-```{r, eval=false}
+```{r, eval=F}
 system.time({ for (i in 1:100){ de$solve(fastprob,de$Tsit5()) }})
 ```
 
-```{r, eval=false}
+```{r, eval=F}
 system.time({ for (i in 1:100){ de$solve(prob3   ,de$Tsit5()) }})
 ```
 
@@ -571,7 +570,7 @@ On utilise deux fonctions `f` et `g`, où `du = f(u,t)dt + g(u,t)dW_t`
 
 ## Résolution d'une SDE
 
-```{r, eval=false}
+```{r, eval=F}
 f <- function(u,p,t) {
   du1 = p[1]*(u[2]-u[1])
   du2 = u[1]*(p[2]-u[3]) - u[2]
@@ -597,7 +596,7 @@ plotly::plot_ly(udf, x = ~V1, y = ~V2, z = ~V3, type = 'scatter3d', mode = 'line
 
 ### Version avec `desolve` 
 
-```{r, eval=false}
+```{r, eval=F}
 library(deSolve)
 Lorenz <- function(t, state, parameters) {
   with(as.list(c(state, parameters)), {
@@ -619,18 +618,18 @@ lorenz_solve <- function (i){
   out <- ode(y = state, times = times, func = Lorenz, parms = parameters)
 }
 ```
-```{r, eval=false}
+```{r, eval=F}
 system.time({ lapply(1:1000,lorenz_solve) })
 ```
 
-```{r, eval=false}
+```{r, eval=F}
 prob_func <- function (prob,i,rep){
   de$remake(prob,u0=runif(3)*u0,p=runif(3)*p)
 }
 ensembleprob = de$EnsembleProblem(fastprob, prob_func = prob_func, safetycopy=FALSE)
 ```
 
-```{r, eval=false}
+```{r, eval=F}
 system.time({ de$solve(ensembleprob,de$Tsit5(),de$EnsembleSerial(),trajectories=1000,saveat=0.01) })
 
 ```
