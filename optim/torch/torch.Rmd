@@ -24,6 +24,47 @@ Cependant, il faut peut-être installer/réinstaller des dépendances mal géré
 
 Sur le site, des exemples d'application sont présentés avec le dataset mnist. Pour l'instant, il semble que le package soit encore en développement et les datasets mnist ne sont pas présents dans la branchemaster du dépôt.
 
+### Exemple
+
+On définit une chaîne de tenseurs :
+
+$$X_1 =
+\left(\begin{array}{cc} 
+1 & 1\\
+1 & 1
+\end{array}\right) $$
+
+$$X_2 = 1.1$$
+
+$$ Y = (X_2 + 2) X_1$$
+
+$$Z = 3 Y^2$$
+
+$$f(X_1, X_2) = \bar{Z} = \frac{1}{4} \sum Z_{ij}$$
+
+```{r}
+library(torch)
+x1 <- torch_ones(2,2, requires_grad = TRUE)
+x2 <- torch_tensor(1.1, requires_grad = TRUE)
+y <- x1 * (x2 + 2)
+y$retain_grad()
+z <- y$pow(2) * 3
+z$retain_grad()
+out <- z$mean()
+out
+```
+
+Calcul de $$\frac{\partial f}{\partial Z}, \frac{\partial f}{\partial Y}, \frac{\partial f}{\partial X_2}, \frac{\partial f}{\partial X_1}$$
+
+```{r}
+out$backward()
+z$grad
+y$grad
+x2$grad
+x1$grad
+```
+
+
 ## Le package R rTorch
 La librairie de deep learning PyTorch (https://pytorch.org) sous Python est très populaire. Le package rTorch est un package R qui fait l'interface entre R et PyTorch.
 
