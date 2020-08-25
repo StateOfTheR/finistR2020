@@ -71,7 +71,7 @@ params <- c(a = 1)
 y0     <- c(1)
 times  <- seq(0, 1, by = 0.01)
 PD     <- matrix(0, nrow = 1, ncol = 1)
-out    <- ode(y0, times, model, parms = params, jacfun = jac)
+out_atome <- ode(y0, times, model, parms = params, jacfun = jac)
 ```
 
 Le résultat est une matrice:
@@ -82,7 +82,7 @@ On peut vérifier que la solution numérique (en bleu) est confondue avec la sol
 
 ```{r}
 plot_data <-
-  data.frame(out) %>%
+  data.frame(out_atome) %>%
   rename(numeric = X1) %>%
   mutate(analytic = exp(-time)) %>%
   pivot_longer(cols = -time,
@@ -101,7 +101,7 @@ ggplot(plot_data, aes(x = time, y = y, color = type)) +
 On peut diagnostiquer la réussite de l'intégration numérique via la commande `diagnostics`
 
 ```{r}
-diagnostics(out)
+diagnostics(out_atome)
 ```
 
 ### EDO classique: le modèle SIR
@@ -324,7 +324,7 @@ state         <- c(APHIDS = APHIDS)
 
 on peut alors laisser la densité évoluer sur 200 jours avec un rendu par jour:
 ```{r}
-out <- ode.1D(state, times = 0:200, Aphid, parms = params,
+out_aphide <- ode.1D(state, times = 0:200, Aphid, parms = params,
               nspec = 1, names = "Aphid")
 ```
 
@@ -332,7 +332,7 @@ Le résultat est comme auparavant une matrice avec la première colonne pour le 
 
 On peut utiliser ce résultat pour voir la diffusion des aphides dans les plantes au cours du temps:
 ```{r}
-out %>%
+out_aphide %>%
   data.frame %>%
   pivot_longer(cols = -time,
                names_to = "location",
