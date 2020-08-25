@@ -17,9 +17,10 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Interactive tutorials with the learnr package
 
-The _learnr_ package to turn any R Markdown document into an interactive tutorial.The _gradethis_ package for "grading" student exercises in learnr tutorials.
+The _learnr_ package to turn any R Markdown document into an interactive tutorial.The _gradethis_ package for "grading" student exercises in learnr tutorials. The rstudio [primers](https://rstudio.cloud/learn/primers) constitute great examples of learnr tutorials. 
 
 ## Creating a Lesson Repo From Scratch using decampr
+
 Sources : 
 
 [decampr from_scratch] (https://laderast.github.io/decampr/articles/from_scratch.html)
@@ -29,16 +30,16 @@ Sources :
 install.packages("remotes")
 remotes::install_github("laderast/decampr")
 ```
+
 ```{r, eval =FALSE}
 library(decampr)
 library(usethis)
 decampr::create_course_repo()
 ```
 
-
 ## Créer un course sur la plateforme d'Ines Montani (mybinder.org et Netlify)
 
-Ines Montani has developed a course platform that runs R and python code on [Binder](mybinder.org), which turns a git repo into a collection of interactive notebooks. Binder allows you to create custom computing environments that can be shared and used by many remote users.
+Ines Montani has developed a course platform that runs R and Python code on [Binder](mybinder.org), which turns a git repo into a collection of interactive notebooks. Binder allows you to create custom computing environments that can be shared and used by many remote users.
 
 How does it work? It takes advantage of mybinder.org's ability to run R in a Docker container. The website itself is hosted on a service such as Netlify, which handles the lesson material, code submission, and displaying results. The code is submitted via JavaScript to the Docker container and results (such as data.frames and ggplot2 figures) are returned to the user on a webpage.
 The course repository works with two components: Gatsby (front-end), and Binder (back-end). 
@@ -71,21 +72,28 @@ Pros :
 
 On commence par installer Gasby, générateur de site web ainsi que ses autres dépendances avant de lancer le serveur, qui sera sur localhost:8000.
 
-A noter qu'il est nécessaire d'avoir Node.js installé au préalable.
+A noter qu'il est nécessaire d'avoir Node.js installé au préalabl et que les versions disponibles par défaut dans les dépôts apt sont obsolètes (8.5.x). Sous Ubuntu 18.04 LTS, on peut installer des versions récentes de NodeJS et npm (NodeJS Package Manager) via les commandes suivantes:
+```{bash}
+# Using Ubuntu
+curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+sudo apt-get install -y nodejs
+```
 
-Pour verifier cela ainsi que les versions : 
+On peut vérifier que l'installation s'est bien passée et que les numéros de version sont les bons via: 
 ```{bash verif_versions}
 node -v # Besoin d'une version > 10.15
 npm -v
 ```
+
+On peut construire le site en local via:
 
 ```{bash for_local_server, eval = FALSE}
 sudo npm install -g gatsby-cli  # Install Gatsby globally
 npm install                # Install dependencies
 npm run dev                # Run the development server
 ```
-A noter que npm notice crée un fichier package-lock.json qu'il faut copier à la place de celui présent à la racine du répertoire.
 
+A noter que npm notice crée un fichier package-lock.json qu'il faut copier à la place de celui présent à la racine du répertoire. Sous ubuntu 18.04 LTS, la dernière commande ne permet pas de générer le site web... (mais Julie a réussi sur son Mac) 
 
 ### La structure du répertoire
 
@@ -105,12 +113,13 @@ install.packages("rjson")
 ```
 et un fichier runtime.txt qui ressemble `r-2019-04-10`.
 
-### Le déploiement du site web
+## Déployer le cours sur un site web avec binder
 
-### Remarque
+### Remarque (pour le framework d'Inès Montani)
 
 One note on the Docker container, that is built on mybinder.org: while the install.R method works, we recommend building on existing work through using a Dockerfile.
 
+### Alternative (tutoriaux distribués via un package)
 
 
 
