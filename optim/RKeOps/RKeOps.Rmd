@@ -1,6 +1,6 @@
 ---
 title: "RKeOps"
-author: "P. Neuvial"
+author: "P. Neuvial for finistR2020"
 date: "24/08/2020"
 output: html_document
 ---
@@ -19,7 +19,15 @@ Sources:
 
 [KeOps](http://www.kernel-operations.io/) stands for "Kernel Operations". [RKeOps](https://cran.r-project.org/package=rkeops) is an R package interfacing the KeOps library. 
 
-The main motivation behind KeOps is the need to compute fast and scalable Gaussian convolutions (**RBF kernel products**). For **very large values** of $M$and $N$, given :
+Kernels are widely used in Statistics and Learning:
+
+- Kernel density estimation
+- Classification/Regression: SVM, K-NN, etc...
+- Kernel embeddings to compare distributions 
+- Interpolation and Kriging
+- Optimal Transport
+
+The main motivation behind KeOps is the need to compute fast and scalable kernel operations such as Gaussian convolutions (**RBF kernel products**). For **very large values** of $M$and $N$, given :
 
 - a **target** point cloud $(x_i)_{i=1}^M \in  \mathbb R^{M \times D}$,
 - a **source** point cloud $(y_j)_{j=1}^N \in  \mathbb R^{N \times D}$,
@@ -46,14 +54,6 @@ without having to code
 the formula $\partial_x K(x_i,y_j) = -\tfrac{1}{\sigma^2}(x_i - y_j) \exp(-\|x_i - y_j\|^2 / 2 \sigma^2)$!
 
 
-Performing such calculations is useful because kernels are widely used in Statistics and Learning:
-
-- Kernel density estimation
-- Classification/Regression: SVM, K-NN, etc...
-- Kernel embeddings to compare distributions 
-- Interpolation and Kriging
-- Optimal Transport
-
 ### Scalability
 
 KeOps combines online map-reduce schemes with GPU to obtain high performance for large matrices.
@@ -64,21 +64,21 @@ Reference: [Installation page](https://www.kernel-operations.io/keops/R/using_rk
 
 *The package is only available from UNIX-type platforms*
 
-Installation (on my Mac) requires [`cmake`](https://cmake.org/). The [`cmake` download page](https://cmake.org/download) provides a GUI (CMake.app), so I used:
+Installation requires [`cmake`](https://cmake.org/). 
+
+To install `cmake` on a Mac one can use:
 
 ```
 brew install cmake
 ```
 
-Then one can run
+Then the `rkeops` package can be installed from CRAN:
 
 ```{r install, eval=FALSE}
 if (!require("rkeops")) {
     install.packages("rkeops")
 }
 ```
-
-successfully. 
 
 
 
@@ -102,7 +102,7 @@ args = c("x = Vi(3)",      # vector indexed by i (of dim 3)
 
 So far, so good but at the compilation step I get an error with `cmake`:
 
-```
+```{r eval=FALSE}
 # compilation
 > op <- keops_kernel(formula, args)
 Compiling headersb72ec1124da8340d0118a99af in /Users/pneuvial/Library/R/4.0/library/rkeops:
@@ -141,9 +141,9 @@ The next step (provided that compilation worked above) will be:
 # computation (order of the input arguments should be similar to `args`)
 res <- op(list(X, Y, B, s))
 res
-
 ```
 
+Note: Julien and Saint-Clair got this to work well on linux (using CPU and not GPU).
 
 ## Session information
 
