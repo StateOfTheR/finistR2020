@@ -1,6 +1,6 @@
 ---
 title: "RKeOps"
-author: "P. Neuvial"
+author: "P. Neuvial for finistR2020"
 date: "24/08/2020"
 output: html_document
 ---
@@ -72,7 +72,7 @@ To install `cmake` on a Mac one can use:
 brew install cmake
 ```
 
-Then the package can be installed from CRAN:
+Then the `rkeops` package can be installed from CRAN:
 
 ```{r install, eval=FALSE}
 if (!require("rkeops")) {
@@ -102,7 +102,7 @@ args = c("x = Vi(3)",      # vector indexed by i (of dim 3)
 
 So far, so good but at the compilation step I get an error with `cmake`:
 
-```
+```{r eval=FALSE}
 # compilation
 > op <- keops_kernel(formula, args)
 Compiling headersb72ec1124da8340d0118a99af in /Users/pneuvial/Library/R/4.0/library/rkeops:

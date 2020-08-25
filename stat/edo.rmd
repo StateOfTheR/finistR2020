@@ -448,13 +448,13 @@ matplot(sol$t,udf,"l",col=1:3)
 ![timeseries](https://user-images.githubusercontent.com/1814174/39012314-ef7a8fe2-43c8-11e8-9dde-1a8b87d3cfa4.png)
 
 
-```{r}
+```{r, eval = FALSE}
 plotly::plot_ly(udf, x = ~V1, y = ~V2, z = ~V3, type = 'scatter3d', mode = 'lines')
 ```
 
 ![plotly_plot](https://user-images.githubusercontent.com/1814174/39012384-27ee7262-43c9-11e8-84d2-1edf937288ae.png)
 
-```{r}
+```{r, eval = FALSE}
 abstol <- 1e-8
 reltol <- 1e-8
 saveat <- 0:10000/100
@@ -471,7 +471,7 @@ plotly::plot_ly(udf, x = ~V1, y = ~V2, z = ~V3, type = 'scatter3d', mode = 'line
 
 On utilise deux fonctions `f` et `g`, où `du = f(u,t)dt + g(u,t)dW_t`
 
-```{r}
+```{r, eval = FALSE}
 de <- diffeqr::diffeq_setup()
 f <- function(u,p,t) {
   return(1.01*u)
