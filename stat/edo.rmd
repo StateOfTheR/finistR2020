@@ -1,0 +1,523 @@
+---
+title: "Équations différentielles avec R"
+author: "Atelier EDO"
+date: "25/08/2020"
+output: html_document
+---
+
+# Differential Equations
+
+## CRAN Task View
+
+Le CRAN propose une [Task View](https://cran.r-project.org/web/views/DifferentialEquations.html) sur les équations différentielles. 
+
+Une équation différentielle est une équation entre une ou plusieurs fonctions inconnues et leurs dérivées. Cette équation décrit comment une fonction varie en fonction d'une ou de plusieurs variables (souvent le temps ou l'espace) et en fonction des dérivées de cette fonction.  
+Il y différentes facon de classifier les équations différentielles : 
+- les équations peuvent être stochastique (la quantité inconue est aléatoire) ou déterministe (la quantité inconnue est déterministe).
+- les équations peuvent porter sur des fonctions à une seule variable (équation différentielle ordinaire) ou à plusieurs variables (équation aux dérivées partielles).
+- les équations peuvent inclure des fonctions dont la dérivée a un certain pas de temps dépend de la dérivée à un pas de temps précédent (équation différentielle à retard ou differential equations delay), ou alors des fonctions algébriques (i.e. il existe une ou plusieurs relations algébriques entre les variables du système - équation différentielle algébrique).
+- les contraintes peuvent être posées sur tout ou partie du domaine ou sur tout ou partie de la frontière. Ces contraintes peuvent être de plusieurs types : on peut spécifier les valeurs que la fonction doit prendre sur tout ou partie de la frontière du modèle (condition de Dirichlet), les valeurs que la dérivée de la fonction doit prendre sur tout ou partie du domaine (condition de Neumann), etc. 
+
+Il existe plusieurs packages R permettant de résoudre ces équations et d'ajuster ces modèles à de la donnée. Ici, seuls les package deSolve et diffeqr sont utilisés pour résoudre des ED.
+
+## Résolution numérique d'EDO et d'EDP
+
+Le package [`deSolve`](https://cran.r-project.org/web/packages/deSolve/) permet de résoudre numériquement des équations simples. 
+
+### Installation et chargement 
+
+```{r, eval = FALSE}
+install.packages("deSolve")
+```
+
+```{r}
+library(tidyverse)
+library(GGally)
+library(deSolve)
+```
+
+### EDO simple: la désintégration atomique
+
+On cherche à résoudre $y' = ay$ avec condition initiale $y(0) = y_0$. On commence par coder l'équation différentielle: 
+- `t` représente le temps courant 
+- `Y` représente l'état courant du système 
+- `parameters` stocke les paramètres du modèle (ici $a$)
+
+```{r}
+model <- function(t, Y, parameters) {
+    with(as.list(parameters), {
+        dy = -a*Y
+        list(dy)
+    })
+}
+```
+
+On renseigne ensuite la jacobienne $\frac{\partial y'}{\partial y}$
+
+```{r}
+jac <- function(t, Y, parameters) {
+    with(as.list(parameters), {
+        PD[1,1] <- a
+        return(PD)
+    })
+}
+```
+
+On peut ensuite résoudre l'EDO pour $a = 1$ et $y_0 = 1$ sur l'intervalle $[0, 1]$ des pas de temps de longeur $0.01$ comme suit:
+```{r}
+params <- c(a = 1)
+y0     <- c(1)
+times  <- seq(0, 1, by = 0.01)
+PD     <- matrix(0, nrow = 1, ncol = 1)
+out    <- ode(y0, times, model, parms = params, jacfun = jac)
+```
+
+Le résultat est une matrice:
+- une colonne pour le temps (reprend les valeurs de `times`)
+- une colonne par dimension dans le système d'équations différentielles
+
+On peut vérifier que la solution numérique (en bleu) est confondue avec la solution analytique (en rouge). 
+
+```{r}
+plot_data <- data.frame(out) %>% 
+    rename(numeric = X1) %>% 
+    mutate(analytic = exp(-time)) %>% 
+    pivot_longer(cols = -time, names_to = "type", values_to = "y")
+ggplot(plot_data, aes(x = time, y = y, color = type)) + 
+    geom_line() + 
+    ylim(0, 1) + 
+    theme(legend.position = c(0.95, 0.95), 
+          legend.justification = c(1, 1), 
+          legend.background = element_rect(fill = NA))
+```
+
+`ode` utilise la méthode de Runge-Kutta pour calculer $y(t)$ et renvoie uniquement les valeurs $y(0), y(0.01), \dots, y(1)$ mais fait néanmoins appel à des points intérmédiaires lors du calcul. On peut s'en convaincre en comparant les valeurs finales ($y(1)$) obtenues avec `times = seq(0, 1, by = 0.01)` et `times = seq(0, 1, by = 1)`. 
+
+On peut diagnostiquer la réussite de l'intégration numérique via la commande `diagnostics`
+
+```{r}
+diagnostics(out)
+```
+
+### EDO classique: le modèle SIR
+
+Source <https://kinglab.eeb.lsa.umich.edu/480/nls/de.html>
+Nous considérons le modèle différentiel classique en épidémiologie. 
+
+```{r}
+# Define differential System
+closed.sir.model <- function (t, state, parameters) {
+  ## first extract the state variables
+  S <- state[1]
+  I <- state[2]
+  R <- state[3]
+  ## now extract the parameters
+  beta <- parameters[1]
+  gamma <- parameters[2]
+  N <- S + I + R
+  ## now code the model equations
+  dSdt <- -beta * S * I/N
+  dIdt <- beta * S * I/N - gamma * I
+  dRdt <- gamma * I
+  ## combine results into a single vector
+  dxdt <- c(dSdt,dIdt,dRdt)
+  ## return result as a list!
+  list(dxdt)
+}
+```
+
+Define parameters and times of evaluation
+
+```{r}
+parms <- c(beta = 400,gamma =  365/13)
+# times stamps
+times <- seq(from = 0,to = 60/365,by = 1/365/4)
+# initial conditions
+xstart <- c(S = 999,I = 1,R = 0)
+```
+
+Solving with ODE 
+```{r}
+out <-
+  ode(func = closed.sir.model,
+      y = xstart,
+      times = times,
+      parms = parms,
+      method = 'lsodar') %>%
+  as.data.frame()
+```
+And plot
+```{r}
+out %>%
+  gather(variable,value,-time) %>%
+  ggplot(aes(x = time,y = value,color = variable)) +
+  geom_line(size = 2) +
+  theme_classic() +
+  labs(x = 'time (yr)',y = 'number of individuals')
+```
+
+### EDO classique: Modèle de Lorenz
+
+Il s'agit d'une modélisation idéalisée de l'atmosphère. X, Y et Z représentent respectivement les variations verticale et horizontale de la température et le flux de convection.
+
+$$
+\left\{
+\begin{align}
+X' &= aX + YZ \\
+Y' &= b(Y-Z) \\
+Z' &= -XY + cY -Z \\
+\end{align}
+\right.
+$$
+
+```{r}
+times <- seq(0, 100, by = 0.01)
+
+a <- -8/3
+b <- -10
+c <- 28
+
+lorenz <- function(t, y, parms) {
+  with(as.list(y), {
+    dX <- a * X + Y * Z
+    dY <- b * (Y - Z)
+    dZ <- -X * Y + c * Y - Z
+    list(c(dX, dY, dZ))
+  })
+}
+
+out_lorenz <- ode(y = c(X = 1, Y = 1, Z = 1), times = times, func = lorenz, parms = NULL)
+
+df_lorenz <-
+  out_lorenz %>%
+  as_tibble() %>%
+  mutate_all(as.numeric) 
+  
+df_lorenz
+  
+library(GGally)
+
+ggpairs(df_lorenz, 
+        lower = list(continuous = wrap("points", size = 0.1)))
+```
+
+### EDO classique: Réaction de Belousov-Zhabotinskii
+
+Il s'agit d'une récation chimique exhibant des motifs périodiques.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/PpyKSRo8Iec" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+$$
+\begin{align}
+A+B \xrightarrow{k_A} 2A \\
+B+C \xrightarrow{k_B} 2B \\
+C+A \xrightarrow{k_C} 2C \\
+\end{align}
+$$
+
+$$
+\left\{
+\begin{align}
+\partial_t n_A = n_A (k_A n_B - k_C n_C) \\
+\partial_t n_B = n_B (k_B n_C - k_A n_A) \\
+\partial_t n_C = n_C (k_C n_A - k_B n_B) \\
+\end{align}
+\right.
+$$
+
+```{r}
+times <- seq(0, 30, by = 0.01)
+
+k_A <- 1
+k_B <- 1
+k_C <- 2
+
+bz <- function(t, y, params) {
+  with(as.list(y), {
+    dA <- A * (k_A * B - k_C * C)
+    dB <- B * (k_B * C - k_A * A)
+    dC <- C * (k_C * A - k_B * B)
+    list(c(dA, dB, dC))
+  })
+}
+
+out_bz <- ode(y = c(A = 0.6, B = 0.6, C = 0.3), times = times, func = bz, parms = NULL)
+
+out_bz %>%
+  as_tibble() %>%
+  mutate_all(as.numeric) %>%
+  pivot_longer(-time, names_to = "variable", values_to = "value") %>%
+  ggplot() +
+  aes(x = time, y = value, color = variable) +
+  geom_line()
+```
+
+### EDP classique
+
+La résolution d'EDP est plus complexe et consiste à transformer les EDPs en EDOs en utilisant la méthode des différences finies. 
+
+On illustre la démarche sur un modèle de diffusion de pestes (des aphides) sur une rangée de plantes positionnées entre $x = 0$ et $x = 60$.
+
+$$
+\frac{\partial N}{\partial t} = - \frac{\partial F}{\partial x} + g \times N
+$$
+
+où le flux diffusif est donné par $F = -D \frac{\partial N}{\partial x}$ et les contraintes stipulent que la densité d'aphides tombe à $0$ aux deux bouts de la rangée de plantes: $\forall t \geq 0, N(x=0, t) = N(x=60, t) = 0$. 
+
+Au temps initial, les aphides ne sont présentes qu'au milieu de la rangée de plantes: 
+$$
+N(x, t = 0) = \begin{cases} 1 & \text{if} \quad x = 30 \\ 0 & \text{else} \end{cases}
+$$
+
+La méthodes des différences finies consiste à diviser le domaine en boîtes et à discrétiser l'équation comme suit
+$$
+\frac{dN_i}{dt} = - \frac{F_{i, i+1} - F_{i-1, i}}{\Delta x_i} + g\times N_i
+$$
+où $N_i$ représente la densité d'aphide au milieu de la boîte tandis que les flux sont définies aux interfaces entre boîtes:
+$$
+F_{i-1, i} = -D_{i, i-1} \times \frac{N_i - N_{i-1}}{\Delta x_{i-1, i}}
+$$
+pour se ramener à un système d'EDOs. 
+
+On commence par définir les équations du modèle
+
+```{r}
+Aphid <- function(t, APHIDS, parameters) {
+    with(as.list(parameters), {
+         ## taille des boîtes
+         deltax     <- c (0.5, rep(1, numboxes - 1), 0.5)
+         ## valeurs du flux aux interfaces
+         Flux       <- -D * diff(c(0, APHIDS, 0)) / deltax
+         ## valeurs des dérivées
+         dAPHIDS    <- -diff(Flux) / delx + APHIDS * r
+     
+         # the return value
+         list(dAPHIDS)
+    })
+}
+```
+
+puis les paramètres du modèle et de la grille de discretisation:
+
+```{r}
+params <- list(
+    D         <- 0.3,    # m2/day  diffusion rate
+    r         <- 0.01,   # /day    net growth rate
+    delx      <- 1,      # m       thickness of boxes
+    numboxes  <- 60,
+    # distance of boxes on plant, m, 1 m intervals
+    Distance  <- seq(from = 0.5, by = delx, length.out = numboxes)
+)
+```
+
+et enfin les conditions intiales
+```{r}
+# Initial conditions:  # ind/m2
+APHIDS        <- rep(0, times = numboxes)
+APHIDS[30:31] <- 1
+# initialise state variables
+state         <- c(APHIDS = APHIDS)      
+```
+
+on peut alors laisser la densité évoluer sur 200 jours avec un rendu par jour:
+```{r}
+out <- ode.1D(state, times = 0:200, Aphid, parms = params, 
+              nspec = 1, names = "Aphid")
+```
+
+Le résultat est comme auparavant une matrice avec la première colonne pour le temps et une colonne par EDO dans la discrétisation. 
+
+On peut utiliser ce résultat pour voir la diffusion des aphides dans les plantes au cours du temps:
+```{r}
+out %>% 
+  data.frame %>% 
+  pivot_longer(cols = -time, 
+               names_to = "location", 
+               names_pattern = "APHIDS(.*)", 
+               values_to = "density") %>% 
+  mutate(location = as.integer(location)) %>% 
+  ggplot(aes(x = time, y = location, fill = density)) +
+  geom_tile() + 
+  scale_fill_viridis_c()
+```
+
+### Equation différentielle à retard
+
+Cet exemple est tiré du document : https://cran.r-project.org/web/packages/deSolve/vignettes/deSolve.pdf . 
+
+Le modèle de flemming 
+```{r}
+# DDE function
+derivs <- function(t, y, parms) {
+    if (t < 0) {
+        lag <- 19
+    } else {
+        lag <- lagvalue(t - 0.74)
+    } 
+    dy <- r * y * (1 - lag/m)
+    list(dy, dy = dy)
+}
+
+# parameters
+r <- 3.5; m <- 19
+
+# initial values and times
+yinit <- c(y = 19.001)
+times <- seq(-0.74, 40, by = 0.01)
+
+yout <- dede(y = yinit, times = times, func = derivs,
+    parms = NULL, atol = 1e-10)
+
+plot(yout, which = 1, type = "l", lwd = 2,
+    main = "Lemming model", mfrow = c(1,2))
+    
+plot(yout[,2], yout[,3], xlab = "y", ylab = "dy", type = "l", lwd = 2)
+
+
+```
+
+## Estimating parameters
+
+## What else ?
+
+
+## diffeqr
+
+Il s'agit d'une interface R pour utiliser le package Julia [DifferentialEquations.jl](https://diffeq.sciml.ai/dev/)
+
+Sites du package sur le [CRAN](https://CRAN.R-project.org/package=diffeqr) et sur [GitHub](https://github.com/SciML)
+
+### Installation
+
+Pour l'utiliser il faut installer Julia, en le téléchargeant [ici](https://julialang.org/downloads/)
+
+```{r, eval = FALSE}
+install.packages("JuliaCall")
+JuliaCall::julia_setup(rebuild=T)
+install.packages("diffeqr")
+```
+
+### Modèle de Lorenz
+
+L'installation des packages Julia peut prendre du temps:
+
+```{r, eval = FALSE}
+de <- diffeqr::diffeq_setup()
+```
+
+Définition de la dérivée
+
+```{r, eval = FALSE}
+f <- function(u,p,t) {
+  du1 = p[1]*(u[2]-u[1])
+  du2 = u[1]*(p[2]-u[3]) - u[2]
+  du3 = u[1]*u[2] - p[3]*u[3]
+  return(c(du1,du2,du3))
+}
+```
+
+Les paramètres sont contenus dans un vecteur `p`. On appelle la fonction `diffeqr::ode.solve` pour résoudre le système:
+
+```{r, eval = FALSE}
+u0 <- c(1.0,0.0,0.0)
+tspan <- c(0.0,100.0)
+p <- c(10.0,28.0,8/3)
+prob <- de$ODEProblem(f, u0, tspan, p)
+sol <- de$solve(prob)
+```
+
+Les méthodes numériques pour la résolution sont très nombreuses. Elles vont dépendre de vos objectifs <https://diffeq.sciml.ai/stable/basics/compatibility_chart/#Solver-Compatibility-Chart>
+
+La solution `sol$u` est une liste de vecteurs,
+et `sol$u[i]` est le vecteur u[i] au temps `sol$t[i]`. On peut le transformer en matrice R avec `sapply`:
+
+```{r, eval = FALSE}
+mat <- sapply(sol$u,identity)
+```
+
+Chaque ligne est une série temporelle. 
+Transformation en data.frame
+
+```{r, eval = FALSE}
+udf <- as.data.frame(t(mat))
+```
+
+```{r, eval = FALSE}
+matplot(sol$t,udf,"l",col=1:3)
+```
+
+![timeseries](https://user-images.githubusercontent.com/1814174/39012314-ef7a8fe2-43c8-11e8-9dde-1a8b87d3cfa4.png)
+
+
+```{r}
+plotly::plot_ly(udf, x = ~V1, y = ~V2, z = ~V3, type = 'scatter3d', mode = 'lines')
+```
+
+![plotly_plot](https://user-images.githubusercontent.com/1814174/39012384-27ee7262-43c9-11e8-84d2-1edf937288ae.png)
+
+```{r}
+abstol <- 1e-8
+reltol <- 1e-8
+saveat <- 0:10000/100
+sol <- de$solve(prob,abstol=abstol,reltol=reltol,saveat=saveat)
+udf <- as.data.frame(t(sapply(sol$u,identity)))
+plotly::plot_ly(udf, x = ~V1, y = ~V2, z = ~V3, type = 'scatter3d', mode = 'lines')
+```
+
+![precise_solution](https://user-images.githubusercontent.com/1814174/39012651-e03124e6-43c9-11e8-8496-bbee87987a37.png)
+
+
+### Stochastic Differential Equation (SDE) Examples
+
+
+On utilise deux fonctions `f` et `g`, où `du = f(u,t)dt + g(u,t)dW_t`
+
+```{r}
+de <- diffeqr::diffeq_setup()
+f <- function(u,p,t) {
+  return(1.01*u)
+}
+g <- function(u,p,t) {
+  return(0.87*u)
+}
+u0 <- 1/2
+tspan <- c(0.0,1.0)
+prob <- de$SDEProblem(f,g,u0,tspan)
+sol <- de$solve(prob)
+udf <- as.data.frame(t(sapply(sol$u,identity)))
+plotly::plot_ly(udf, x = sol$t, y = sol$u, type = 'scatter', mode = 'lines')
+```
+
+![geometric_sdes](https://user-images.githubusercontent.com/1814174/39020683-9ea22b56-43e2-11e8-97f5-0c2a3ea69a2e.png)
+
+
+## Estimation des paramètres 
+
+On chercher mainenant à estimer les paramètres structurels d'un système diférentiel à partir d'observations bruitées. On l'applique sur le SIR. 
+
+Utiliser une méthode des moindres carrés habituelles est rendue compliquée par le fait que la fonction de régression $f$ est solution d'une quat diff donc n'a pas de solution explicite. De plus, chaque évaluation de la fonction (par un schéma numérique) est couteux d'un point de vue computationnel. 
+
+Une autre approche est d'exprimer $f$ dans une base (spline par exemple), cette fonction devra d'une part s'ajuster aux donnnées et d'autre part être solution du système (qui est introduit comme une pénalité). 
+Cette méthode qui date de 2007, est implémentée dans le package `pcode`
+La méthode est décrite dans la vignette du pacakge. 
+<https://cran.r-project.org/web/packages/pCODE/vignettes/pcode-vignette.html>
+
+
+```{r}
+library(fda)
+#" basis list
+knots <- seq(0,max(times),length.out=21)
+#order of basis functions
+norder <- 4
+#number of basis funtions
+nbasis <- length(knots) + norder - 2
+#creating Bspline basis
+basis_dim1  <- create.bspline.basis(c(0,max(times)),nbasis,norder,breaks = knots)
+basis = list(basis_dim1,basis_dim1,basis_dim1)
+```
+
+## Jeton de reproductilité
+
+```{r session-information}
+sessionInfo()
+```
