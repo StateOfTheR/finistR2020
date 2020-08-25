@@ -26,11 +26,11 @@ Le package [`deSolve`](https://cran.r-project.org/web/packages/deSolve/) permet 
 
 ### Installation et chargement 
 
-```r, eval = FALSE
+```{r, eval = FALSE}
 install.packages("deSolve")
 ```
 
-```r
+```{r}
 library(tidyverse)
 library(GGally)
 library(deSolve)
@@ -43,7 +43,7 @@ On cherche à résoudre $y' = ay$ avec condition initiale $y(0) = y_0$. On comme
 - `Y` représente l'état courant du système 
 - `parameters` stocke les paramètres du modèle (ici $a$)
 
-```r
+```{r}
 model <- function(t, Y, parameters) {
     with(as.list(parameters), {
         dy = -a*Y
@@ -54,7 +54,7 @@ model <- function(t, Y, parameters) {
 
 On renseigne ensuite la jacobienne $\frac{\partial y'}{\partial y}$
 
-```r
+```{r}
 jac <- function(t, Y, parameters) {
     with(as.list(parameters), {
         PD[1,1] <- a
@@ -64,7 +64,7 @@ jac <- function(t, Y, parameters) {
 ```
 
 On peut ensuite résoudre l'EDO pour $a = 1$ et $y_0 = 1$ sur l'intervalle $[0, 1]$ des pas de temps de longeur $0.01$ comme suit:
-```r
+```{r}
 params <- c(a = 1)
 y0     <- c(1)
 times  <- seq(0, 1, by = 0.01)
@@ -78,7 +78,7 @@ Le résultat est une matrice:
 
 On peut vérifier que la solution numérique (en bleu) est confondue avec la solution analytique (en rouge). 
 
-```r
+```{r}
 plot_data <- data.frame(out) %>% 
     rename(numeric = X1) %>% 
     mutate(analytic = exp(-time)) %>% 
@@ -95,7 +95,7 @@ ggplot(plot_data, aes(x = time, y = y, color = type)) +
 
 On peut diagnostiquer la réussite de l'intégration numérique via la commande `diagnostics`
 
-```r
+```{r}
 diagnostics(out)
 ```
 
@@ -104,7 +104,7 @@ diagnostics(out)
 Source <https://kinglab.eeb.lsa.umich.edu/480/nls/de.html>
 Nous considérons le modèle différentiel classique en épidémiologie. 
 
-```r
+```{r}
 # Define differential System
 closed.sir.model <- function (t, state, parameters) {
   ## first extract the state variables
@@ -127,7 +127,8 @@ closed.sir.model <- function (t, state, parameters) {
 ```
 
 Define parameters and times of evaluation
-```r
+
+```{r}
 parms <- c(beta = 400,gamma =  365/13)
 # times stamps
 times <- seq(from = 0,to = 60/365,by = 1/365/4)
@@ -136,7 +137,7 @@ xstart <- c(S = 999,I = 1,R = 0)
 ```
 
 Solving with ODE 
-```r
+```{r}
 out <-
   ode(func = closed.sir.model,
       y = xstart,
@@ -146,7 +147,7 @@ out <-
   as.data.frame()
 ```
 And plot
-```r
+```{r}
 out %>%
   gather(variable,value,-time) %>%
   ggplot(aes(x = time,y = value,color = variable)) +
@@ -169,7 +170,7 @@ Z' &= -XY + cY -Z \\
 \right.
 $$
 
-```r
+```{r}
 times <- seq(0, 100, by = 0.01)
 
 a <- -8/3
@@ -224,7 +225,7 @@ $$
 \right.
 $$
 
-```r
+```{r}
 times <- seq(0, 30, by = 0.01)
 
 k_A <- 1
@@ -280,7 +281,7 @@ pour se ramener à un système d'EDOs.
 
 On commence par définir les équations du modèle
 
-```r
+```{r}
 Aphid <- function(t, APHIDS, parameters) {
     with(as.list(parameters), {
          ## taille des boîtes
@@ -298,7 +299,7 @@ Aphid <- function(t, APHIDS, parameters) {
 
 puis les paramètres du modèle et de la grille de discretisation:
 
-```r
+```{r}
 params <- list(
     D         <- 0.3,    # m2/day  diffusion rate
     r         <- 0.01,   # /day    net growth rate
@@ -310,7 +311,7 @@ params <- list(
 ```
 
 et enfin les conditions intiales
-```r
+```{r}
 # Initial conditions:  # ind/m2
 APHIDS        <- rep(0, times = numboxes)
 APHIDS[30:31] <- 1
@@ -319,7 +320,7 @@ state         <- c(APHIDS = APHIDS)
 ```
 
 on peut alors laisser la densité évoluer sur 200 jours avec un rendu par jour:
-```r
+```{r}
 out <- ode.1D(state, times = 0:200, Aphid, parms = params, 
               nspec = 1, names = "Aphid")
 ```
@@ -327,7 +328,7 @@ out <- ode.1D(state, times = 0:200, Aphid, parms = params,
 Le résultat est comme auparavant une matrice avec la première colonne pour le temps et une colonne par EDO dans la discrétisation. 
 
 On peut utiliser ce résultat pour voir la diffusion des aphides dans les plantes au cours du temps:
-```r
+```{r}
 out %>% 
   data.frame %>% 
   pivot_longer(cols = -time, 
@@ -345,7 +346,7 @@ out %>%
 Cet exemple est tiré du document : https://cran.r-project.org/web/packages/deSolve/vignettes/deSolve.pdf . 
 
 Le modèle de flemming 
-```r
+```{r}
 # DDE function
 derivs <- function(t, y, parms) {
     if (t < 0) {
@@ -390,7 +391,7 @@ Sites du package sur le [CRAN](https://CRAN.R-project.org/package=diffeqr) et su
 
 Pour l'utiliser il faut installer Julia, en le téléchargeant [ici](https://julialang.org/downloads/)
 
-```r
+```{r, eval = FALSE}
 install.packages("JuliaCall")
 JuliaCall::julia_setup(rebuild=T)
 install.packages("diffeqr")
@@ -400,13 +401,13 @@ install.packages("diffeqr")
 
 L'installation des packages Julia peut prendre du temps:
 
-```r
+```{r, eval = FALSE}
 de <- diffeqr::diffeq_setup()
 ```
 
 Définition de la dérivée
 
-```r
+```{r, eval = FALSE}
 f <- function(u,p,t) {
   du1 = p[1]*(u[2]-u[1])
   du2 = u[1]*(p[2]-u[3]) - u[2]
@@ -417,7 +418,7 @@ f <- function(u,p,t) {
 
 Les paramètres sont contenus dans un vecteur `p`. On appelle la fonction `diffeqr::ode.solve` pour résoudre le système:
 
-```r
+```{r, eval = FALSE}
 u0 <- c(1.0,0.0,0.0)
 tspan <- c(0.0,100.0)
 p <- c(10.0,28.0,8/3)
@@ -430,31 +431,31 @@ Les méthodes numériques pour la résolution sont très nombreuses. Elles vont 
 La solution `sol$u` est une liste de vecteurs,
 et `sol$u[i]` est le vecteur u[i] au temps `sol$t[i]`. On peut le transformer en matrice R avec `sapply`:
 
-```r
+```{r, eval = FALSE}
 mat <- sapply(sol$u,identity)
 ```
 
 Chaque ligne est une série temporelle. 
 Transformation en data.frame
 
-```r
+```{r, eval = FALSE}
 udf <- as.data.frame(t(mat))
 ```
 
-```r
+```{r, eval = FALSE}
 matplot(sol$t,udf,"l",col=1:3)
 ```
 
 ![timeseries](https://user-images.githubusercontent.com/1814174/39012314-ef7a8fe2-43c8-11e8-9dde-1a8b87d3cfa4.png)
 
 
-```r
+```{r}
 plotly::plot_ly(udf, x = ~V1, y = ~V2, z = ~V3, type = 'scatter3d', mode = 'lines')
 ```
 
 ![plotly_plot](https://user-images.githubusercontent.com/1814174/39012384-27ee7262-43c9-11e8-84d2-1edf937288ae.png)
 
-```r
+```{r}
 abstol <- 1e-8
 reltol <- 1e-8
 saveat <- 0:10000/100
@@ -471,7 +472,7 @@ plotly::plot_ly(udf, x = ~V1, y = ~V2, z = ~V3, type = 'scatter3d', mode = 'line
 
 On utilise deux fonctions `f` et `g`, où `du = f(u,t)dt + g(u,t)dW_t`
 
-```r
+```{r}
 de <- diffeqr::diffeq_setup()
 f <- function(u,p,t) {
   return(1.01*u)
@@ -502,7 +503,7 @@ La méthode est décrite dans la vignette du pacakge.
 <https://cran.r-project.org/web/packages/pCODE/vignettes/pcode-vignette.html>
 
 
-```R
+```{r}
 library(fda)
 #" basis list
 knots <- seq(0,max(times),length.out=21)
@@ -520,6 +521,3 @@ basis = list(basis_dim1,basis_dim1,basis_dim1)
 ```{r session-information}
 sessionInfo()
 ```
-
-
-
