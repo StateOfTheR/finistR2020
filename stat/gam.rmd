@@ -70,4 +70,6 @@ coef(Mods3)
   - [Site avec exemple](https://m-clark.github.io/generalized-additive-models), les données sont [ici](https://github.com/m-clark/generalized-additive-models/tree/master/data) 
   - [Livre de Simon Wood](https://b-ok.cc/book/2945925/6817d4)
   - [autre ref](http://environmentalcomputing.net/intro-to-gams/)
+  - [formation GAM en R](https://noamross.github.io/gams-in-r-course/)
+
 
