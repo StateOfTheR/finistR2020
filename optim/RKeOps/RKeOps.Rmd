@@ -54,10 +54,13 @@ without having to code
 the formula $\partial_x K(x_i,y_j) = -\tfrac{1}{\sigma^2}(x_i - y_j) \exp(-\|x_i - y_j\|^2 / 2 \sigma^2)$!
 
 
-### Scalability
+### One-slide summary
 
-KeOps combines online map-reduce schemes with GPU to obtain high performance for large matrices.
- 
+```{r fig-take-home, echo=FALSE}
+knitr::include_graphics("img/rkeops_take-home.png")
+```
+
+
 ## Installation
 
 Reference: [Installation page](https://www.kernel-operations.io/keops/R/using_rkeops.html)
