@@ -43,6 +43,7 @@ theme_set(theme_bw())
 ### EDO simple: la désintégration atomique
 
 On cherche à résoudre $y' = ay$ avec condition initiale $y(0) = y_0$. On commence par coder l'équation différentielle:
+
 - `t` représente le temps courant
 - `Y` représente l'état courant du système
 - `parameters` stocke les paramètres du modèle (ici $a$)
@@ -77,8 +78,14 @@ out_atome <- ode(y0, times, model, parms = params, jacfun = jac)
 ```
 
 Le résultat est une matrice:
+
 - une colonne pour le temps (reprend les valeurs de `times`)
 - une colonne par dimension dans le système d'équations différentielles
+
+```{r}
+head(out_atome)
+```
+
 
 On peut vérifier que la solution numérique (en bleu) est confondue avec la solution analytique (en rouge).
 
