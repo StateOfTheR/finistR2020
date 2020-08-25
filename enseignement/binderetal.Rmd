@@ -121,7 +121,12 @@ One note on the Docker container, that is built on mybinder.org: while the insta
 
 ### Alternative (tutoriaux distribués via un package)
 
+Si les tutoriaux sont ditribués comme recommandés par les auteurs de `learnr`, c'est à dire dans le dossier `inst/tutorials/` d'un package, on peut créer un binder très facilement via [mybinder.org](https://mybinder.org/) et déployer des serveurs Rstudio à la volée. 
 
+#### Points d'attention
+
+- Faire une branche `binder` pour éviter de reconstruire un binder à chaque commit "cosmétique"
+- 
 
 
 
