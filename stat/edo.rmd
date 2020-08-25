@@ -9,39 +9,40 @@ output: html_document
 
 ## CRAN Task View
 
-Le CRAN propose une [Task View](https://cran.r-project.org/web/views/DifferentialEquations.html) sur les équations différentielles. 
+Le CRAN propose une [Task View](https://cran.r-project.org/web/views/DifferentialEquations.html) sur les équations différentielles.
 
-Une équation différentielle est une équation entre une ou plusieurs fonctions inconnues et leurs dérivées. Cette équation décrit comment une fonction varie en fonction d'une ou de plusieurs variables (souvent le temps ou l'espace) et en fonction des dérivées de cette fonction.  
-Il y différentes facon de classifier les équations différentielles : 
+Une équation différentielle est une équation entre une ou plusieurs fonctions inconnues et leurs dérivées. Cette équation décrit comment une fonction varie en fonction d'une ou de plusieurs variables (souvent le temps ou l'espace) et en fonction des dérivées de cette fonction.
+Il y différentes facon de classifier les équations différentielles :
 - les équations peuvent être stochastique (la quantité inconue est aléatoire) ou déterministe (la quantité inconnue est déterministe).
 - les équations peuvent porter sur des fonctions à une seule variable (équation différentielle ordinaire) ou à plusieurs variables (équation aux dérivées partielles).
 - les équations peuvent inclure des fonctions dont la dérivée a un certain pas de temps dépend de la dérivée à un pas de temps précédent (équation différentielle à retard ou differential equations delay), ou alors des fonctions algébriques (i.e. il existe une ou plusieurs relations algébriques entre les variables du système - équation différentielle algébrique).
-- les contraintes peuvent être posées sur tout ou partie du domaine ou sur tout ou partie de la frontière. Ces contraintes peuvent être de plusieurs types : on peut spécifier les valeurs que la fonction doit prendre sur tout ou partie de la frontière du modèle (condition de Dirichlet), les valeurs que la dérivée de la fonction doit prendre sur tout ou partie du domaine (condition de Neumann), etc. 
+- les contraintes peuvent être posées sur tout ou partie du domaine ou sur tout ou partie de la frontière. Ces contraintes peuvent être de plusieurs types : on peut spécifier les valeurs que la fonction doit prendre sur tout ou partie de la frontière du modèle (condition de Dirichlet), les valeurs que la dérivée de la fonction doit prendre sur tout ou partie du domaine (condition de Neumann), etc.
 
 Il existe plusieurs packages R permettant de résoudre ces équations et d'ajuster ces modèles à de la donnée. Ici, seuls les package deSolve et diffeqr sont utilisés pour résoudre des ED.
 
 ## Résolution numérique d'EDO et d'EDP
 
-Le package [`deSolve`](https://cran.r-project.org/web/packages/deSolve/) permet de résoudre numériquement des équations simples. 
+Le package [`deSolve`](https://cran.r-project.org/web/packages/deSolve/) permet de résoudre numériquement des équations simples.
 
-### Installation et chargement 
+### Installation et chargement
 
 ```{r, eval = FALSE}
 install.packages("deSolve")
 ```
 
-```{r}
+```{r, message = FALSE}
 library(tidyverse)
 library(GGally)
 library(deSolve)
+library(fda)
 theme_set(theme_bw())
 ```
 
 ### EDO simple: la désintégration atomique
 
-On cherche à résoudre $y' = ay$ avec condition initiale $y(0) = y_0$. On commence par coder l'équation différentielle: 
-- `t` représente le temps courant 
-- `Y` représente l'état courant du système 
+On cherche à résoudre $y' = ay$ avec condition initiale $y(0) = y_0$. On commence par coder l'équation différentielle:
+- `t` représente le temps courant
+- `Y` représente l'état courant du système
 - `parameters` stocke les paramètres du modèle (ici $a$)
 
 ```{r}
@@ -77,10 +78,10 @@ Le résultat est une matrice:
 - une colonne pour le temps (reprend les valeurs de `times`)
 - une colonne par dimension dans le système d'équations différentielles
 
-On peut vérifier que la solution numérique (en bleu) est confondue avec la solution analytique (en rouge). 
+On peut vérifier que la solution numérique (en bleu) est confondue avec la solution analytique (en rouge).
 
 ```{r}
-plot_data <- 
+plot_data <-
   data.frame(out) %>%
   rename(numeric = X1) %>%
   mutate(analytic = exp(-time)) %>%
@@ -95,7 +96,7 @@ ggplot(plot_data, aes(x = time, y = y, color = type)) +
         legend.background = element_rect(fill = NA))
 ```
 
-`ode` utilise la méthode de Runge-Kutta pour calculer $y(t)$ et renvoie uniquement les valeurs $y(0), y(0.01), \dots, y(1)$ mais fait néanmoins appel à des points intérmédiaires lors du calcul. On peut s'en convaincre en comparant les valeurs finales ($y(1)$) obtenues avec `times = seq(0, 1, by = 0.01)` et `times = seq(0, 1, by = 1)`. 
+`ode` utilise la méthode de Runge-Kutta pour calculer $y(t)$ et renvoie uniquement les valeurs $y(0), y(0.01), \dots, y(1)$ mais fait néanmoins appel à des points intérmédiaires lors du calcul. On peut s'en convaincre en comparant les valeurs finales ($y(1)$) obtenues avec `times = seq(0, 1, by = 0.01)` et `times = seq(0, 1, by = 1)`.
 
 On peut diagnostiquer la réussite de l'intégration numérique via la commande `diagnostics`
 
@@ -106,7 +107,7 @@ diagnostics(out)
 ### EDO classique: le modèle SIR
 
 Source <https://kinglab.eeb.lsa.umich.edu/480/nls/de.html>
-Nous considérons le modèle différentiel classique en épidémiologie. 
+Nous considérons le modèle différentiel classique en épidémiologie.
 
 ```{r}
 # Define differential System
@@ -140,7 +141,7 @@ times <- seq(from = 0,to = 60/365,by = 1/365/4)
 xstart <- c(S = 999,I = 1,R = 0)
 ```
 
-Solving with ODE 
+Solving with ODE
 ```{r}
 out <-
   ode(func = closed.sir.model,
@@ -194,13 +195,13 @@ out_lorenz <- ode(y = c(X = 1, Y = 1, Z = 1), times = times, func = lorenz, parm
 df_lorenz <-
   out_lorenz %>%
   as_tibble() %>%
-  mutate_all(as.numeric) 
-  
+  mutate_all(as.numeric)
+
 df_lorenz
-  
+
 library(GGally)
 
-ggpairs(df_lorenz, 
+ggpairs(df_lorenz,
         lower = list(continuous = wrap("points", size = 0.1)))
 ```
 
@@ -257,7 +258,7 @@ out_bz %>%
 
 ### EDP classique
 
-La résolution d'EDP est plus complexe et consiste à transformer les EDPs en EDOs en utilisant la méthode des différences finies. 
+La résolution d'EDP est plus complexe et consiste à transformer les EDPs en EDOs en utilisant la méthode des différences finies.
 
 On illustre la démarche sur un modèle de diffusion de pestes (des aphides) sur une rangée de plantes positionnées entre $x = 0$ et $x = 60$.
 
@@ -265,9 +266,9 @@ $$
 \frac{\partial N}{\partial t} = - \frac{\partial F}{\partial x} + g \times N
 $$
 
-où le flux diffusif est donné par $F = -D \frac{\partial N}{\partial x}$ et les contraintes stipulent que la densité d'aphides tombe à $0$ aux deux bouts de la rangée de plantes: $\forall t \geq 0, N(x=0, t) = N(x=60, t) = 0$. 
+où le flux diffusif est donné par $F = -D \frac{\partial N}{\partial x}$ et les contraintes stipulent que la densité d'aphides tombe à $0$ aux deux bouts de la rangée de plantes: $\forall t \geq 0, N(x=0, t) = N(x=60, t) = 0$.
 
-Au temps initial, les aphides ne sont présentes qu'au milieu de la rangée de plantes: 
+Au temps initial, les aphides ne sont présentes qu'au milieu de la rangée de plantes:
 $$
 N(x, t = 0) = \begin{cases} 1 & \text{if} \quad x = 30 \\ 0 & \text{else} \end{cases}
 $$
@@ -280,7 +281,7 @@ où $N_i$ représente la densité d'aphide au milieu de la boîte tandis que les
 $$
 F_{i-1, i} = -D_{i, i-1} \times \frac{N_i - N_{i-1}}{\Delta x_{i-1, i}}
 $$
-pour se ramener à un système d'EDOs. 
+pour se ramener à un système d'EDOs.
 
 On commence par définir les équations du modèle
 
@@ -318,36 +319,36 @@ et enfin les conditions intiales
 APHIDS        <- rep(0, times = numboxes)
 APHIDS[30:31] <- 1
 # initialise state variables
-state         <- c(APHIDS = APHIDS)      
+state         <- c(APHIDS = APHIDS)
 ```
 
 on peut alors laisser la densité évoluer sur 200 jours avec un rendu par jour:
 ```{r}
-out <- ode.1D(state, times = 0:200, Aphid, parms = params, 
+out <- ode.1D(state, times = 0:200, Aphid, parms = params,
               nspec = 1, names = "Aphid")
 ```
 
-Le résultat est comme auparavant une matrice avec la première colonne pour le temps et une colonne par EDO dans la discrétisation. 
+Le résultat est comme auparavant une matrice avec la première colonne pour le temps et une colonne par EDO dans la discrétisation.
 
 On peut utiliser ce résultat pour voir la diffusion des aphides dans les plantes au cours du temps:
 ```{r}
-out %>% 
-  data.frame %>% 
-  pivot_longer(cols = -time, 
-               names_to = "location", 
-               names_pattern = "APHIDS(.*)", 
-               values_to = "density") %>% 
-  mutate(location = as.integer(location)) %>% 
+out %>%
+  data.frame %>%
+  pivot_longer(cols = -time,
+               names_to = "location",
+               names_pattern = "APHIDS(.*)",
+               values_to = "density") %>%
+  mutate(location = as.integer(location)) %>%
   ggplot(aes(x = time, y = location, fill = density)) +
-  geom_tile() + 
+  geom_tile() +
   scale_fill_viridis_c()
 ```
 
 ### Equation différentielle à retard
 
-Cet exemple est tiré du document : https://cran.r-project.org/web/packages/deSolve/vignettes/deSolve.pdf . 
+Cet exemple est tiré du document : https://cran.r-project.org/web/packages/deSolve/vignettes/deSolve.pdf .
 
-Le modèle de flemming 
+Le modèle de flemming
 ```{r}
 # DDE function
 derivs <- function(t, y, parms) {
@@ -371,9 +372,9 @@ yout <- dede(y = yinit, times = times, func = derivs,
              parms = NULL, atol = 1e-10)
 
 df_out <-
-  yout %>% 
-  as_tibble() %>% 
-  mutate_all(as.numeric) %>% 
+  yout %>%
+  as_tibble() %>%
+  mutate_all(as.numeric) %>%
   mutate(yend = lead(y), dy.yend = lead(dy.y))
 
 ggplot(df_out) +
@@ -444,7 +445,7 @@ et `sol$u[i]` est le vecteur u[i] au temps `sol$t[i]`. On peut le transformer en
 mat <- sapply(sol$u,identity)
 ```
 
-Chaque ligne est une série temporelle. 
+Chaque ligne est une série temporelle.
 Transformation en data.frame
 
 ```{r, eval = FALSE}
@@ -500,20 +501,35 @@ plotly::plot_ly(udf, x = sol$t, y = sol$u, type = 'scatter', mode = 'lines')
 ![geometric_sdes](https://user-images.githubusercontent.com/1814174/39020683-9ea22b56-43e2-11e8-97f5-0c2a3ea69a2e.png)
 
 
-## Estimation des paramètres 
+## Estimation des paramètres
 
-On chercher mainenant à estimer les paramètres structurels d'un système diférentiel à partir d'observations bruitées. On l'applique sur le SIR. 
-
-Utiliser une méthode des moindres carrés habituelles est rendue compliquée par le fait que la fonction de régression $f$ est solution d'une quat diff donc n'a pas de solution explicite. De plus, chaque évaluation de la fonction (par un schéma numérique) est couteux d'un point de vue computationnel. 
-
-Une autre approche est d'exprimer $f$ dans une base (spline par exemple), cette fonction devra d'une part s'ajuster aux donnnées et d'autre part être solution du système (qui est introduit comme une pénalité). 
-Cette méthode qui date de 2007, est implémentée dans le package `pcode`
-La méthode est décrite dans la vignette du pacakge. 
-<https://cran.r-project.org/web/packages/pCODE/vignettes/pcode-vignette.html>
-
+On chercher mainenant à estimer les paramètres structurels d'un système diférentiel à partir d'observations bruitées. On l'applique sur le SIR.
 
 ```{r}
-library(fda)
+sigma = 20
+noisy <- out;
+noisy$S  <- pmax(out$S  + rnorm(length(times),0,sigma),0)
+noisy$I  <- pmax(out$I  + rnorm(length(times),0,sigma),0)
+noisy$R  <- pmax(out$R  + rnorm(length(times),0,sigma),0)
+
+
+noisy %>%
+  gather(variable,value,-time) %>%
+  ggplot(aes(x = time,y = value,color = variable)) +
+  geom_point(size = 2) +
+  theme_classic() +
+  labs(x = 'time (yr)',y = 'number of individuals')
+
+observ <- noisy[,2:4]
+```
+
+Utiliser une méthode des moindres carrés habituelles est rendue compliquée par le fait que la fonction de régression $f$ est solution d'une quat diff donc n'a pas de solution explicite. De plus, chaque évaluation de la fonction (par un schéma numérique) est couteux d'un point de vue computationnel.
+
+Une autre approche est d'exprimer $f$ dans une base (spline par exemple), cette fonction devra d'une part s'ajuster aux donnnées et d'autre part être solution du système (qui est introduit comme une pénalité).
+Cette méthode qui date de 2007, est implémentée dans le package `pcode`
+La méthode est décrite dans la [vignette](https://cran.r-project.org/web/packages/pCODE/vignettes/pcode-vignette.html) du pacakge.
+
+```{r}
 #" basis list
 knots <- seq(0,max(times),length.out=21)
 #order of basis functions
