@@ -348,7 +348,10 @@ out_aphide %>%
 
 Cet exemple est tiré du document : https://cran.r-project.org/web/packages/deSolve/vignettes/deSolve.pdf .
 
-Le modèle de flemming
+Le modèle logistique est un modèle de dynamique de population simple dans lequel une population évolue jusqu'à atteindre un plateau suivant la fonction $x'(t)=r.x(t).[\frac{1-x(t)}{M}]$ (M est le nombre d'individus que peut suporter l'écosystème à l'équilibre). Le terme densité-dépendant $\frac{1-x(t)}{M}$ peut jouer sur l'écosystème avec un retard ce qui amène à écrire la EDR suivante : $x'(t)=r.x(t).[\frac{1-x(t - \tau)}{M}]$.
+
+Dans le cas d'une population de lemming, le lag est fixé à 9 mois (0.74 année), le temps de croissance d'un lemming jusqu'au stade adulte. Le paramètre r est fixé sur la base données expérimentales. Le paramètre M contrôlant la capacité biotique du milieu est fixé à 19.
+
 ```{r}
 # DDE function
 derivs <- function(t, y, parms) {
