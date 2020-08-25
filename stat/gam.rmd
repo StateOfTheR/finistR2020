@@ -9,6 +9,8 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+![img](img/GAM.jpg)
+
 ## Modèles additifs généralisés
 
 Un modèle additif généralisé est un GLM dans lequel le prédicteur linéaire fait intervenir une somme de fonctions régulières des covariables.
