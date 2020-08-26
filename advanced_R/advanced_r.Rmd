@@ -15,16 +15,17 @@ Les éléments de l'introduction proviennent du site d'aide de [dplyr](https://c
 
 L'évaluation tidy est un type d'évaluation utilisée dans tout le tidyverse. Les verbes dplyr utilise d'une manière ou d'une autre l'évaluation tidy. Il en existe essentiellement 2 formes :
 
-- `arrange()`, `count()`, `filter()`, `group_by()`, `mutate()`, and `summarise()` : ces verbes utilisent le masquage de données (data masking). De cette facon, les valriables dans des données peuvent être utilisées comme si elles étaient dans l'environnement. Plus besoin d'écrire 'df$var' mais simplement 'var' dans le verbe dplyr.
+- `arrange()`, `count()`, `filter()`, `group_by()`, `mutate()`, and `summarise()` : ces verbes utilisent le masquage de données (data masking). De cette facon, les variables dans des données peuvent être utilisées comme si elles étaient dans l'environnement. Plus besoin d'écrire 'df$var' mais simplement 'var' dans le verbe dplyr.
 
-- `across()`, `relocate()`, `rename()`, `select()`, and `pull()` : ces verbes utilisent la sélection tidy et permettent de choisir facilement des variables en se basant sur leur position, leur nom ou leur type.  (e.g. `starts_with("x")` or `is.numeric()`).
+- `across()`, `relocate()`, `rename()`, `select()`, and `pull()` : ces verbes utilisent la sélection tidy et permettent de choisir facilement des variables en se basant sur leur position, leur nom ou leur type  (e.g. `starts_with("x")` or `is.numeric()`).
 
 Ces verbes rendent l'exploration de données rapide et fluide mais ils peuvent poser des problèmes dans le cas où ils sont utilisés dans des boucles ou des fonctions.
 
-Une fonction qui utilise le data masking peut notamment poser problème lorsqu'elle appelle le nom d'une variable dans un tableau à partir d'une variable de l'environnement sans taper explicitement la variable du tableau. 2 cas de figures existent :
-- quand la variable est dans une fonction (e.g. mean()), il faut inclure la variable dans une double accolade ({{var}}).
-- quand la variable est une chaine de caractère, il faut l'inclure dans des crochets et les faire précéder de .data (.data[[var]]).
+Une fonction qui utilise le data masking peut notamment poser problème lorsqu'elle appelle le nom d'une variable dans un tableau à partir d'une variable de l'environnement sans taper explicitement la variable du tableau (des exemples précis sont donnés par la suite). Dans ce cas, on peut utiliser le double crochet `{{}}` ou le `.data[[]]` si la variable est une chaine de charactère. De facon général, il faut différencier explicitement les variables selon qu'elles sont dans le dataframe ou dans l'environnment.
 
+La séléction tidy est un outil complémentaire qui facilite le travaille sur les colonnes d'un jeu de données.
+
+La suite du document donnent quelques exemple d'utilisation de rlang.
 
 # Examples d'utilisation de rlang
 
