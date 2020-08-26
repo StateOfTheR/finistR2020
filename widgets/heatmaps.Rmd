@@ -14,6 +14,9 @@ library(reshape2)
 library(ggplot2)
 library(plotly)
 library(jpeg)
+library(GGally)
+library(network)
+library(sna)
 ```
 
 On génère une matrice à visualiser.
@@ -157,6 +160,25 @@ hist2 <- plot_ly(dfx,
 
 hist2
 ```
+
+## Réseaux
+
+```{r}
+rownames(lambda) <- c("A", "B", "C")
+colnames(lambda) <- c(1,2)
+bip <- network(lambda,
+               matrix.type = "bipartite",
+               ignore.eval = FALSE,
+               names.eval = "weights")
+col = c("actor" = "grey", "event" = "gold")
+net <- ggnet2(bip, label = TRUE, color="mode", palette=col, edge.label = "weights")
+net
+```
+
+```{r}
+ggplotly(net)
+```
+
 
 ## Heatmap à partir d'une image
 
