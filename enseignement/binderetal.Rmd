@@ -1,5 +1,5 @@
 ---
-title: "Teaching with R"
+title: "Teaching with R: binder solutions"
 author: "Atelier enseignement"
 date: "8/25/2020"
 output: html_document
@@ -11,20 +11,20 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Some ressources
 
-[CRAN Task View: Teaching Statistics] (https://CRAN.R-project.org/view=TeachingStatistics)
-
-[education.rstudio] (https://education.rstudio.com/blog/2020/03/resources-for-teaching-data-science-and-statistics-remotely/)
+- [CRAN Task View: Teaching Statistics](https://CRAN.R-project.org/view=TeachingStatistics)
+- [education.rstudio](https://education.rstudio.com/blog/2020/03/resources-for-teaching-data-science-and-statistics-remotely/)
 
 ## Interactive tutorials with the learnr package
 
-The _learnr_ package to turn any R Markdown document into an interactive tutorial.The _gradethis_ package for "grading" student exercises in learnr tutorials. The rstudio [primers](https://rstudio.cloud/learn/primers) constitute great examples of learnr tutorials. 
+The [learnr](https://rstudio.github.io/learnr/) package to turn any R Markdown document into an interactive tutorial.The [gradethis](https://rstudio-education.github.io/gradethis/) package for "grading" student exercises in learnr tutorials. The rstudio [primers](https://rstudio.cloud/learn/primers) constitute great examples of learnr tutorials. 
 
 ## Creating a Lesson Repo From Scratch using decampr
 
 Sources : 
 
-[decampr from_scratch] (https://laderast.github.io/decampr/articles/from_scratch.html)
-[decampr] (https://github.com/laderast/decampr)
+- [decampr from_scratch](https://laderast.github.io/decampr/articles/from_scratch.html)
+- [decampr](https://github.com/laderast/decampr)
+
 
 ```{r, eval = FALSE}
 install.packages("remotes")
@@ -44,6 +44,8 @@ Ines Montani has developed a course platform that runs R and Python code on [Bin
 How does it work? It takes advantage of mybinder.org's ability to run R in a Docker container. The website itself is hosted on a service such as Netlify, which handles the lesson material, code submission, and displaying results. The code is submitted via JavaScript to the Docker container and results (such as data.frames and ggplot2 figures) are returned to the user on a webpage.
 The course repository works with two components: Gatsby (front-end), and Binder (back-end). 
 
+![How does Gatsby work with Binder?](img/client_serveur.png)
+
 Cons : 
 - Takes some time to learn. The file structure of the platform takes a little getting used to, with code, exercises, and slides residing in different folders and files. 
 - Currently no way to track user completion/award certificates, but perfect for application of providing free lessons on learning R and encouraging students
@@ -61,7 +63,7 @@ Pros :
 
 ### Comment faire en pratique ?
 
-1. Import a minimal repo (), install it and make sure the app is running locally.
+1. Import a minimal repo, for example [course-starter-r](https://github.com/ines/course-starter-r), install it and make sure the app is running locally.
 2. Customize the meta.json and binder/install.R.
 3. Build a [Binder](https://mybinder.org/) from the binder branch of this repo.
 4. Add content (chapters, exercises and slides) and optionally add separate content license.
@@ -73,7 +75,7 @@ Pros :
 On commence par installer Gasby, générateur de site web ainsi que ses autres dépendances avant de lancer le serveur, qui sera sur localhost:8000.
 
 A noter qu'il est nécessaire d'avoir Node.js installé au préalabl et que les versions disponibles par défaut dans les dépôts apt sont obsolètes (8.5.x). Sous Ubuntu 18.04 LTS, on peut installer des versions récentes de NodeJS et npm (NodeJS Package Manager) via les commandes suivantes:
-```{bash}
+```{bash, eval = FALSE}
 # Using Ubuntu
 curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
 sudo apt-get install -y nodejs
@@ -97,6 +99,8 @@ A noter que npm notice crée un fichier package-lock.json qu'il faut copier à l
 
 ### La structure du répertoire
 
+![Branches](img/branches.png)
+
 Two branches in the repository :
 
 - Course material, exercise code, and slide material live in the master branch (chapters, exercices, slides). 
@@ -111,7 +115,8 @@ La branche binder comprend 2 fichiers, install.R qui liste les packages à insta
 install.packages("tidyverse")
 install.packages("rjson")
 ```
-et un fichier runtime.txt qui ressemble `r-2019-04-10`.
+
+et un fichier runtime.txt qui ressemble à `r-2019-04-10`.
 
 ## Déployer le cours sur un site web avec binder
 
@@ -121,7 +126,18 @@ One note on the Docker container, that is built on mybinder.org: while the insta
 
 ### Alternative (tutoriaux distribués via un package)
 
+Si les tutoriaux sont ditribués comme recommandés par les auteurs de `learnr`, c'est à dire dans le dossier `inst/tutorials/` d'un package, on peut créer un binder très facilement via [mybinder.org](https://mybinder.org/) et déployer des serveurs Rstudio à la volée via le lien fourni de type (https://mybinder.org/v2/gh/mahendra-mariadassou/L1fdvGenetics/master?urlpath=rstudio). Le suffixe `?urlpath=rstudio` permet de lancer une instance de rstudio dans le binder. 
 
+![Interface de binder](images/binder_example.png)
+
+#### Points d'attention
+
+- faire une branche dédiée `binder` (qui se met à jour lentement) pour éviter de reconstruire un binder à chaque commit "cosmétique"
+- faire pointer le binder sur la branche binder
+- attention à spécifier la bonne date dans `runtime.txt` (pour avoir les bonnes versions de package)
+- la construction du binder prend du temps (plusieurs minutes)
+  - il est gardé en cache un certain temps 
+  - il est recommandé de cliquer lancer un binder la veille / quelques heures avant le cours pour que les échantillons puissent charger la version en cache rapidement (~ 1-2 minutes)
 
 
 

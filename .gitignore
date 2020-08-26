@@ -19,3 +19,6 @@ finistr2019_website/derby.log
 finistr2019_website/d-RcppModules_files/
 finistr2019_website/s-julia_mixed_models_cache/
 finistr2019_website/logs/
+*.swp
+finistR2020.Rproj
+Manifest.toml
