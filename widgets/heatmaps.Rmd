@@ -17,6 +17,7 @@ library(jpeg)
 library(GGally)
 library(network)
 library(sna)
+library(d3heatmap)
 ```
 
 On génère une matrice à visualiser.
@@ -136,6 +137,12 @@ plot_ly(dfx, x=~Var2, y=~Var1, z=~value) %>%
   add_heatmap(colors = "YlOrRd") %>%
   colorbar(title = "value") %>%
   layout(shapes = plotly_shapes)
+```
+
+## d3heatmap
+
+```{r}
+d3heatmap(x, Rowv = FALSE, Colv = FALSE, colors = "YlOrRd")
 ```
 
 # Bonus

@@ -36,7 +36,7 @@ La station biologique de Roscoff va accueillir  la quatrième édition du R Boot
 - Mariadassou	Mahendra
 - Massiot Gaspard
 - Navaro	Pierre
-- Neuvial Pierre ?
+- Neuvial Pierre
  
 <!-- ![Équipe finistR2019](img/finistr_team_2019.jpeg) -->
 
@@ -78,6 +78,31 @@ Les compte rendu des éditions précédentes sont disponibles
   - [Finist'R 2018](https://stateofther.github.io/finistR2018/)
   - [Finist'R 2017](https://stateofther.github.io/finistR2017/)
 
-
-
 ## Programme 
+
+```{r}
+prog <- readODS::read_ods(path = "Programme.ods") 
+activites <-
+  prog %>%  
+  gather(key = condition, value = activité, -Horaire) %>%  
+  distinct(activité) %>% 
+  as_vector()
+color_used <-
+  activites %>%
+  enframe(name = NULL) %>%
+  mutate(col = case_when(str_detect(value, "Bilan")       ~ "#97b1bd",
+                         str_detect(value, "Atelier 1")   ~ "#def7cf",
+                         str_detect(value, "Atelier 2")   ~ "#c3f2a7",
+                         str_detect(value, "Atelier 3")   ~ "#b5f48d",
+                         str_detect(value, "Atelier 4")   ~ "#96e863",
+                         str_detect(value, "Restitution") ~ "#fea741",
+                         str_detect(value, "Introduction") ~ "#fea741")) %>% 
+  pull(col)
+prog %>% 
+  datatable(options = list(pageLength = 24, dom = "t", ordering = FALSE),
+            rownames = FALSE) %>%
+  formatStyle(columns = c(2:ncol(prog)),
+              backgroundColor = styleEqual(activites , color_used))
+```
+
+Les séquences en vert correspondent à des séances d'atelier en sous groupes. Les séquences en orange correspondent à un panorama du sujet indiqué, tandis que les séquences en bleu correspondent à des temps de réflexion et rédaction sur le rendu final.

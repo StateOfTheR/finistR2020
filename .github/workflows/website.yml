@@ -11,10 +11,10 @@ jobs:
       - uses: goanpeca/setup-miniconda@v1
         with:
           environment-file: binder/environment.yml
+          activate-environment: test
       - shell: bash -l {0}
         run: |
-          cd finistR2020_website
-          conda run -n test Rscript -e "rmarkdown::render_site()"
+          conda run -n test Rscript -e 'rmarkdown::render_site(input="finistR2020_website")'
       - name: GitHub Pages action
         uses: peaceiris/actions-gh-pages@v3
         with:

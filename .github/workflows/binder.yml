@@ -13,7 +13,6 @@ jobs:
     - name: update jupyter dependencies with repo2docker
       uses: jupyterhub/repo2docker-action@master
       with:
-        github-token: ${{secrets.BINDER}}
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         BINDER_CACHE: true
