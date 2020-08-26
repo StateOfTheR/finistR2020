@@ -84,4 +84,52 @@ my_plot("species")
 map(cat_vars, my_plot) %>% cowplot::plot_grid(plotlist = .)
 ```
 
+## Comparaisons entre `.env` et `.data`. 
+
+Essayons de ne représenter qu'une partie du jeu de données, par exemple les manchots Adelie
+
+```{r}
+ggplot(penguins %>% filter(species == "Adelie"), 
+       aes(x = bill_length_mm, y = bill_depth_mm, color = island)) + 
+    geom_point() + 
+    ggtitle("Penguins of species Adelie, colored by island")
+```
+
+On peut essayer de fonctionaliser ce graphique
+
+```{r}
+## This seems to works
+my_plot <- function(species) {
+  ggplot(penguins %>% filter(species == species), 
+         aes(x = bill_length_mm, y = bill_depth_mm, color = island )) + 
+    geom_point() + 
+    ggtitle(glue::glue("Penguins of species {species}, colored by island"))
+}
+```
+
+Mais ça ne marche pas...
+```{r}
+my_plot("Adelie")
+```
+
+Il faut être rigoureux et distinguer la _data variable_ `species` de la valeur de l'_argument_ `species`. On peut renommer l'argument en `.species` mais c'est désagréable. Une solution élégante consiste à utiliser le pronom `.env` pour distinguer les deux symboles. 
+
+```{r}
+## This works
+my_plot <- function(species) {
+  ggplot(penguins %>% filter(species == .env$species), 
+         aes(x = bill_length_mm, y = bill_depth_mm, color = island )) + 
+    geom_point() + 
+    ggtitle(glue::glue("Penguins of species {species}, colored by island"))
+}
+```
+
+```{r}
+my_plot("Adelie")
+```
+
+On peut alors itérer sur les espèces de penguins
+```{r}
+unique(penguins$species) %>% map(my_plot) %>% cowplot::plot_grid(plotlist = .)
+```
 
