@@ -21,7 +21,7 @@ L'évaluation tidy est un type d'évaluation utilisée dans tout le tidyverse. L
 
 Ces verbes rendent l'exploration de données rapide et fluide mais ils peuvent poser des problèmes dans le cas où ils sont utilisés dans des boucles ou des fonctions.
 
-Une fonction qui utilise le data masking peut notamment poser problème lorsqu'elle appelle le nom d'une variable dans un tableau à partir d'une variable de l'environnement sans taper explicitement la variable du tableau (des exemples précis sont donnés par la suite). [rlang](https://cran.r-project.org/web/packages/rlang/index.html) fournit des outils pour écrire des codes génériques tout en utilisant dplyr.
+Par exemple, une fonction qui utilise le data masking peut notamment poser problème lorsqu'elle appelle le nom d'une variable dans un tableau à partir d'une variable de l'environnement sans taper explicitement la variable du tableau (des exemples précis sont donnés par la suite). [rlang](https://cran.r-project.org/web/packages/rlang/index.html) fournit des outils pour écrire des codes génériques tout en utilisant dplyr.
 La séléction tidy est un outil complémentaire qui facilite le travaille sur les colonnes d'un jeu de données.
 
 La suite du document donnent quelques exemple d'utilisation de rlang.
