@@ -5,3 +5,28 @@ date: "26/08/2020"
 output: html_document
 ---
 
+# Examples d'utilisation de rlang
+
+## tidy evaluation à l'aide de `{{`
+
+L'utilisation de fonctions du tidyverse dans des fonctions peut parfois poser problème
+
+
+```{r}
+library(tidyverse)
+data(penguins, package = "palmerpenguins")
+```
+
+```{r}
+## This works
+ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm, color = species)) + geom_point()
+```
+
+```{r, error = TRUE}
+## This doesn't
+my_plot <- function(var) {
+  ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm, color = var)) + geom_point()
+}
+my_plot(species)
+```
+
