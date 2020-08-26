@@ -25,6 +25,7 @@ Une fonction qui utilise le data masking peut notamment poser problème lorsqu'e
 - quand la variable est dans une fonction (e.g. mean()), il faut inclure la variable dans une double accolade ({{var}}).
 - quand la variable est une chaine de caractère, il faut l'inclure dans des crochets et les faire précéder de .data (.data[[var]]).
 
+La séléction tidy est un outil complémentaire qui facilite le travaille sur les colonnes d'un jeu de données. En général, il faut différencier les variables selon qu'elles sont dans le dataframe ou dans l'environnment. 
 
 # Examples d'utilisation de rlang
 
