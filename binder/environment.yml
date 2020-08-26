@@ -4,14 +4,15 @@ channels:
   - conda-forge
 dependencies:
   - r=3.6.0
+  - r-desolve
+  - r-dplyr
+  - r-dt
   - r-fda
   - r-ggally
   - r-ggforce
   - r-plotly
-  - r-desolve
-  - r-dplyr
-  - r-dt
   - r-rmarkdown
+  - r-stringi
   - r-tidyverse
   - jupytext
   - pandoc
