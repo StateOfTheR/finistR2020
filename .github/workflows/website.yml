@@ -1,5 +1,8 @@
 name: rmarkdown website
-on: push
+on:
+  push:
+    branches:
+      - pnavaro
 
 jobs:
   website:
@@ -7,7 +10,11 @@ jobs:
     if: "!contains(github.event.head_commit.message, 'image tag')"
     runs-on: "ubuntu-latest"
     steps:
+      - name: apt install
+        run: sudo apt-get install -yq libicu-dev
       - uses: actions/checkout@v2
+        with:
+          ref: pnavaro
       - uses: goanpeca/setup-miniconda@v1
         with:
           environment-file: binder/environment.yml

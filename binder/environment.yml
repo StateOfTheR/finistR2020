@@ -1,17 +1,18 @@
 name: test
 channels:
-  - r
   - conda-forge
 dependencies:
-  - r=3.6.0
+  - r-base=3.6.3
+  - r-desolve
+  - r-dplyr
+  - r-dt
   - r-fda
   - r-ggally
   - r-ggforce
   - r-plotly
-  - r-desolve
-  - r-dplyr
-  - r-dt
+  - r-readods
   - r-rmarkdown
+  - r-stringi
   - r-tidyverse
   - jupytext
   - pandoc
