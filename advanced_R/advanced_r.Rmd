@@ -21,6 +21,11 @@ L'évaluation tidy est un type d'évaluation utilisée dans tout le tidyverse. L
 
 Ces verbes rendent l'exploration de données rapide et fluide mais ils peuvent poser des problèmes dans le cas où ils sont utilisés dans des boucles ou des fonctions.
 
+Une fonction qui utilise le data masking peut notamment poser problème lorsqu'elle appelle le nom d'une variable dans un tableau à partir d'une variable de l'environnement sans taper explicitement la variable du tableau. 2 cas de figures existent :
+- quand la variable est dans une fonction (e.g. mean()), il faut inclure la variable dans une double accolade ({{var}}).
+- quand la variable est une chaine de caractère, il faut l'inclure dans des crochets et les faire précéder de .data (.data[[var]]).
+
+
 # Examples d'utilisation de rlang
 
 ## Tidy evaluation à l'aide de `{{` et `.data`. 
