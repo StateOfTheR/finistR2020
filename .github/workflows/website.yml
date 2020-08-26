@@ -2,19 +2,19 @@ name: rmarkdown website
 on:
   push:
     branches:
-      - pnavaro
+      - master
 
 jobs:
   website:
     name: Build website with rmarkdown
-    if: "!contains(github.event.head_commit.message, 'image tag')"
+    if: "contains(github.event.head_commit.message, 'website')"
     runs-on: "ubuntu-latest"
     steps:
       - name: apt install
         run: sudo apt-get install -yq libicu-dev
       - uses: actions/checkout@v2
         with:
-          ref: pnavaro
+          ref: master
       - uses: goanpeca/setup-miniconda@v1
         with:
           environment-file: binder/environment.yml
