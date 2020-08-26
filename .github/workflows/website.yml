@@ -1,0 +1,21 @@
+name: rmarkdown website
+on: push
+
+jobs:
+  website:
+    name: Build website with rmarkdown
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: actions/checkout@v2
+      - uses: goanpeca/setup-miniconda@v1
+        with:
+          environment-file: binder/environment.yml
+      - shell: bash -l {0}
+        run: |
+          cd finistR2020_website
+          conda run -n runenv Rscript -e "rmarkdown::render_site()"
+      - name: GitHub Pages action
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          deploy_key: ${{ secrets.BINDER_PRIV }}
+          publish_dir: ./docs

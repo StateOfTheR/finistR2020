@@ -5,7 +5,7 @@ date: "25/08/2020"
 output: html_document
 ---
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/StateOfTheR/finistR2020/pnavaro?filepath=stat%2Fedo.ipynb)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/StateOfTheR/finistR2020/master?filepath=stat%2Fedo.ipynb)
 
 # Differential Equations
 
