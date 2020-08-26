@@ -1,5 +1,5 @@
 ---
-title: "Volcano plot with plotly"
+title: "Interactive volcano plot with plotly/ggiraph"
 author: "P. Neuvial"
 date: "26/08/2020"
 output: html_document
@@ -9,20 +9,31 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+## Introduction
+
 Our goal is to add some interactivity to a "volcano plot": 
 
 - clicking on a gene opens the GeneCards page 
 - hovering on a gene shows other genes from the same pathway
 - ...
 
+## Data
+
+Microarray data from a differential gene expression study (Chiaretti et al 2005)
+
+```{r load-data}
+diff_exp <- readRDS("widgets/diff_exp.rds")
+head(diff_exp)
+```
+
+## Using plotly
+
+Setup:
 ```{r load-packages}
 library("plotly")
 library("htmlwidgets")
 ```
 
-```{r load-data}
-diff_exp <- readRDS("widgets/diff_exp.rds")
-```
 
 ```{r}
 p <- plot_ly(data = diff_exp, x = ~meanDiff, y = ~logp) %>%
@@ -39,6 +50,36 @@ onRender(
   }
 ")
 ```
+
+## Using ggiraph
+
+```{r}
+library("ggplot2")
+library("ggiraph")
+```
+
+
+```{r}
+diff_exp$onclick <- sprintf("window.open(\"%s%s\")",
+  "https://www.genecards.org/cgi-bin/carddisp.pl?gene=", diff_exp[["geneName"]])
+```
+
+```{r}
+p <- ggplot(diff_exp, 
+            aes(meanDiff, logp)) +
+    geom_point()
+p
+```
+
+```{r}
+ip <- p + geom_point_interactive(
+        aes(data_id = geneName, 
+            tooltip = geneName,
+            onclick = onclick))
+
+girafe(ggobj = ip)
+```
+
 
 ## Session information
 ```{r session-info}
