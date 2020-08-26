@@ -11,9 +11,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Some ressources
 
-[CRAN Task View: Teaching Statistics] (https://CRAN.R-project.org/view=TeachingStatistics)
+[CRAN Task View: Teaching Statistics](https://CRAN.R-project.org/view=TeachingStatistics)
 
-[education.rstudio] (https://education.rstudio.com/blog/2020/03/resources-for-teaching-data-science-and-statistics-remotely/)
+[education.rstudio](https://education.rstudio.com/blog/2020/03/resources-for-teaching-data-science-and-statistics-remotely/)
 
 ## Interactive tutorials with the learnr package
 
@@ -23,7 +23,7 @@ The _learnr_ package to turn any R Markdown document into an interactive tutoria
 
 Sources : 
 
-[decampr from_scratch] (https://laderast.github.io/decampr/articles/from_scratch.html)
+[decampr from_scratch](https://laderast.github.io/decampr/articles/from_scratch.html)
 [decampr] (https://github.com/laderast/decampr)
 
 ```{r, eval = FALSE}
@@ -43,6 +43,8 @@ Ines Montani has developed a course platform that runs R and Python code on [Bin
 
 How does it work? It takes advantage of mybinder.org's ability to run R in a Docker container. The website itself is hosted on a service such as Netlify, which handles the lesson material, code submission, and displaying results. The code is submitted via JavaScript to the Docker container and results (such as data.frames and ggplot2 figures) are returned to the user on a webpage.
 The course repository works with two components: Gatsby (front-end), and Binder (back-end). 
+
+![How does Gatsby work with Binder?](img/client_serveur.png)
 
 Cons : 
 - Takes some time to learn. The file structure of the platform takes a little getting used to, with code, exercises, and slides residing in different folders and files. 
@@ -96,6 +98,8 @@ npm run dev                # Run the development server
 A noter que npm notice crée un fichier package-lock.json qu'il faut copier à la place de celui présent à la racine du répertoire. Sous ubuntu 18.04 LTS, la dernière commande ne permet pas de générer le site web... (mais Julie a réussi sur son Mac) 
 
 ### La structure du répertoire
+
+![Branches](img/branches.png)
 
 Two branches in the repository :
 
