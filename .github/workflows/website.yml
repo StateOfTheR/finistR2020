@@ -2,7 +2,7 @@ name: rmarkdown website
 on:
   push:
     branches:
-      - pnavaro
+      - website
 
 jobs:
   website:
@@ -14,7 +14,7 @@ jobs:
         run: sudo apt-get install -yq libicu-dev
       - uses: actions/checkout@v2
         with:
-          ref: pnavaro
+          ref: website
       - uses: goanpeca/setup-miniconda@v1
         with:
           environment-file: binder/environment.yml
