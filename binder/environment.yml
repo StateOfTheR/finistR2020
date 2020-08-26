@@ -10,6 +10,7 @@ dependencies:
   - r-ggally
   - r-ggforce
   - r-plotly
+  - r-readods
   - r-rmarkdown
   - r-stringi
   - r-tidyverse
