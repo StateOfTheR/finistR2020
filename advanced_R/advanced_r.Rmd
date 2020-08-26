@@ -146,3 +146,16 @@ On peut alors itérer sur les espèces de penguins
 unique(penguins$species) %>% map(my_plot) %>% cowplot::plot_grid(plotlist = .)
 ```
 
+On peut évidemment combiner la sélection d'une espèce avec le coloriage par une variable catégorielle. 
+
+```{r}
+my_plot <- function(species, color) {
+  ggplot(penguins %>% filter(species == .env$species), 
+         aes(x = bill_length_mm, y = bill_depth_mm, color = .data[[color]])) + 
+    geom_point() + 
+    ggtitle(glue::glue("Penguins of species {species}, colored by {color}"))
+}
+my_plot("Adelie", "sex")
+```
+
+## Utilisation de `:=`
