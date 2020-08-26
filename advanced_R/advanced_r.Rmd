@@ -7,7 +7,7 @@ output: html_document
 
 # Examples d'utilisation de rlang
 
-## tidy evaluation à l'aide de `{{`
+## Tidy evaluation à l'aide de `{{` et `.data`. 
 
 L'utilisation de fonctions du tidyverse dans des fonctions personnelles peut parfois poser problème
 
@@ -46,14 +46,14 @@ my_plot <- function(var) {
 my_plot(species)
 ```
 
-Si on veut afficher le titre de façon programmatique, il faut `enquo()` le symbole `var` pour qu'il ne soit pas interprété et reconnu comme une chaîne de caractères
+Si on veut afficher le titre de façon programmatique, il faut `ensym()` pour qu'il soit reconnu comme une chaîne de caractères
 
 ```{r}
 ## This works
 my_plot <- function(var) {
   ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm, color = {{ var }})) + 
     geom_point() + 
-    ggtitle(paste("Variable =", enquos(var)))
+    ggtitle(glue::glue("Variable = {ensym(var)}"))
 }
 my_plot(species)
 ```
@@ -67,7 +67,7 @@ cat_vars <- names(penguins)[map_lgl(penguins, is.factor)] ## [1] "species" "isla
 map(cat_vars, my_plot) %>% cowplot::plot_grid(plotlist = .)
 ```
 
-Pour que `my_plot()` accepte des chaînes de caractères, il faut utiliser le pronom spécial `.data`
+Pour que `my_plot()` accepte des chaînes de caractères, il faut utiliser le pronom spécial `.data` pour préciser que la variable doit être cherchée dans le tableau `penguins`. 
 
 ```{r}
 ## This works
@@ -76,6 +76,12 @@ my_plot <- function(var) {
     geom_point() + 
     ggtitle(glue::glue("Variable = {var}"))
 }
+my_plot("species")
+```
+
+
+```{r}
 map(cat_vars, my_plot) %>% cowplot::plot_grid(plotlist = .)
 ```
+
 
