@@ -4,6 +4,7 @@ on: push
 jobs:
   website:
     name: Build website with rmarkdown
+    if: "!contains(github.event.head_commit.message, 'image tag')"
     runs-on: "ubuntu-latest"
     steps:
       - uses: actions/checkout@v2
@@ -12,8 +13,9 @@ jobs:
           environment-file: binder/environment.yml
       - shell: bash -l {0}
         run: |
+          conda run -n test Rscript binder/install.R
           cd finistR2020_website
-          conda run -n runenv Rscript -e "rmarkdown::render_site()"
+          conda run -n test Rscript -e "rmarkdown::render_site()"
       - name: GitHub Pages action
         uses: peaceiris/actions-gh-pages@v3
         with:
