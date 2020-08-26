@@ -9,6 +9,8 @@ dependencies:
   - r-plotly
   - r-desolve
   - r-dplyr
+  - r-dt
   - r-rmarkdown
   - r-tidyverse
   - jupytext
+  - pandoc
