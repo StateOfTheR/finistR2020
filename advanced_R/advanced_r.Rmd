@@ -175,7 +175,7 @@ my_plot <- function(species, color) {
 my_plot("Adelie", "sex")
 ```
 
-## Différence entre passage par promesse et passage par nom
+## Passage d'arguments par promesse versus par nom
 
 Les versions `my_plot(var = species)` et `my_plot(var = "species")` diffèrent dans la nature de l'argument: une expression dans le premier cas, une chaîne de caractères dans le deuxième. La première version est plus souple. 
 
@@ -223,6 +223,16 @@ On peut néanmoins s'en sortir à l'aide du pronom `.data` précédemment prése
 my_plot_expr(.data[[var_x]], .data[[var_y]])
 ```
 
+Et itérer sur des tableaux
+
+```{r}
+cont_vars <- c("bill_length_mm", "bill_depth_mm", "flipper_length_mm", "body_mass_g")
+df <- crossing(x = cont_vars, y = cont_vars) 
+plot_list <- map2(.x = df$x, .y = df$y, ~ my_plot_expr(.data[[.x]], .data[[.y]]) + theme(legend.position = "none"))
+cowplot::plot_grid(plotlist = plot_list)
+```
+
+
 ## Utilisation de `:=`
 
 
@@ -234,4 +244,3 @@ load("VMS_data.RData")
 
 
 ```
-
