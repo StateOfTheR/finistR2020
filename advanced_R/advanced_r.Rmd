@@ -55,10 +55,9 @@ my_plot <- function(var) {
 my_plot(species)
 ```
 
-Le problème vient de l'évaluatino de `var` dans l'appel à `my_plot()`: R cherche `species` dans l'environnement parent de la fonction plutôt que dans le contexte du data.frame `penguins`. 
+Le problème vient de l'évaluation de `var` dans l'appel à `my_plot()`: R cherche `species` dans l'environnement parent de la fonction plutôt que dans le contexte du data.frame `penguins`. 
 
-On peut remédier au problème à l'aide de l'opérateur `{{` qui permet de remplacer `var` par `species` en tant que symbole.  
-
+On peut remédier au problème à l'aide de l'opérateur `{{` qui permet de remplacer `var` par `species` dans l'appel à `ggplot` via le mécanisme de `quosure`. 
 
 ```{r}
 ## This works
@@ -80,7 +79,7 @@ my_plot <- function(var) {
 my_plot(species)
 ```
 
-Si on veut afficher le titre de façon programmatique, il faut `ensym()` (conversion en symbole) pour qu'il soit reconnu comme une chaîne de caractères
+Si on veut afficher le titre de façon programmatique, il faut `ensym()` (conversion en symbole de l'expression passée en argument à une fonction) pour qu'il soit reconnu comme une chaîne de caractères
 
 ```{r}
 ## This works
@@ -92,9 +91,7 @@ my_plot <- function(var) {
 my_plot(species)
 ```
 
-
-
-Attention, dans cet example, l'argument de `my_plot()` est un `symbol`. On ne peut donc pas itérer sur les colonnes catégorielles de `penguins` stockées dans un vecteur de `"character"`: ces dernières ne sont pas interprétées correctement...
+Attention, dans cet example, l'argument de `my_plot()` est une expression. On ne peut donc pas itérer sur les colonnes catégorielles de `penguins` stockées dans un vecteur de `"character"`: ces dernières ne sont pas interprétées correctement...
 
 ```{r}
 cat_vars <- names(penguins)[map_lgl(penguins, is.factor)] ## [1] "species" "island"  "sex" 
@@ -178,5 +175,11 @@ my_plot <- function(species, color) {
 }
 my_plot("Adelie", "sex")
 ```
+
+## Différence entre passage par promesse et passage par nom
+
+Les versions `my_plot(var = species)` et `my_plot(var = "species")` diffèrent dans la nature de l'arguement: une expression dans le premier cas, une châine de caractères dans le deuxième. 
+
+La mécanique 
 
 ## Utilisation de `:=`
