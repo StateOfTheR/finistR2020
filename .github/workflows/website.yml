@@ -18,6 +18,6 @@ jobs:
           conda run -n runenv Rscript -e "rmarkdown::render_site()"
       - name: GitHub Pages action
         uses: peaceiris/actions-gh-pages@v3
-          with:
+        with:
           deploy_key: ${{ secrets.BINDER_PRIV }}
           publish_dir: ./docs
