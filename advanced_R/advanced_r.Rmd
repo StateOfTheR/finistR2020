@@ -177,8 +177,50 @@ my_plot("Adelie", "sex")
 
 ## Différence entre passage par promesse et passage par nom
 
-Les versions `my_plot(var = species)` et `my_plot(var = "species")` diffèrent dans la nature de l'arguement: une expression dans le premier cas, une châine de caractères dans le deuxième. 
+Les versions `my_plot(var = species)` et `my_plot(var = "species")` diffèrent dans la nature de l'argument: une expression dans le premier cas, une chaîne de caractères dans le deuxième. La première version est plus souple. 
 
-La mécanique 
+```{r}
+my_plot_char <- function(x, y) {
+  ggplot(penguins, 
+         aes(x = .data[[x]], y = .data[[y]], color = species)) + 
+    geom_point()
+}
+my_plot_char(x = "bill_length_mm", y = "bill_depth_mm")
+```
+```{r}
+my_plot_expr <- function(x, y) {
+  ggplot(penguins, 
+         aes(x = {{x}}, y = {{y}}, color = species)) + 
+    geom_point()
+}
+my_plot_expr(x = bill_length_mm, y = bill_depth_mm)
+```
+Contrairement à `my_plot_char()`, `my_plot_expr()` peut être utilisée avec des expressions, _i.e._ des transformations des variables de `penguins` calculées à la volée:
+
+```{r}
+my_plot_expr(x = bill_length_mm - bill_depth_mm, y = bill_length_mm + bill_depth_mm)
+```
+
+## Utiliser des chaînes de caractères dans fonctions du tidyverse
+
+On peut avoir envie d'itérer sur des variables stockées dans vecteurs de type `character`. C'est facile avec `my_plot_char()` mais légèrement plus difficile avec `my_plot_expr()`
+
+```{r}
+var_x <- "bill_length_mm"
+var_y <- "bill_depth_mm"
+## Works fine
+my_plot_char(var_x, var_y)
+```
+```{r error = TRUE}
+## Does not work as intended
+my_plot_expr(var_x, var_y)
+```
+
+On peut néanmoins s'en sortir à l'aide du pronom `.data` précédemment présenté
+
+```{r error = TRUE}
+## Works as intended
+my_plot_expr(.data[[var_x]], .data[[var_y]])
+```
 
 ## Utilisation de `:=`
