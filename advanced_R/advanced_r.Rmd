@@ -35,7 +35,7 @@ my_plot(species)
 
 Le problème vient de l'évaluatio de `var` dans l'appel à `my_plot()`: R cherche `species` dans l'environnement parent de la fonction plutôt que dans le contexte du data.frame `penguins`. 
 
-On peut remédier au problème à l'aide de l'opérateur `{{` qui permet de remplacer `var` par `species` en tant que symbole. 
+On peut remédier au problème à l'aide de l'opérateur `{{` qui permet de remplacer `var` par `species` en tant que symbole.  
 
 ```{r}
 ## This works
@@ -45,6 +45,20 @@ my_plot <- function(var) {
 }
 my_plot(species)
 ```
+
+Si on veut afficher le titre de façon programmatique, il faut `enquo()` le symbole `var` pour qu'il ne soit pas interprété et reconnu comme une chaîne de caractères
+
+```{r}
+## This works
+my_plot <- function(var) {
+  ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm, color = {{ var }})) + 
+    geom_point() + 
+    ggtitle(paste("Variable =", enquos(var)))
+}
+my_plot(species)
+```
+
+
 
 Attention, dans cet example, l'argument de `my_plot()` est un `symbol`. On ne peut donc pas itérer sur les colonnes catégorielles de `penguins` stockées dans un vecteur de `"character"`: ces dernières ne sont pas interprétées correctement...
 
