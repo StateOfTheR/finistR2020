@@ -1,0 +1,47 @@
+---
+title: "Volcano plot with plotly"
+author: "P. Neuvial"
+date: "26/08/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Our goal is to add some interactivity to a "volcano plot": 
+
+- clicking on a gene opens the GeneCards page 
+- hovering on a gene shows other genes from the same pathway
+- ...
+
+```{r load-packages}
+library("plotly")
+library("htmlwidgets")
+```
+
+```{r load-data}
+diff_exp <- readRDS("widgets/diff_exp.rds")
+```
+
+```{r}
+p <- plot_ly(data = diff_exp, x = ~meanDiff, y = ~logp) %>%
+    add_markers(
+        text = diff_exp[["geneName"]],
+        customdata = paste0("https://www.genecards.org/cgi-bin/carddisp.pl?gene=", diff_exp[["geneName"]]))
+onRender(
+    p, "
+  function(el) {
+    el.on('plotly_click', function(d) {
+      var url = d.points[0].customdata;
+      window.open(url);
+    });
+  }
+")
+```
+
+## Session information
+```{r session-info}
+sessionInfo()
+```
+
