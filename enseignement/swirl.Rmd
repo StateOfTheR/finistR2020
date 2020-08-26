@@ -9,13 +9,15 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+[`swirl`](https://swirlstats.com/) est un package qui permet de jouer des stionnaires dans R. Les question sont écrites dans un format yaml et on peut également préparer du code R. 
+On peut trouver de la documentation sur swirl [ici] 
 
-`swirlify` est un package permettand  de proposer des cours interactifs avec ` R` dans `RStudio`.  Ce domcument est basé sur le tuoriel [http://swirlstats.com/swirlify/index.html](http://swirlstats.com/swirlify/index.html).
+[`swirlify`](http://swirlstats.com/swirlify/) pour faciliter la mise en place de questionnaire swirl. 
 
 
 ## Créer un cours 
 
-On peut créer le cours Démarche statistique dans lequel on souhaite avoir deux leçons : l'introduction à R et la leçon sur la régression simple.
+On peut créer le cours Démarche statistique dans lequel on souhaite avoir deux leçons : la leçon Introduction à R et la leçon sur la régression simple.
 
 ```{r load}
 library(swirlify)
@@ -24,8 +26,25 @@ library(swirlify)
 
 ```{r new_lesson, eval=FALSE}
 
-new_lesson("Introduction à R", "Démarche statistique")
-new_lesson("Modèle de régression", "Démarche statistique")
+swirlify::new_lesson("Introduction à R", "Démarche statistique")
+swirlify::new_lesson("Modèle de régression", "Démarche statistique")
+```
+
+Ces commandes créent la structure de répertoire nécessaire et les fichiers de base, notamment le fichier lesson.yaml dans le répertoire de chaque leçon. 
+
+
+On peut vouloir indiquer un ordre dans les leçons . Il faut alors sélectionner la leçon à ajouter dans le manifest puis l'ajouter. 
+
+```{r add_manifest, eval = FALSE}
+swirlify::set_lesson('Démarche_statistique/Introduction_à_R/lesson.yaml')
+swirlify::add_to_manifest()
+swirlify::set_lesson('Démarche_statistique/Modèle_de_régression/lesson.yaml')
+swirlify::add_to_manifest()
+```
+
+
+```{bash, comment = ''}
+head Démarche_statistique/MANIFEST
 ```
 
 
@@ -34,17 +53,10 @@ new_lesson("Modèle de régression", "Démarche statistique")
 Pour travailler sur la leçon Introduction à R, il faut spécifier la leçon sur laquelle on travaille, par la commande suivante. 
 
 ```{r set_lesson, eval = FALSE}
-set_lesson("Démarche_statistique/Introduction_à_R/lesson.yaml")
+swirlify::set_lesson("Démarche_statistique/Introduction_à_R/lesson.yaml")
 ```
 
-Cette commande ouvre le .yaml correspondant.
-
-
-On peut vouloir indiquer qu'il fut avant tout fire la leçon d'introduction à R avant d'entrer dans la leçon régression linéaire. Il faut alors ajouter un fichier MANIFEST.
-
-```{bash, comment = ''}
-head MANIFEST
-```
+Cette commande ouvre le lesson.yaml correspondant dans lequel on peut commencer à mettre des questions. 
 
 
 
@@ -63,18 +75,25 @@ dta <- read.table(file.path(.get_course_path(), "Démarche_statistique", "Introd
 
 
 
-Pour ajouter des nouvelles questions/interactions, on peut soi utiliser la commande `swirlify ` pour entrer dans un mode interactif et poser des questions soit utiliser en ligne de commande les  w +  q + tab.
+Pour ajouter des nouvelles questions/interactions, on peut soit utiliser la commande `swirlify ` pour entrer dans un mode interactif et poser des questions soit utiliser en ligne de commande les  w +  q + tab.
 
+### Ajouter un message
 
 ```{r wq_mes, eval =FALSE}
-wq_message(output = " Bienvenue sur le cours d'introdution à R")
+swirlify::wq_message(output = " Bienvenue sur le cours d'introdution à R")
 ```
+
+
+
+### Ajouter une question à choix multiple
 
 ```{r  wq_multiple, eval =FALSE}
 
-wq_multiple(output = "La table de données dta a été chargée. Parmi les variables suivantes, laquelle fait partie de ce jeu de données ?",
+swirlify::wq_multiple(
+            output = "La table de données dta a été chargée. Parmi les variables suivantes, laquelle fait partie de ce jeu de données ?",
             answer_choices = "manuf;Ville;temperature",
             correct_answer = "manuf",
+            answer_tests = "omnitest(correctExpr = 'colnames(dta)')",
             hint = "La commande colnames permet d'afficher le nom des colonnes.")
 
 ```
@@ -106,15 +125,15 @@ On peut tout auusi bien éditer directement le fichier lesson.yaml pour obtenir 
 
 On peut tester la leçon
 
-```{r}
-demo_lesson()
+```{r demo, eval = FALSE }
+swirlify::demo_lesson()
 ```
 
 
 Pour distribuer le cours il faut l'empaqueter.
 
 
-```{r}
+```{r pack_course, eval = FALSE}
   swirlify::pack_course()
 
 swirl::install_course(swc_path = "~/git/finistR2020/enseignement/Démarche_statistique.swc")
