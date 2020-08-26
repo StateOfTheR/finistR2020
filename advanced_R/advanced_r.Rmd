@@ -9,8 +9,7 @@ output: html_document
 
 ## tidy evaluation à l'aide de `{{`
 
-L'utilisation de fonctions du tidyverse dans des fonctions peut parfois poser problème
-
+L'utilisation de fonctions du tidyverse dans des fonctions personnelles peut parfois poser problème
 
 ```{r}
 library(tidyverse)
@@ -19,14 +18,50 @@ data(penguins, package = "palmerpenguins")
 
 ```{r}
 ## This works
-ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm, color = species)) + geom_point()
+ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm, color = species)) + 
+  geom_point() + 
+  ggtitle("Variable = species")
 ```
 
 ```{r, error = TRUE}
 ## This doesn't
 my_plot <- function(var) {
-  ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm, color = var)) + geom_point()
+  ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm, color = var)) + 
+    geom_point() + 
+    ggtitle(glue::glue("{var}"))
 }
 my_plot(species)
+```
+
+Le problème vient de l'évaluatio de `var` dans l'appel à `my_plot()`: R cherche `species` dans l'environnement parent de la fonction plutôt que dans le contexte du data.frame `penguins`. 
+
+On peut remédier au problème à l'aide de l'opérateur `{{` qui permet de remplacer `var` par `species` en tant que symbole. 
+
+```{r}
+## This works
+my_plot <- function(var) {
+  ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm, color = {{ var }})) + 
+    geom_point()
+}
+my_plot(species)
+```
+
+Attention, dans cet example, l'argument de `my_plot()` est un `symbol`. On ne peut donc pas itérer sur les colonnes catégorielles de `penguins` stockées dans un vecteur de `"character"`: ces dernières ne sont pas interprétées correctement...
+
+```{r}
+cat_vars <- names(penguins)[map_lgl(penguins, is.factor)] ## [1] "species" "island"  "sex" 
+map(cat_vars, my_plot) %>% cowplot::plot_grid(plotlist = .)
+```
+
+Pour que `my_plot()` accepte des chaînes de caractères, il faut utiliser le pronom spécial `.data`
+
+```{r}
+## This works
+my_plot <- function(var) {
+  ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm, color = .data[[var]] )) + 
+    geom_point() + 
+    ggtitle(glue::glue("Variable = {var}"))
+}
+map(cat_vars, my_plot) %>% cowplot::plot_grid(plotlist = .)
 ```
 
