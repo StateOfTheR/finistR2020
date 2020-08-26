@@ -9,6 +9,19 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 ```
 
+# Eléments généraux
+
+Les éléments de l'introduction proviennent du site : https://cran.r-project.org/web/packages/dplyr/vignettes/programming.html. 
+
+L'évaluation tidy est un type d'évaluation utilisée dans tout le tidyverse. Les verbes dplyr utilise d'une manière ou d'une autre l'évaluation tidy. Il en existe essentiellement 2 formes :
+
+- arrange(), count(), filter(), group_by(), mutate(), and summarise() : ces verbes utilisent le masquage de données (data masking). De cette facon, les valriables dans des données peuvent être utilis&ées comme si elles étaient dans l'environnement. Plus besoin d'écrire 'df$var' mais simplement 'var' dans le verbe dplyr.
+
+- across(), relocate(), rename(), select(), and pull() : ces verbes utilisent la sélection tidy et permettent de choisir facilement des variables en se basant sur leur position, leur nom ou leur type.  (e.g. starts_with("x") or is.numeric).
+
+Ces verbes rendent l'exploration de données rapide et fluide mais ils peuvent poser des problèmes dans le cas où ils sont utilisés dans des loupes ou des fonctions.
+
+
 # Examples d'utilisation de rlang
 
 ## Tidy evaluation à l'aide de `{{` et `.data`. 
@@ -100,4 +113,52 @@ my_plot("species")
 map(cat_vars, my_plot) %>% cowplot::plot_grid(plotlist = .)
 ```
 
+## Comparaisons entre `.env` et `.data`. 
+
+Essayons de ne représenter qu'une partie du jeu de données, par exemple les manchots Adelie
+
+```{r}
+ggplot(penguins %>% filter(species == "Adelie"), 
+       aes(x = bill_length_mm, y = bill_depth_mm, color = island)) + 
+    geom_point() + 
+    ggtitle("Penguins of species Adelie, colored by island")
+```
+
+On peut essayer de fonctionaliser ce graphique
+
+```{r}
+## This seems to works
+my_plot <- function(species) {
+  ggplot(penguins %>% filter(species == species), 
+         aes(x = bill_length_mm, y = bill_depth_mm, color = island )) + 
+    geom_point() + 
+    ggtitle(glue::glue("Penguins of species {species}, colored by island"))
+}
+```
+
+Mais ça ne marche pas...
+```{r}
+my_plot("Adelie")
+```
+
+Il faut être rigoureux et distinguer la _data variable_ `species` de la valeur de l'_argument_ `species`. On peut renommer l'argument en `.species` mais c'est désagréable. Une solution élégante consiste à utiliser le pronom `.env` pour distinguer les deux symboles. 
+
+```{r}
+## This works
+my_plot <- function(species) {
+  ggplot(penguins %>% filter(species == .env$species), 
+         aes(x = bill_length_mm, y = bill_depth_mm, color = island )) + 
+    geom_point() + 
+    ggtitle(glue::glue("Penguins of species {species}, colored by island"))
+}
+```
+
+```{r}
+my_plot("Adelie")
+```
+
+On peut alors itérer sur les espèces de penguins
+```{r}
+unique(penguins$species) %>% map(my_plot) %>% cowplot::plot_grid(plotlist = .)
+```
 
