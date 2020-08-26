@@ -1,5 +1,8 @@
 name: Binder
-on: push
+on:
+  push:
+    branches:
+      - pnavaro
 
 jobs:
   binder:
@@ -8,8 +11,7 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v2
       with:
-        ref: ${{ github.event.pull_request.head.sha }}
-
+          ref: pnavaro
     - name: update jupyter dependencies with repo2docker
       uses: jupyterhub/repo2docker-action@master
       with:
