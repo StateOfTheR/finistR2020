@@ -101,6 +101,12 @@ as_tbl_graph(multilvl_ex) %>%
     shape = as.factor(lvl),
     size = nsize
   )) +
+    ggforce::geom_mark_hull(
+    aes(x, y, group = block, fill = block, label=block),
+    concavity = 4,
+    expand = unit(2, "mm"),
+    alpha = 0.25
+  ) +
   scale_shape_manual(values = c(21, 22)) +
   scale_size_continuous(range = c(1.5, 4.5)) +
   scale_fill_viridis(option = "A") +
@@ -148,6 +154,12 @@ as_tbl_graph(multilvl_ex) %>%
     shape = as.factor(lvl),
     size = nsize
   )) +
+  ggforce::geom_mark_hull(
+    aes(x, y, group = block, fill = block, label=block),
+    concavity = 4,
+    expand = unit(2, "mm"),
+    alpha = 0.25
+  ) +
   scale_shape_manual(values = c(21, 22)) +
   scale_size_continuous(range = c(1.5, 4.5)) +
   scale_fill_viridis(option = "A") +
@@ -457,6 +469,4 @@ Le rendu est un peu  artisanal (par exemple certaines shapes on un label dedans,
 Le rendu joli grâce aux ombres mais difficilement utilisable pour des dessins automatiques. 
 Par ailleurs, le côté widget n'est pas utile pour les petits réseaux (vue mesoscopiques des SBM)
 Je vais plutôt essayer avec `ggraph`.
-
-
 
