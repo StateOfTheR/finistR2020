@@ -9,9 +9,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: goanpeca/setup-miniconda@v1
         with:
-          activate-environment: runenv
           environment-file: binder/environment.yml
-          auto-activate-base: false
       - shell: bash -l {0}
         run: |
           cd finistR2020_website
