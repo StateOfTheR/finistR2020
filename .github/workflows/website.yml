@@ -13,7 +13,6 @@ jobs:
           environment-file: binder/environment.yml
       - shell: bash -l {0}
         run: |
-          conda run -n test Rscript binder/install.R
           cd finistR2020_website
           conda run -n test Rscript -e "rmarkdown::render_site()"
       - name: GitHub Pages action
