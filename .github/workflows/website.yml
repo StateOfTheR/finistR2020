@@ -12,7 +12,6 @@ jobs:
         with:
           environment-file: binder/environment.yml
           activate-environment: test
-          channel-priority: strict
       - shell: bash -l {0}
         run: |
           conda run -n test Rscript -e 'rmarkdown::render_site(input="finistR2020_website")'

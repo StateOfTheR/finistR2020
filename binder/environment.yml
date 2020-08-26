@@ -1,11 +1,12 @@
+name: test
 channels:
   - r
   - conda-forge
-  - defaults
 dependencies:
   - r=3.6.0
   - r-fda
   - r-ggally
+  - r-ggforce
   - r-plotly
   - r-desolve
   - r-dplyr
