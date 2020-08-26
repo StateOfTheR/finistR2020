@@ -5,13 +5,17 @@ date: "26/08/2020"
 output: html_document
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+```
+
 # Examples d'utilisation de rlang
 
 ## Tidy evaluation à l'aide de `{{` et `.data`. 
 
 L'utilisation de fonctions du tidyverse dans des fonctions personnelles peut parfois poser problème
 
-```{r}
+```{r, message=FALSE}
 library(tidyverse)
 data(penguins, package = "palmerpenguins")
 ```
@@ -33,9 +37,10 @@ my_plot <- function(var) {
 my_plot(species)
 ```
 
-Le problème vient de l'évaluatio de `var` dans l'appel à `my_plot()`: R cherche `species` dans l'environnement parent de la fonction plutôt que dans le contexte du data.frame `penguins`. 
+Le problème vient de l'évaluatino de `var` dans l'appel à `my_plot()`: R cherche `species` dans l'environnement parent de la fonction plutôt que dans le contexte du data.frame `penguins`. 
 
 On peut remédier au problème à l'aide de l'opérateur `{{` qui permet de remplacer `var` par `species` en tant que symbole.  
+
 
 ```{r}
 ## This works
@@ -46,7 +51,18 @@ my_plot <- function(var) {
 my_plot(species)
 ```
 
-Si on veut afficher le titre de façon programmatique, il faut `ensym()` pour qu'il soit reconnu comme une chaîne de caractères
+À noter qu'on obtient l'équivalent de `{{ var }}` en combinant `enquo` (conversion en "quosure" = expression + environnement) et `!!` (évaluation sauce "tidy") :
+
+```{r, results='hide'}
+## This works
+my_plot <- function(var) {
+  ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm, color = !!enquo(var))) + 
+    geom_point()
+}
+my_plot(species)
+```
+
+Si on veut afficher le titre de façon programmatique, il faut `ensym()` (conversion en symbole) pour qu'il soit reconnu comme une chaîne de caractères
 
 ```{r}
 ## This works
