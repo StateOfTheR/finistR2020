@@ -4,18 +4,16 @@ on: push
 jobs:
   website:
     name: Build website with rmarkdown
+    if: "!contains(github.event.head_commit.message, 'image tag')"
     runs-on: "ubuntu-latest"
     steps:
       - uses: actions/checkout@v2
       - uses: goanpeca/setup-miniconda@v1
         with:
-          activate-environment: runenv
           environment-file: binder/environment.yml
-          auto-activate-base: false
       - shell: bash -l {0}
         run: |
-          cd finistR2020_website
-          conda run -n runenv Rscript -e "rmarkdown::render_site()"
+          conda run -n test Rscript -e 'rmarkdown::render_site(input="finistR2020_website")'
       - name: GitHub Pages action
         uses: peaceiris/actions-gh-pages@v3
         with:
