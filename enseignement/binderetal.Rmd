@@ -17,14 +17,14 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Interactive tutorials with the learnr package
 
-The _learnr_ package to turn any R Markdown document into an interactive tutorial.The _gradethis_ package for "grading" student exercises in learnr tutorials. The rstudio [primers](https://rstudio.cloud/learn/primers) constitute great examples of learnr tutorials. 
+The `learnr` package to turn any R Markdown document into an interactive tutorial.The `gradethis` package for "grading" student exercises in learnr tutorials. The rstudio [primers](https://rstudio.cloud/learn/primers) constitute great examples of learnr tutorials. 
 
 ## Creating a Lesson Repo From Scratch using decampr
 
 Sources : 
 
 [decampr from_scratch](https://laderast.github.io/decampr/articles/from_scratch.html)
-[decampr] (https://github.com/laderast/decampr)
+[decampr](https://github.com/laderast/decampr)
 
 ```{r, eval = FALSE}
 install.packages("remotes")
@@ -63,7 +63,7 @@ Pros :
 
 ### Comment faire en pratique ?
 
-1. Import a minimal repo (), install it and make sure the app is running locally.
+1. Import a minimal repo, for example [course-starter-r](https://github.com/ines/course-starter-r), install it and make sure the app is running locally.
 2. Customize the meta.json and binder/install.R.
 3. Build a [Binder](https://mybinder.org/) from the binder branch of this repo.
 4. Add content (chapters, exercises and slides) and optionally add separate content license.
@@ -75,7 +75,7 @@ Pros :
 On commence par installer Gasby, générateur de site web ainsi que ses autres dépendances avant de lancer le serveur, qui sera sur localhost:8000.
 
 A noter qu'il est nécessaire d'avoir Node.js installé au préalabl et que les versions disponibles par défaut dans les dépôts apt sont obsolètes (8.5.x). Sous Ubuntu 18.04 LTS, on peut installer des versions récentes de NodeJS et npm (NodeJS Package Manager) via les commandes suivantes:
-```{bash}
+```{bash, eval = FALSE}
 # Using Ubuntu
 curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
 sudo apt-get install -y nodejs
