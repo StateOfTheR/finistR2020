@@ -15,7 +15,7 @@ Les éléments de l'introduction proviennent du site d'aide de [dplyr](https://c
 
 L'évaluation tidy est un type d'évaluation utilisée dans tout le tidyverse. Les verbes dplyr utilise d'une manière ou d'une autre l'évaluation tidy. Il en existe essentiellement 2 formes :
 
-- `arrange()`, `count()`, `filter()`, `group_by()`, `mutate()`, and `summarise()` : ces verbes utilisent le masquage de données (data masking). De cette facon, les variables dans des données peuvent être utilisées comme si elles étaient dans l'environnement. Plus besoin d'écrire 'df$var' mais simplement 'var' dans le verbe dplyr.
+- `arrange()`, `count()`, `filter()`, `group_by()`, `mutate()`, and `summarise()` : ces verbes utilisent le masquage de données (data masking). De cette facon, les variables dans des données peuvent être utilisées comme si elles étaient dans l'environnement. Plus besoin d'écrire `df$var` mais simplement `var` dans le verbe dplyr.
 
 - `across()`, `relocate()`, `rename()`, `select()`, and `pull()` : ces verbes utilisent la sélection tidy (tidy selection) et permettent de choisir facilement des variables en se basant sur leur position, leur nom ou leur type  (e.g. `starts_with("x")` or `is.numeric()`).
 
@@ -34,6 +34,7 @@ L'utilisation de fonctions du tidyverse dans des fonctions personnelles peut par
 
 ```{r, message=FALSE}
 library(tidyverse)
+theme_set(theme_bw())
 data(penguins, package = "palmerpenguins")
 ```
 
