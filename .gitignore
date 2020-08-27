@@ -4,23 +4,6 @@
 .Rapp.history
 .RData
 
-atelier2/R_and_python/.ipynb_checkpoints/
-atelier2/R_and_python/ranger.ipynb
-atelier2/R_and_python/RandomForest.ipynb
-atelier2/sdeEuler
-
-spark/*_cache/
-spark/logs/
-spark/*_files/
-spark/derby.log
-spark/spark-SoTR.html
-
-finistr2019_website/derby.log
-finistr2019_website/d-RcppModules_files/
-finistr2019_website/s-julia_mixed_models_cache/
-finistr2019_website/logs/
 *.swp
 finistR2020.Rproj
 Manifest.toml
-docs/
-finistR2020_website/index_cache/
