@@ -16,7 +16,7 @@ jobs:
         with:
           ref: website
       - name: Install Julia
-        run: julia -e 'using Pkg; Pkg.add["DifferentialEquations"]'
+        run: julia -e 'using Pkg; Pkg.add("DifferentialEquations")'
       - uses: goanpeca/setup-miniconda@v1
         with:
           auto-update-conda: true
