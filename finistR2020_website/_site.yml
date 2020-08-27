@@ -15,7 +15,7 @@ navbar:
     menu:
         - text: "Modèles GAM"
           href: gam.html     
-        - text: "EDO"
+        - text: "Équations différentielles avec R"
           href: edo.html     
 output:
   html_document:
