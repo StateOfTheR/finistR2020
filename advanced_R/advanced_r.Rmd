@@ -9,6 +9,8 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 ```
 
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/stateofther/finistR2020/website?filepath=finistR2020_website/advanced_r.Rmd)
+
 # Eléments généraux
 
 Les éléments de l'introduction proviennent du site d'aide de [dplyr](https://cran.r-project.org/web/packages/dplyr/vignettes/programming.html). 
@@ -264,13 +266,4 @@ summarize_penguins <- function(filter_condition, group, summary_var, summary_fun
 
 ```{r}
 summarize_penguins(species == "Adelie", island, bill_depth_mm, mean, na.rm = TRUE)
-```
-
-## Utilisation de tidyselect
-
-```{r}
-load("VMS_data.RData")
-
-
-
 ```
