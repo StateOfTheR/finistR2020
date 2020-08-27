@@ -129,19 +129,28 @@ Dans l'exemple ci-dessus la matrice de check est la suivante:
 
 que l'on peut modifier à souhait. 
 
-Remarque: les dépendances autres que celles de CRAN seront bien installées si elles sont correctement décrites dans le fichier DESCRIPTION du package. Par exemple, les dépendances de Bioconductor doivent être spécifiées dans le champ `biocViews:` du fichier DESCRIPTION.
+### Gestion des dépendances
+
+Les dépendances autres que celles de CRAN (github ou autre) seront automatiquement installées si elles sont correctement décrites dans le fichier DESCRIPTION du package, comme indiqué dans la [doc de devtools](https://devtools.r-lib.org/articles/dependencies.html#other-sources). 
+
+En particulier si votre package dépend d'un package Bioconductor, il est nécessaire d'ajouter au fichier DESCRIPTION la ligne 
+
+```
+biocViews:
+```
+
+(qui permet au package remotes de comprendre qu'il faut aller chercher les dépendances sur les dépôts de Bioconductor)
 
 ### Pour le déploiement du site web
 
-
 ```{r pkgdown, eval = FALSE}
 use_github_action("pkgdown.yaml")
-
 ```
 
 et c'est tout
 
 ## Ressources  
 
+- [Le dépôt "GitHub Actions for the R language"](https://github.com/r-lib/actions)
 - [Le site ropensci](https://ropenscilabs.github.io/actions_sandbox/)
 - [une petit vidéo utile de Jim Hester](https://www.jimhester.com/talk/2020-rsc-github-actions)
