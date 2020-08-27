@@ -17,12 +17,11 @@ L'évaluation tidy est un type d'évaluation utilisée dans tout le tidyverse. L
 
 - `arrange()`, `count()`, `filter()`, `group_by()`, `mutate()`, and `summarise()` : ces verbes utilisent le masquage de données (data masking). De cette facon, les variables dans des données peuvent être utilisées comme si elles étaient dans l'environnement. Plus besoin d'écrire 'df$var' mais simplement 'var' dans le verbe dplyr.
 
-- `across()`, `relocate()`, `rename()`, `select()`, and `pull()` : ces verbes utilisent la sélection tidy et permettent de choisir facilement des variables en se basant sur leur position, leur nom ou leur type  (e.g. `starts_with("x")` or `is.numeric()`).
+- `across()`, `relocate()`, `rename()`, `select()`, and `pull()` : ces verbes utilisent la sélection tidy (tidy selection) et permettent de choisir facilement des variables en se basant sur leur position, leur nom ou leur type  (e.g. `starts_with("x")` or `is.numeric()`).
 
 Ces verbes rendent l'exploration de données rapide et fluide mais ils peuvent poser des problèmes dans le cas où ils sont utilisés dans des boucles ou des fonctions.
 
-Une fonction qui utilise le data masking peut notamment poser problème lorsqu'elle appelle le nom d'une variable dans un tableau à partir d'une variable de l'environnement sans taper explicitement la variable du tableau (des exemples précis sont donnés par la suite). Dans ce cas, on peut utiliser le double crochet `{{}}` ou le `.data[[]]` si la variable est une chaine de charactère. De facon général, il faut différencier explicitement les variables selon qu'elles sont dans le dataframe ou dans l'environnment.
-
+Par exemple, une fonction qui utilise le data masking peut notamment poser problème lorsqu'elle appelle le nom d'une variable dans un tableau à partir d'une variable de l'environnement sans taper explicitement la variable du tableau (des exemples précis sont donnés par la suite). [rlang](https://cran.r-project.org/web/packages/rlang/index.html) fournit des outils pour écrire des codes génériques tout en utilisant dplyr.
 La séléction tidy est un outil complémentaire qui facilite le travaille sur les colonnes d'un jeu de données.
 
 La suite du document donnent quelques exemple d'utilisation de rlang.
@@ -176,10 +175,73 @@ my_plot <- function(species, color) {
 my_plot("Adelie", "sex")
 ```
 
-## Différence entre passage par promesse et passage par nom
+## Passage d'arguments par promesse versus par nom
 
-Les versions `my_plot(var = species)` et `my_plot(var = "species")` diffèrent dans la nature de l'arguement: une expression dans le premier cas, une châine de caractères dans le deuxième. 
+Les versions `my_plot(var = species)` et `my_plot(var = "species")` diffèrent dans la nature de l'argument: une expression dans le premier cas, une chaîne de caractères dans le deuxième. La première version est plus souple. 
 
-La mécanique 
+```{r}
+my_plot_char <- function(x, y) {
+  ggplot(penguins, 
+         aes(x = .data[[x]], y = .data[[y]], color = species)) + 
+    geom_point()
+}
+my_plot_char(x = "bill_length_mm", y = "bill_depth_mm")
+```
+```{r}
+my_plot_expr <- function(x, y) {
+  ggplot(penguins, 
+         aes(x = {{x}}, y = {{y}}, color = species)) + 
+    geom_point()
+}
+my_plot_expr(x = bill_length_mm, y = bill_depth_mm)
+```
+Contrairement à `my_plot_char()`, `my_plot_expr()` peut être utilisée avec des expressions, _i.e._ des transformations des variables de `penguins` calculées à la volée:
+
+```{r}
+my_plot_expr(x = bill_length_mm - bill_depth_mm, y = bill_length_mm + bill_depth_mm)
+```
+
+## Utiliser des chaînes de caractères dans fonctions du tidyverse
+
+On peut avoir envie d'itérer sur des variables stockées dans vecteurs de type `character`. C'est facile avec `my_plot_char()` mais légèrement plus difficile avec `my_plot_expr()`
+
+```{r}
+var_x <- "bill_length_mm"
+var_y <- "bill_depth_mm"
+## Works fine
+my_plot_char(var_x, var_y)
+```
+
+```{r error = TRUE}
+## Does not work as intended
+my_plot_expr(var_x, var_y)
+```
+
+On peut néanmoins s'en sortir à l'aide du pronom `.data` précédemment présenté
+
+```{r error = TRUE}
+## Works as intended
+my_plot_expr(.data[[var_x]], .data[[var_y]])
+```
+
+Et itérer sur des tableaux
+
+```{r}
+cont_vars <- c("bill_length_mm", "bill_depth_mm", "flipper_length_mm", "body_mass_g")
+df <- crossing(x = cont_vars, y = cont_vars) 
+plot_list <- map2(.x = df$x, .y = df$y, ~ my_plot_expr(.data[[.x]], .data[[.y]]) + theme(legend.position = "none"))
+cowplot::plot_grid(plotlist = plot_list)
+```
+
 
 ## Utilisation de `:=`
+
+
+## Utilisation de tidyselect
+
+```{r}
+load("VMS_data.RData")
+
+
+
+```
