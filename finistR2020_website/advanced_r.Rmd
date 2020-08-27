@@ -281,10 +281,7 @@ VMS_data <- as_tibble(VMS_data)
 
 On peut chercher à créer une fonction représentant les captures de deux navires pour 3 espèces (la sole, le merlu, la langoustine). La fonction suivante utilise les différentes commandes vues précédemment (`{{}}`, `.Data`, `.env$`, `:=`). 
 
-```{r}
-library(rnaturalearth)
-world <- ne_countries(scale = "medium", returnclass = "sf")
-
+```{r fig.width = 9, fig.height=3}
 plot_VMS_data <- function(data,species,unit){
   data %>% 
     dplyr::select(aggreg_level:lati,contains(paste0(.env$unit,"_",.env$species))) %>% # aller chercher l'unité et les espèces dans l'environnement 
@@ -294,9 +291,8 @@ plot_VMS_data <- function(data,species,unit){
     summarise("{unit}" := mean(.data[[unit]])) %>%
     ggplot() + #  ploter les données
     geom_point(aes(x=long,y=lati,col = log(.data[[unit]]+1)),size = 0.5,shape=15) +
-    geom_sf(data = world)+
-    coord_sf(xlim = c(-6,0), ylim = c(43,48), expand = FALSE)+
     scale_color_gradient(low = "white", high = "red")+xlab("")+ylab("")+
+    coord_equal() + 
     theme(panel.border = element_blank(),
           panel.grid.major = element_blank(),
           panel.grid.minor = element_blank(),
