@@ -29,7 +29,7 @@ La restitution se fait sous forme de site web. Le site de l’édition 2020
   - Gloaguen Pierre
   - Le Minh Tam
   - Mariadassou Mahendra
-  - Massiot Gaspard
+  - Massiot Gaspar
   - Navaro Pierre
   - Neuvial Pierre
 
