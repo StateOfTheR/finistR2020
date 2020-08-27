@@ -7,3 +7,5 @@
 *.swp
 finistR2020.Rproj
 Manifest.toml
+docs/index.html
+docs/site_libs
