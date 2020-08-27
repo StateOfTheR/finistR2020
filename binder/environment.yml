@@ -8,6 +8,7 @@ dependencies:
   - r-dplyr
   - r-dt
   - r-fda
+  - r-forcats
   - r-ggally
   - r-ggforce
   - r-plotly
