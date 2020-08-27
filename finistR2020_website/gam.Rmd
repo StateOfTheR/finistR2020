@@ -15,7 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ![img](img/GAM.jpg)
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/stateofther/finistR2020/website?filepath=gam.Rmd)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/stateofther/finistR2020/website?filepath=finistR2020_website/gam.Rmd)
 
 ## Modèles additifs généralisés
 
