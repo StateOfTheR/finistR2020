@@ -236,7 +236,21 @@ cowplot::plot_grid(plotlist = plot_list)
 
 ## Utilisation de `:=`
 
-L'opérateur `:=` permet de créer des nouvelles variables à la volée dans des verbes du tidyverse
+On peut évidemment utiliser l'opérateur `{{` à d'autres verbes du tidyverse:
+```{r}
+summarize_penguins <- function(filter_condition, group, summary_var, summary_fun, ...) {
+  penguins %>% 
+    filter({{ filter_condition }}) %>% 
+    group_by({{ group }}) %>% 
+    summarize(my_summary := summary_fun({{summary_var}}, ...))
+}
+```
+
+```{r}
+summarize_penguins(species == "Adelie", island, bill_depth_mm, mean, na.rm = TRUE)
+```
+
+Mais le fait de devoir spécifier dès le départ le nom de colonne est désagréable et peu informatif. L'opérateur `:=` permet de créer des variables *nommées de façon dynamique* dans des verbes du tidyverse
 
 ```{r}
 summarize_penguins <- function(filter_condition, group, summary_var, summary_fun, ...) {
