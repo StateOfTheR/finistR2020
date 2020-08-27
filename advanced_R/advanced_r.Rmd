@@ -211,6 +211,7 @@ var_y <- "bill_depth_mm"
 ## Works fine
 my_plot_char(var_x, var_y)
 ```
+
 ```{r error = TRUE}
 ## Does not work as intended
 my_plot_expr(var_x, var_y)
