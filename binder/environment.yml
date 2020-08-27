@@ -5,7 +5,6 @@ dependencies:
   - r-base=3.6.3
   - r-codetools
   - r-desolve
-  - r-dplyr
   - r-dt
   - r-fda
   - r-forcats
@@ -16,5 +15,6 @@ dependencies:
   - r-rmarkdown
   - r-stringi
   - r-tidyverse
+  - r-cowplot
   - jupytext
   - pandoc
