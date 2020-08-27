@@ -90,12 +90,13 @@ activites <-
 color_used <-
   activites %>%
   enframe(name = NULL) %>%
-  mutate(col = case_when(str_detect(value, "Bilan")       ~ "#97b1bd",
-                         str_detect(value, "Atelier 1")   ~ "#def7cf",
-                         str_detect(value, "Atelier 2")   ~ "#c3f2a7",
-                         str_detect(value, "Atelier 3")   ~ "#b5f48d",
-                         str_detect(value, "Atelier 4")   ~ "#96e863",
-                         str_detect(value, "Restitution") ~ "#fea741",
+  mutate(col = case_when(str_detect(value, "Bilan")        ~ "#97b1bd",
+                         str_detect(value, "Atelier 1")    ~ "#def7cf",
+                         str_detect(value, "Atelier 2")    ~ "#c3f2a7",
+                         str_detect(value, "Atelier 3")    ~ "#b5f48d",
+                         str_detect(value, "Atelier 4")    ~ "#96e863",
+                         str_detect(value, "Restitution")  ~ "#fea741",
+                         str_detect(value, "Webinar")      ~ "#fea741",
                          str_detect(value, "Introduction") ~ "#fea741")) %>% 
   pull(col)
 prog %>% 
@@ -105,4 +106,4 @@ prog %>%
               backgroundColor = styleEqual(activites , color_used))
 ```
 
-Les séquences en vert correspondent à des séances d'atelier en sous groupes. Les séquences en orange correspondent à un panorama du sujet indiqué, tandis que les séquences en bleu correspondent à des temps de réflexion et rédaction sur le rendu final.
+Les séquences en vert correspondent à des séances d'atelier en sous groupes. Les séquences en orange correspondent à des sujets abordés collectivement, tandis que les séquences en bleu correspondent à des temps de réflexion et rédaction sur le rendu final.
