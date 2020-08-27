@@ -268,6 +268,9 @@ summarize_penguins(species == "Adelie", island, bill_depth_mm, mean, na.rm = TRU
 
 ## Utilisation de tidyselect
 
+
+## Un exemple sur un jeu de données de pêche
+
 Le jeu de données VMS_data contient les données spatialisées des captures (`LE_KG`), des efforts (`HF`) et des indices d'abondance (`CPUE`) par navire (`aggreg_level`) des chalutiers ciblant les espèces démersales (`OTB_DEF`) dans le golfe de Gascogne. La donnée est aggrégée à l'échelle des cellules (`layer`) d'une grille de résolution 0.05°. Les captures et les indices d'abondance pour chaque espèce sont en colonne.
 
 ```{r}
@@ -286,12 +289,12 @@ world <- ne_countries(scale = "medium", returnclass = "sf")
 
 plot_eff.sev.vessels <- function(data,species,unit){
   data %>% 
-    dplyr::select(aggreg_level:lati,contains(paste0(.env$unit,"_",.env$species))) %>% # on va chercher l'unité et les espèces dans l'environnement 
-    pivot_longer(contains(paste0(.env$unit,"_",.env$species)),names_to = "species",values_to = unit) %>%  # .env$unit ne marche pas ?
-    mutate(species = str_remove(species, paste0(.env$unit,"_"))) %>%
-    group_by(layer,long,lati,species) %>%
+    dplyr::select(aggreg_level:lati,contains(paste0(.env$unit,"_",.env$species))) %>% # aller chercher l'unité et les espèces dans l'environnement 
+    pivot_longer(contains(paste0(.env$unit,"_",.env$species)),names_to = "species",values_to = {{unit}}) %>% # passer les colonnes valeurs en une seule colonne
+    mutate(species = str_remove(species, paste0(.env$unit,"_"))) %>% # modifier le nom de la colonne species
+    group_by(layer,long,lati,species) %>% # moyenner les valeurs par espèce par cellule
     summarise("{unit}" := mean(.data[[unit]])) %>%
-    ggplot() +
+    ggplot() + #  ploter les données
     geom_point(aes(x=long,y=lati,col = log(.data[[unit]]+1)),size = 0.5,shape=15) +
     geom_sf(data = world)+
     coord_sf(xlim = c(-6,0), ylim = c(43,48), expand = FALSE)+
