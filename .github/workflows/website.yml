@@ -15,8 +15,11 @@ jobs:
       - uses: actions/checkout@v2
         with:
           ref: website
+      - name: Install Julia
+        run: julia -e 'using Pkg; Pkg.add["DifferentialEquations"]'
       - uses: goanpeca/setup-miniconda@v1
         with:
+          auto-update-conda: true
           environment-file: binder/environment.yml
           activate-environment: test
       - shell: bash -l {0}
