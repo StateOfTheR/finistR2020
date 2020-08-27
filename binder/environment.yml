@@ -3,6 +3,7 @@ channels:
   - conda-forge
 dependencies:
   - r-base=3.6.3
+  - r-codetools
   - r-desolve
   - r-dplyr
   - r-dt
