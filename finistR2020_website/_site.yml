@@ -16,7 +16,9 @@ navbar:
         - text: "Modèles GAM"
           href: gam.html     
         - text: "Équations différentielles avec R"
-          href: edo.html     
+          href: edo.html
+        - text: "Progammation avec le tidyverse"
+          href: advanced_r.html
 output:
   html_document:
     theme: flatly
