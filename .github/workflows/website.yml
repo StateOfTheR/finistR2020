@@ -10,11 +10,11 @@ jobs:
     if: "!contains(github.event.head_commit.message, 'skip')"
     runs-on: "ubuntu-latest"
     steps:
-      - name: apt install
-        run: xargs -a binder/apt.txt sudo apt-get install
       - uses: actions/checkout@v2
         with:
           ref: website
+      - name: apt install
+        run: xargs -a binder/apt.txt sudo apt-get install
       - name: Install Julia
         run: julia -e 'using Pkg; Pkg.add("DifferentialEquations")'
       - uses: goanpeca/setup-miniconda@v1
