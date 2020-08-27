@@ -284,15 +284,15 @@ On peut chercher à créer une fonction représentant les captures de deux navir
 library(rnaturalearth)
 world <- ne_countries(scale = "medium", returnclass = "sf")
 
-plot_eff.sev.vessels <- function(data,vessels,species,unit){
+plot_eff.sev.vessels <- function(data,species,unit){
   data %>% 
     dplyr::select(aggreg_level:lati,contains(paste0(.env$unit,"_",.env$species))) %>% # on va chercher l'unité et les espèces dans l'environnement 
     pivot_longer(contains(paste0(.env$unit,"_",.env$species)),names_to = "species",values_to = unit) %>%  # .env$unit ne marche pas ?
     mutate(species = str_remove(species, paste0(.env$unit,"_"))) %>%
     group_by(layer,long,lati,species) %>%
-    summarise(value = mean({{unit}})) %>%
+    summarise("{unit}" := mean(.data[[unit]])) %>%
     ggplot() +
-    geom_point(aes(x=long,y=lati,col = log(value+1)),size = 0.5,shape=15) +
+    geom_point(aes(x=long,y=lati,col = log(.data[[unit]]+1)),size = 0.5,shape=15) +
     geom_sf(data = world)+
     coord_sf(xlim = c(-6,0), ylim = c(43,48), expand = FALSE)+
     scale_color_gradient(low = "white", high = "red")+xlab("")+ylab("")+
@@ -305,10 +305,9 @@ plot_eff.sev.vessels <- function(data,vessels,species,unit){
 }
 
 data_2 <- VMS_data
-vessels_2 <- c("16629","37581")
 species_2 <- c("Solea_solea","Merluccius_merluccius","Nephrops_norvegicus")
 unit_2 <-"CPUE"
-plot_eff.sev.vessels(data_2,vessels_2,species_2,unit_2)
+plot_eff.sev.vessels(data_2,species_2,unit_2)
 
 ```
 
