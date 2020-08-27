@@ -236,6 +236,20 @@ cowplot::plot_grid(plotlist = plot_list)
 
 ## Utilisation de `:=`
 
+L'opérateur `:=` permet de créer des nouvelles variables à la volée dans des verbes du tidyverse
+
+```{r}
+summarize_penguins <- function(filter_condition, group, summary_var, summary_fun, ...) {
+  penguins %>% 
+    filter({{ filter_condition }}) %>% 
+    group_by({{ group }}) %>% 
+    summarize("{{summary_var}}_{{summary_fun}}" := summary_fun({{summary_var}}, ...))
+}
+```
+
+```{r}
+summarize_penguins(species == "Adelie", island, bill_depth_mm, mean, na.rm = TRUE)
+```
 
 ## Utilisation de tidyselect
 
