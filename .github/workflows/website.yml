@@ -11,7 +11,7 @@ jobs:
     runs-on: "ubuntu-latest"
     steps:
       - name: apt install
-        run: sudo apt-get install -yq libicu-dev
+        run: xargs -a binder/apt.txt sudo apt-get install
       - uses: actions/checkout@v2
         with:
           ref: website
