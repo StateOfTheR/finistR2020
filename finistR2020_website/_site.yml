@@ -10,15 +10,22 @@ navbar:
     icon: fa-github
     href: https://github.com/StateOfTheR/finistR20
  right:
-  - text: "Statistiques"
+  - text: "R avancé"
+    icon: fas fa-r-project
+    menu:
+        - text: "Progammation avec le tidyverse"
+          href: advanced_r.html
+  - text: "Statistique"
     icon: fas fa-chart-bar
     menu:
         - text: "Modèles GAM"
           href: gam.html     
         - text: "Équations différentielles avec R"
           href: edo.html
-        - text: "Progammation avec le tidyverse"
-          href: advanced_r.html
+        - text: "Manipulation des distributions"
+          href: distributions.html
+        - text: "Tidymodels"
+          href: tidymodels.html
 output:
   html_document:
     theme: flatly
