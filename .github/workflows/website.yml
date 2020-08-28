@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+
 jobs:
   website:
     name: Build website with rmarkdown

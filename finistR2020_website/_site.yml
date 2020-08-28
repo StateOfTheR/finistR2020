@@ -8,13 +8,7 @@ navbar:
     href: index.html
   - text: "Dépôt GitHub"
     icon: fa-github
-    href: https://github.com/StateOfTheR/finistR20
- right:
-  - text: "Statistiques"
-    icon: fas fa-chart-bar
-    menu:
-        - text: "Modèles GAM"
-          href: gam.html     
+    href: https://github.com/StateOfTheR/finistR2020
 output:
   html_document:
     theme: flatly
