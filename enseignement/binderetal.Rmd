@@ -46,8 +46,7 @@ The course repository works with two components: Gatsby (front-end), and Binder 
 
 ![How does Gatsby work with Binder?](img/client_serveur.png)
 
-Cons :
-
+Cons : 
 - Takes some time to learn. The file structure of the platform takes a little getting used to, with code, exercises, and slides residing in different folders and files. 
 - Currently no way to track user completion/award certificates, but perfect for application of providing free lessons on learning R and encouraging students
 - Code checking is limited
@@ -55,8 +54,11 @@ Cons :
 Pros :
 
 - Scalability. Because it is hosted on mybinder.org, a free service, the course scales very well. We have had hundreds of users run the RBootcamp, and we have had very few hiccups. Without this ability, we could not offer our course for free for everyone globally.
+
 - Free for right now. Solutions such as LearnR are great, but they require a shinyapps.io account to host the material, which have limited bandwidth for the free accounts, and more access costs money. Ines’ platform is dependent on two services that are currently free: mybinder.org and netlify.
+
 - Separates out code from content. DataCamp lessons are organized into chapters that contain instructions and then an interactive coding platform that gives code scaffolding, hints and solutions. This allows students to learn interactively by following instructions to complete code prompts within an R environment. Ines’ platform allows for similar interactivity, but separates out the slide contents from the code. This is very helpful in testing and debugging the code.
+
 - Works on phone browsers. 
 
 ### Comment faire en pratique ?
@@ -78,10 +80,9 @@ A noter qu'il est nécessaire d'avoir Node.js installé au préalabl et que les 
 curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
 sudo apt-get install -y nodejs
 ```
-Sous windows, on installe Nodejs depuis https://nodejs.org/en/ puis installer le package `windows-build-tools` avec la commande `npm install --global windows-build-tools --vs2015` dans une invite de commande lancée en mode administrateur.
 
 On peut vérifier que l'installation s'est bien passée et que les numéros de version sont les bons via: 
-```{bash verif_versions, eval = FALSE}
+```{bash verif_versions}
 node -v # Besoin d'une version > 10.15
 npm -v
 ```
