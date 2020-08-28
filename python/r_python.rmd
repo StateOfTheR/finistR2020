@@ -1,0 +1,250 @@
+---
+title: "Représentation et inférence de réseaux avec R et Python"
+author: "Saint-Clair Chabert-Liddell"
+date: "August 26, 2020"
+output: 
+  html_document: 
+    df_print: tibble
+editor_options: 
+  chunk_output_type: inline
+---
+
+## Utilisation de Python dans rmarkdown
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Pour pouvoir utiliser `Python` dans `Rmarkdown` il faut utiliser le package `reticulate`.
+On peut lui préciser le chemin de la version que l'on veut utiliser une certaine version plutôt que celle par défaut. Si une version de `Python` est déjà chargée, il faut relancer la session `R` pour que la modification soit appliqué.
+```{r}
+library(reticulate)
+use_python(python = "/usr/bin/python3.6", required = TRUE)
+use_virtualenv("r-reticulate")
+reticulate::py_config()
+```
+
+Il suffit alors de créer un chunk avec `python` comme langage. Tous les objets `R` de l'environnement sont accessible via la commande `r.`.
+```{python}
+x = 2
+print(x)
+r.x = x
+```
+
+Dans un chunk `R`, les objets `python` sont accessible avec la commande `py$`.
+```{r}
+x <- py$x
+y <- x**2
+print(y)
+typeof(y)
+```
+
+Il faut faire attention à la transformation automatique des types de `R` vers `python`, ce dernier étant plus pointilleux que `R` la dessus.
+```{python}
+z = [i**2 for i in range(int(r.y))]
+
+print(z)
+```
+
+## Utilisation de la librarie graph_tool
+
+`graph_tool` est une librairie `python` pour analyser des réseaux développer par T. Peixoto. 
+Elle permet entre autre de faire des visualisations interactive de graphes et est également très réputée pour ces implémentations du SBM et du degree corrected SBM.
+```{r}
+library(sbm)
+library(igraph)
+library(tidyverse)
+```
+
+```{python}
+import graph_tool.all as gt
+import matplotlib.pyplot as plt
+import numpy as np
+import math
+import time
+```
+
+```{python}
+g = gt.collection.data["football"]
+print(g)
+```
+
+
+```{python}
+state = gt.minimize_blockmodel_dl(g)
+m = state.get_matrix()
+```
+
+Les plots `matplotlib` sortent très bien dans le notebook, mais ce n'est pas le cas des plots interactifs. Ceux-ci ouvrent une fenêtre `python` interactive et bloquent la compilation du document.
+
+```{python}
+plt.matshow(m.todense())
+```
+
+
+Si l'on décide de sortir un plot *inline*,  la fenêtre virtuelle ne s'ouvre pas et l'on récupère juste l'adresse mémoire du graph stocker.
+```{python}
+pv = None
+for i in range(1000):
+     ret = state.mcmc_sweep(niter=10)
+     pv = state.collect_vertex_marginals(pv)
+gt.mf_entropy(g, pv)
+p = gt.graph_draw(g, pos=g.vp["pos"], vertex_shape="pie",
+                  vertex_pie_fractions=pv, inline= True)
+```
+
+On obtient des représentations graphiques sur des graph assez gros (1500 noeuds) rapidement.
+```{python}
+g = gt.price_network(1500)
+deg = g.degree_property_map("in")
+deg.a = 4 * (np.sqrt(deg.a) * 0.5 + 0.4)
+```
+```{python}
+
+ebet = gt.betweenness(g)[1]
+ebet.a /= ebet.a.max() / 10.
+eorder = ebet.copy()
+eorder.a *= -1
+pos = gt.sfdp_layout(g)
+control = g.new_edge_property("vector<double>")
+for e in g.edges():
+    d = np.sqrt(sum((pos[e.source()].a - pos[e.target()].a) ** 2)) / 5
+    control[e] = [0.3, d, 0.7, d]
+gt.graph_draw(g, pos=pos, vertex_size=deg, vertex_fill_color=deg, vorder=deg,
+              edge_color=ebet, eorder=eorder, edge_pen_width=ebet,
+              edge_control_points=control) # some curvy edges
+              #output="graph-draw.pdf")
+```
+Et l'on peut également sortir des plots interactifs avec graphviz.
+```{python}
+g = gt.price_network(1500)
+deg = g.degree_property_map("in")
+deg.a = 2 * (np.sqrt(deg.a) * 0.5 + 0.4)
+ebet = gt.betweenness(g)[1]
+#gt.graphviz_draw(g, vcolor=deg, vorder=deg, elen=10,
+#                 ecolor=ebet, eorder=ebet, )#, output="graphviz-draw.pdf")
+```
+```{python}
+g = gt.price_network(3000)
+pos = gt.sfdp_layout(g)
+gt.graph_draw(g, pos=pos)#, output="graph-draw-sfdp.pdf")
+```
+
+```{python}
+g = gt.collection.data["netscience"]
+g = gt.GraphView(g, vfilt=gt.label_largest_component(g))
+g.purge_vertices()
+state = gt.minimize_nested_blockmodel_dl(g, deg_corr=True)
+t = gt.get_hierarchy_tree(state)[0]
+tpos = pos = gt.radial_tree_layout(t, t.vertex(t.num_vertices() - 1), weighted=True)
+cts = gt.get_hierarchy_control_points(g, t, tpos)
+pos = g.own_property(tpos)
+b = state.levels[0].b
+shape = b.copy()
+shape.a %= 14
+gt.graph_draw(g, pos=pos, vertex_fill_color=b, vertex_shape=shape,
+              edge_control_points=cts,
+              edge_color=[0, 0, 0, 0.3], vertex_anchor=0)#, output="netscience_nested_mdl.pdf")
+```
+
+
+Un essaie de plot hiérarchique:
+```{python}
+g = gt.collection.data["celegansneural"]
+state = gt.minimize_nested_blockmodel_dl(g, deg_corr=True)
+gt.draw_hierarchy(state, output="./celegansneural_hier.png")
+```
+![plot hierarchique](./celegansneural_hier.png)
+
+Si l'on fit un sbm sur un graph, l'autoplot sur l'état des blocks du graphe se fait automatiquement. 
+
+```{python}
+t0 = time.time()
+g = gt.collection.data["polbooks"]
+
+state = gt.minimize_blockmodel_dl(g , deg_corr=False)
+for i in range(10):
+    s = gt.minimize_blockmodel_dl(g , deg_corr=False)
+    if s.entropy() < state.entropy():
+        state = s
+
+t = t0 - time.time()
+print(t)
+
+state.entropy()
+```
+```{python}
+
+state.draw(pos=g.vp["pos"], vertex_shape=state.get_blocks())#,
+state.draw(output = "gt_plot.png" )
+#...            output="polbooks_blocks_mdl.svg")
+```
+![Image graph tools](./gt_plot.png)
+
+
+
+## Passe de `python` à `R`
+On peut passer le réseau via la matrice d'adjacence de `python` à `R`, mais on aimerait mieux  sortir un objet `graphml` qui est bien lu par `igraph`.
+
+Malheureusement, cela ne fonctionne pas. Toutes les méthodes de `graph_tool` sur les noeuds et les arêtes renvoient des itérateurs. Il est nécessaire de les transformer en vecteur avec de les utiliser en `R`.
+
+
+```{python}
+blocks = [b for b in state.get_blocks()]
+A = gt.adjacency(g)
+g.save(file_name= "/home/stc/Documents/StateOfTheR/FinistR2020/graph_gt.graphml", fmt="graphml")
+```
+
+```{r}
+#g <- igraph::read.graph("/home/stc/Documents/StateOfTheR/FinistR2020/graph_gt.graphml",                         format = "graphml")
+```
+
+
+```{r}
+py$blocks + 1
+```
+```{r}
+A <- as.matrix(py$A)
+isSymmetric(A)
+```
+```{r}
+my_sbm <- blockmodels::BM_bernoulli("SBM_sym", A, verbosity = 0, plotting = "")
+```
+
+```{r}
+t0 <- Sys.time()
+my_sbm$estimate()
+t <- t0 - Sys.time()
+t
+```
+```{r}
+aricode::ARI(c1 = py$blocks +1, c2 = my_sbm$memberships[[5]]$map()$C)
+my_sbm$memberships[[5]]$map()$C
+py$blocks +1
+```
+
+Les clustering obtenus par `graph-tool` et sbm (`blockmodels`) sont très proche pour le sbm simple.
+
+
+
+
+
+```{r}
+igraph::graph_from_adjacency_matrix(
+  A, mode = "directed") %>% igraph::write_graph(file = "graph_test.graphml", format = "graphml")
+```
+
+```{python}
+gr = gt.load_graph(file_name="~/Documents/StateOfTheR/FinistR2020/graph_test.graphml", fmt="graphml")
+```
+
+```{python}
+gr.set_directed = False
+gt.minimize_blockmodel_dl(gr, deg_corr=False)
+```
+
+
+## Reste à faire
+
+  * Trouver une meilleur méthode pour passer un objet de type graph de `python`  vers `R`. Une solution serait peut-être d'utiliser le module `igraph` de `python`.
+  * Est-il possible de capturer une fenêtre interactive `python` pour la mettre dans la sortie html du `rmarkdown` ?
