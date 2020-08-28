@@ -24,8 +24,8 @@ jobs:
           activate-environment: test
       - shell: bash -l {0}
         run: |
-          conda run -n test Rscript binder/install.R
-          conda run -n test Rscript -e 'rmarkdown::render_site(input="finistR2020_website")'
+          conda run -n finistR2020 Rscript binder/install.R
+          conda run -n finistR2020 Rscript -e 'rmarkdown::render_site(input="finistR2020_website")'
       - name: GitHub Pages action
         uses: peaceiris/actions-gh-pages@v3
         with:
