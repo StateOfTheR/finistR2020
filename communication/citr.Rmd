@@ -84,6 +84,15 @@ Chiquet dit bla bla [-@chiquet18].
 ### Les références non utilisées
 Si l'on souhaite inclure des références de la bibliographie sans les citer dans le corps du texte, il suffit de définir un champs `nocite` dans le fichier de métadata et les mettre à ce niveau-là.
 
+```{r, eval = FALSE}
+
+---
+nocite: | 
+  @item1, @item2
+...
+
+```
+
 
 ### Le style des citations
 
