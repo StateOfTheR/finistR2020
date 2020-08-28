@@ -95,8 +95,14 @@ Installation des dépendances et génération du site
 -   Installer
     [Miniconda](https://docs.conda.io/en/latest/miniconda.html) our
     Anaconda (plus lourd) sur votre poste.
--   Installer [Julia](https://julialang.org/downloads/)
--   Créer l’environement conda pour générer le site web
+-   Installer [Julia](https://julialang.org/downloads/) avec les
+    packages nécessaires.
+
+<!-- -->
+
+    julia -e 'using Pkg; Pkg.add("DifferentialEquations")'
+
+-   Créer l’environemment conda pour générer le site web
 
 <!-- -->
 

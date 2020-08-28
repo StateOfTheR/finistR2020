@@ -4,6 +4,8 @@ channels:
 dependencies:
   - graph-tool
   - jupytext
+  - numpy
+  - matplotlib
   - pandoc
   - r-base=3.6.3
   - r-codetools

@@ -84,8 +84,12 @@ Le programme sera défini collectivement par les participants lors de la semaine
 ## Installation des dépendances et génération du site
 
 - Installer [Miniconda](https://docs.conda.io/en/latest/miniconda.html) our Anaconda (plus lourd) sur votre poste.
-- Installer [Julia](https://julialang.org/downloads/)
-- Créer l'environement conda pour générer le site web
+- Installer [Julia](https://julialang.org/downloads/) avec les packages nécessaires.
+
+```bash
+julia -e 'using Pkg; Pkg.add("DifferentialEquations")'
+```
+- Créer l'environemment conda pour générer le site web
 
 ```bash
 conda env create -f binder/environment.yml
