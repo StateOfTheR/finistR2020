@@ -15,7 +15,7 @@ navbar:
     menu:
         - text: "Progammation avec le tidyverse"
           href: advanced_r.html
-  - text: "Statistique"
+  - text: "Mathématique"
     icon: fas fa-chart-bar
     menu:
         - text: "Modèles GAM"
