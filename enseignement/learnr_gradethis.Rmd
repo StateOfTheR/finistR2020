@@ -1,0 +1,16 @@
+---
+title: "Faire un tutoriel contenant du R avec learnr et gradethis"
+author: "Pierre Gloaguen"
+date: ""
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Le package [`learnr`](https://rstudio.github.io/learnr/) permet de crééer des tutoriels interactifs se basant sur du `R`. Ces tutoriels peuvent comprendre des exercices en `R` (avec solution et indices), ainsi que des quiz. Des méthodes de vérification automatiques sont disponibles depuis récemment grâce au package `gradethis`.
+
+La conception du tutoriels est simple et très proche d'un document Rmarkdown classique. Le déploiment peut ensuite se faire à l'intérieur d'un package ou sur le web grâce à des plateforme de type shinyapps.
+
+Une présentation de `learnr` qui en fait la démonstration est disponible [ici](https://papayoun.shinyapps.io/learnr_gradethis_interactive_tuto/)
