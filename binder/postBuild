@@ -1,5 +1,0 @@
-#!/bin/bash
-
-cd stat
-mv edo.rmd edo.Rmd
-jupytext --to ipynb edo.Rmd
