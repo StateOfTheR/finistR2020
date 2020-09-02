@@ -22,5 +22,5 @@ finistr2019_website/logs/
 *.swp
 finistR2020.Rproj
 Manifest.toml
-docs/
 finistR2020_website/index_cache/
+build
