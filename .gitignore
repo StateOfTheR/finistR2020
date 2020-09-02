@@ -7,3 +7,5 @@
 finistR2020.Rproj
 Manifest.toml
 build
+index_cache/
+tidymodels_cache/
