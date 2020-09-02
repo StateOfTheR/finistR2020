@@ -1,0 +1,264 @@
+---
+title: "Introduction à tidymodels"
+author: "Antoine Bichat"
+date: "8/27/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Packages et données
+
+Comme `tidyverse`, `tidymodels` est un métapackage. Il a été créé et est maintenu (entre autre) par l'auteur de `caret`, et a pour but de le remplacer.
+
+```{r}
+library(tidymodels)
+library(modeldata)
+library(forcats)
+library(skimr)
+library(vip)
+theme_set(theme_bw())
+set.seed(42)
+```
+
+```{r}
+data("stackoverflow")
+stackoverflow
+skim(stackoverflow)
+```
+
+
+# Ensemble de test et d'apprentissage
+
+On utilise le package `rsample` pour séparer notre jeu de données en deux.
+
+```{r}
+split <- initial_split(stackoverflow, prop = 0.8, strata = Country)
+split
+df_train <- training(split)
+df_train
+df_test <- testing(split)
+df_test
+```
+
+# Préparation des données
+
+Le package `recipes` permet de créer des recettes afin de préparer les données pour l'analyse. Ici, on va binariser les variables factorielles (`Country` et `Remote`) puis on normalise tous les prédicteurs (donc toutes les variables sauf `Salary`).
+
+```{r recipe}
+rec <-
+  recipe(df_train, Salary ~ .) %>%
+  step_dummy(Country, Remote) %>%
+  step_normalize(all_predictors())
+rec
+```
+
+Pour l'instant, on a spécifié la recette, mais on ne l'a pas entrainée. Pour cela, on utilise la fonction `prep`.
+
+```{r}
+prep(rec)
+```
+
+Pour appliquer la recette au jeu de donnée qui a servi à l'entraîner, on utilise `juice`.
+
+```{r}
+juiced <-
+  rec %>%
+  prep() %>%
+  juice()
+```
+
+On a bien binarisé et centré les variables.
+
+```{r}
+colnames(juiced)
+mean(juiced$YearsCodedJob)
+var(juiced$YearsCodedJob)
+```
+
+Pour appliquer la recette à un autre jeu de données, il faut utilise `bake`.  
+
+```{r}
+rec %>%
+  prep() %>%
+  bake(df_test) %>% 
+  pull(YearsCodedJob) %>% 
+  mean()
+```
+
+On remarque que ça n'est pas centré : on a normalisé avec la moyenne et la variance du jeu de donnée d'entraînement.
+
+# Spécification d'un modèle de regression linéaire
+
+On crée un modèle de régression avec `parsnip::linear_reg`. 
+
+```{r speclr}
+spec_lr <-
+  linear_reg() %>%
+  set_engine("lm")
+
+spec_lr
+```
+
+Le workflow est l'objet central de l'anaylse : il combine une recette (ou une formule) et une spécification de modèle.
+
+```{r}
+wkf_lr <-
+  workflow() %>%
+  add_recipe(rec) %>%
+  add_model(spec_lr)
+wkf_lr
+```
+
+# Ajustement de la regression linéaire et prédictions
+
+On ajuste le workflow sur le jeu de données d'apprentissage.
+
+```{r fitlr}
+wkf_lr_fit <-
+  wkf_lr %>%
+  fit(df_train)
+wkf_lr_fit
+```
+
+On peut extraire le modèle ajusté avec `pull_workflow_fit`.
+
+```{r}
+fit_lr <-
+  wkf_lr_fit %>%
+  pull_workflow_fit()
+fit_lr 
+tidy(fit_lr)
+```
+
+On peut prédire avec la fonction `predict`.
+
+```{r}
+wkf_lr_fit %>%
+  predict(df_train)
+```
+
+On fait de même sur l'ensemble de test.
+
+```{r}
+df_test_lr <-
+  wkf_lr_fit %>%
+  predict(df_test) %>%
+  bind_cols(df_test)
+df_test_lr
+```
+
+On calcule le RMSE et le R² sur l'ensemble de test avec des fonctions du package `yardstick`.
+
+```{r}
+my_metrics <- metric_set(rmse, rsq)
+
+my_metrics(df_test_lr, truth = Salary, estimate = .pred)
+```
+
+```{r setup2, include=FALSE}
+knitr::opts_chunk$set(eval = FALSE)
+```
+
+# Forêts aléatoires et hyperparamètres
+
+Spécification du modèle et du workflow associé.
+
+```{r specrf}
+spec_rf <-
+  rand_forest(trees = 1000, min_n = tune(), mtry = tune()) %>%
+  set_mode("regression") %>%
+  set_engine("ranger", importance = "impurity") # importance pour vip
+spec_rf
+
+wkf_rf <-
+  workflow() %>%
+  add_recipe(rec) %>%
+  add_model(spec_rf)
+```
+
+On va déterminer la région dans laquelle on va optimiser les paramètres grâce au package `dials`. `min_n` a des valeurs limite par défaut mais il faut ajuster `mtry` par rapport au jeu de données. On crée ensuite un grille non régulière qui maximise l'entropie.
+
+```{r grid}
+grid <-
+  spec_rf %>%
+  parameters() %>%
+  update(mtry = finalize(mtry(), select(juiced, -Salary))) %>%
+  grid_max_entropy(size = 20)
+grid
+ggplot(grid) +
+  aes(mtry, min_n) +
+  geom_point()
+```
+
+k-folds pour la cross-validation, avec `rsample`.
+
+```{r}
+kfolds <- vfold_cv(df_train)
+kfolds
+```
+
+On optimise avec `tune`.
+
+```{r tune, cache=TRUE, cache.lazy=FALSE}
+tuned <- tune_grid(wkf_rf, resamples = kfolds, grid = grid,
+                   control = control_grid(verbose = FALSE),
+                   metrics = my_metrics)
+tuned
+```
+
+On inspecte les modèles. 
+
+```{r}
+autoplot(tuned)
+collect_metrics(tuned)
+show_best(tuned, metric = "rmse")
+select_best(tuned, metric = "rmse")
+```
+
+On ajuste un modèle avec les meilleurs paramètres.
+
+```{r lastfit}
+wkf_rf_fit <-
+  tuned %>%
+  select_best(metric = "rmse") %>%
+  finalize_workflow(wkf_rf, .) %>%
+  last_fit(split, metrics = my_metrics)
+```
+
+Calcule des métriques ce dernier modèle.
+
+```{r}
+collect_metrics(wkf_rf_fit)
+```
+
+On rapelle que le RMSE pour la regression linéaire vaut `r  my_metrics(df_test_lr, truth = Salary, estimate = .pred)$.estimate[1]`.
+
+# Importance des variables
+
+On va utiliser le package `vip` pour calculer le poids des différentes variables dans chaque modèle.
+
+```{r viplr}
+vi(fit_lr)
+
+fit_lr %>%
+  vi() %>%
+  mutate(Variable = fct_rev(as_factor(Variable))) %>%
+  ggplot() +
+  aes(x = Importance, y = Variable, fill = Sign) +
+  geom_col() +
+  labs(y = NULL)
+```
+
+```{r}
+fit_rf <-
+  wkf_rf_fit %>%
+  pull(.workflow) %>%
+  first() %>%
+  pull_workflow_fit()
+vi(fit_rf)
+vip(fit_rf)
+```
+
