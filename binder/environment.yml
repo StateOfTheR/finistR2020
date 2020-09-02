@@ -9,6 +9,7 @@ dependencies:
   - pandoc
   - r-base=3.6.3
   - r-codetools
+  - r-cowplot
   - r-desolve
   - r-dt
   - r-fda
@@ -16,6 +17,7 @@ dependencies:
   - r-ggally
   - r-ggforce
   - r-irkernel
+  - r-naturalearth
   - r-plotly
   - r-rcpp
   - r-rcpparmadillo
