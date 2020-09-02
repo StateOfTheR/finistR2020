@@ -3,5 +3,5 @@ library(JuliaCall)
 julia <- julia_setup()
 install.packages("diffeqr")
 install.packages("sbm")
-
+install.packages("palmerpenguins")
 
