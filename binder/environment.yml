@@ -1,19 +1,27 @@
-name: test
+name: finistR2020
 channels:
   - conda-forge
 dependencies:
+  - graph-tool
+  - jupytext
+  - numpy
+  - matplotlib
+  - pandoc
   - r-base=3.6.3
   - r-codetools
   - r-desolve
-  - r-dplyr
   - r-dt
   - r-fda
+  - r-forcats
   - r-ggally
   - r-ggforce
+  - r-irkernel
   - r-plotly
+  - r-rcpp
+  - r-rcpparmadillo
   - r-readods
+  - r-reticulate
   - r-rmarkdown
   - r-stringi
   - r-tidyverse
-  - jupytext
-  - pandoc
+  - r-cowplot
