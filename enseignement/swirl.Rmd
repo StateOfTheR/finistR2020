@@ -1,0 +1,171 @@
+---
+title: "Un exemple de cours avec Swirl"
+author: "MP Etienne, Baptiste Alglave"
+date: "8/25/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+[`swirl`](https://swirlstats.com/) est un package qui permet de jouer des stionnaires dans R. Les question sont écrites dans un format yaml et on peut également préparer du code R. 
+
+[`swirlify`](http://swirlstats.com/swirlify/) est un package pour faciliter la mise en place de questionnaire swirl. 
+
+
+## Créer un cours 
+
+On peut créer le cours Démarche statistique dans lequel on souhaite avoir deux leçons : la leçon Introduction à R et la leçon sur la régression simple.
+
+```{r load}
+library(swirlify)
+```
+
+
+```{r new_lesson, eval=FALSE}
+
+swirlify::new_lesson("Introduction a R", "Demarche statistique")
+swirlify::new_lesson("Modele de regression", "Demarche statistique")
+```
+
+Ces commandes créent la structure de répertoire nécessaire et les fichiers de base, notamment le fichier lesson.yaml dans le répertoire de chaque leçon. 
+
+
+On peut vouloir indiquer un ordre dans les leçons . Il faut alors sélectionner la leçon à ajouter dans le manifest puis l'ajouter. 
+
+```{r add_manifest, eval = FALSE}
+swirlify::set_lesson('Demarche_statistique/Introduction_a_R/lesson.yaml')
+swirlify::add_to_manifest()
+swirlify::set_lesson('Demarche_statistique/Modele_de_regression/lesson.yaml')
+swirlify::add_to_manifest()
+```
+
+
+```{bash, comment = ''}
+head Demarche_statistique/MANIFEST
+```
+
+
+## Travailler sur une leçon
+
+Pour travailler sur la leçon Introduction à R, il faut spécifier la leçon sur laquelle on travaille, par la commande suivante. 
+
+```{r set_lesson, eval = FALSE}
+swirlify::set_lesson("Demarche_statistique/Introduction_a_R/lesson.yaml")
+```
+
+Cette commande ouvre le lesson.yaml correspondant dans lequel on peut commencer à mettre des questions. 
+
+
+
+Le fichier `initLesson.R ` contient les commandes à éxécuter avant de lancer la leçon. Il est utile de créer une fonction qui récupère le chemin du répertoire comprenant la leçon et charcger facilement un jeu de données. 
+
+```{r copy_dta, include = FALSE}
+system(command = "cp data/usair.txt Demarche_statistique/Introduction_a_R/.")
+```
+
+
+
+```{r fichier_initLesson,  eval = FALSE}
+init_lesson_file <-' .get_course_path <- function(){
+  tryCatch(swirl:::swirl_courses_dir(),
+           error = function(c) {file.path(find.package("swirl"),"Courses")}
+  )
+}
+
+dta <- read.table(file.path(.get_course_path(), 
+"Demarche_statistique", "Introduction_a_R", "usair.txt"), sep = ";", header  = TRUE, skip = 8)'
+
+writeLines(init_lesson_file, con = "Demarche_statistique/Introduction_a_R/initLesson.R")
+
+```
+
+Il faut mettre le fichier de données à l'endroit précisé
+
+```{bash}
+cp data/usair.txt Demarche_statistique/Introduction_a_R/.
+```
+
+
+Pour ajouter des nouvelles questions/interactions, on peut soit utiliser la commande `swirlify() ` pour entrer dans un mode interactif et poser des questions soit utiliser en ligne de commande les  w +  q + tab.
+
+### Ajouter un message
+
+```{r wq_mes, eval =FALSE}
+swirlify::wq_message(output = " Bienvenue sur le cours d'introdution à R")
+```
+
+
+
+### Ajouter une question à choix multiple
+
+```{r  wq_multiple, eval =FALSE}
+
+swirlify::wq_multiple(
+            output = "La table de données dta a été chargée. Parmi les variables suivantes, laquelle fait partie de ce jeu de données ?",
+            answer_choices = "manuf;Ville;temperature",
+            correct_answer = "manuf",
+            answer_tests = "omnitest(correctVal= 'manuf')",
+            hint = "La commande colnames permet d'afficher le nom des colonnes.")
+
+```
+
+
+On peut tout aussi bien éditer directement le fichier lesson.yaml pour obtenir le résultat suivant
+
+```{r show_lesson_yaml, eval = FALSE}
+- Class: meta
+  Course: Démarche statistique
+  Lesson: Introduction à R
+  Author: Marie-Pierre Etienne
+  Type: Standard
+  Organization: Agrocampus Ouest
+  Version: 2.4.5
+
+- Class: text
+  Output:  "Bienvenue sur le cours d' introdution à R"
+
+- Class: mult_question
+  Output: La table de données dta a été chargée. Parmi les variables suivantes, laquelle fait partie de ce jeu de données ?
+  AnswerChoices: manuf;Ville;temperature
+  CorrectAnswer: manuf
+  AnswerTests: omnitest(correctVal= 'ANS')
+  Hint: "La commande colnames permet d'afficher le nom des colonnes".
+
+```
+
+On peut aussi ajouter des questions qui demandent un code en réponse avec `wq_command`.
+
+```{r wq_command, eval = FALSE}
+wq_command( output = "Donner la commande R permettant d'afficher le nom des colonnes de la table de données dta",
+            correct_answer = "colnames(dta)",
+            answer_tests = "omnitest(correctExpr = 'colnames(dta)')",
+            hint = "Explorer les commandes rownames et colnames.")
+              
+```
+
+
+Les différents types de question possibles sont disponibles [ici](http://swirlstats.com/swirlify/writing.html#types_of_questions)
+
+Lorsque la suite de question est écrite on peut tester la leçon.
+
+```{r demo, eval = FALSE }
+swirlify::demo_lesson()
+```
+
+## Distribuer le cours 
+
+Pour distribuer le cours il faut l'empaqueter.
+
+
+```{r pack_course, eval = FALSE}
+  swirlify::pack_course()
+
+swirl::install_course(swc_path = "~/git/finistR2020/enseignement/Demarche_statistique.swc")
+swirl()
+```
+
+##  Des cours déjà disponibles
+
+Des cours sont disponibles sur le [Swirl Course Network](http://swirlstats.com/scn/) dans différentes langues. 

@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Atelier EDO" />
+
+
+<title>Équations différentielles avec R</title>
+
+<script src="site_libs/header-attrs-2.3/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #c4a000; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #000000; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #000000; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #000000; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">FinistR 2020</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Accueil
+  </a>
+</li>
+<li>
+  <a href="https://github.com/StateOfTheR/finistR2020">
+    <span class="fa fa-github"></span>
+     
+    Dépôt GitHub
+  </a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fas fa fas fa-r-project"></span>
+     
+    R avancé
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="advanced_r.html">Progammation avec le tidyverse</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fas fa fas fa-chart-bar"></span>
+     
+    Mathématique
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="gam.html">Modèles GAM</a>
+    </li>
+    <li>
+      <a href="edo.html">Équations différentielles avec R</a>
+    </li>
+    <li>
+      <a href="distributions.html">Manipulation des distributions</a>
+    </li>
+    <li>
+      <a href="tidymodels.html">Tidymodels</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Équations différentielles avec R</h1>
+<h4 class="author">Atelier EDO</h4>
+<h4 class="date">25/08/2020</h4>
+
+</div>
+
+
+<p><a href="https://mybinder.org/v2/gh/stateofther/finistR2020/website?filepath=finistR2020_website%2Fedo.Rmd"><img src="https://mybinder.org/badge_logo.svg" alt="Binder" /></a></p>
+<div id="differential-equations" class="section level1">
+<h1>Differential Equations</h1>
+<div id="cran-task-view" class="section level2">
+<h2>CRAN Task View</h2>
+<p>Le CRAN propose une <a href="https://cran.r-project.org/web/views/DifferentialEquations.html">Task View</a> sur les équations différentielles.</p>
+<p>Une équation différentielle est une équation entre une ou plusieurs fonctions inconnues et leurs dérivées. Cette équation décrit comment une fonction varie en fonction d’une ou de plusieurs variables (souvent le temps ou l’espace) et en fonction des dérivées de cette fonction. Il y différentes facon de classifier les équations différentielles : - les équations peuvent être stochastique (la quantité inconue est aléatoire) ou déterministe (la quantité inconnue est déterministe). - les équations peuvent porter sur des fonctions à une seule variable (équation différentielle ordinaire) ou à plusieurs variables (équation aux dérivées partielles). - les équations peuvent inclure des fonctions dont la dérivée a un certain pas de temps dépend de la dérivée à un pas de temps précédent (équation différentielle à retard ou differential equations delay), ou alors des fonctions algébriques (i.e. il existe une ou plusieurs relations algébriques entre les variables du système - équation différentielle algébrique). - les contraintes peuvent être posées sur tout ou partie du domaine ou sur tout ou partie de la frontière. Ces contraintes peuvent être de plusieurs types : on peut spécifier les valeurs que la fonction doit prendre sur tout ou partie de la frontière du modèle (condition de Dirichlet), les valeurs que la dérivée de la fonction doit prendre sur tout ou partie du domaine (condition de Neumann), etc.</p>
+<p>Il existe plusieurs packages R permettant de résoudre ces équations et d’ajuster ces modèles à de la donnée. Ici, seuls les package deSolve et diffeqr sont utilisés pour résoudre des ED.</p>
+</div>
+<div id="résolution-numérique-dedo-et-dedp" class="section level2">
+<h2>Résolution numérique d’EDO et d’EDP</h2>
+<p>Le package <a href="https://cran.r-project.org/web/packages/deSolve/"><code>deSolve</code></a> permet de résoudre numériquement des équations simples.</p>
+<div id="installation-et-chargement" class="section level3">
+<h3>Installation et chargement</h3>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="kw">install.packages</span>(<span class="st">&quot;deSolve&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="kw">library</span>(tidyverse)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a><span class="kw">library</span>(GGally)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a><span class="kw">library</span>(deSolve)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a><span class="kw">library</span>(fda)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a><span class="kw">theme_set</span>(<span class="kw">theme_bw</span>())</span></code></pre></div>
+</div>
+<div id="edo-simple-la-désintégration-atomique" class="section level3">
+<h3>EDO simple: la désintégration atomique</h3>
+<p>On cherche à résoudre <span class="math inline">\(y&#39; = ay\)</span> avec condition initiale <span class="math inline">\(y(0) = y_0\)</span>. On commence par coder l’équation différentielle: - <code>t</code> représente le temps courant - <code>Y</code> représente l’état courant du système - <code>parameters</code> stocke les paramètres du modèle (ici <span class="math inline">\(a\)</span>)</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a>model &lt;-<span class="st"> </span><span class="cf">function</span>(t, Y, parameters) {</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a>  <span class="kw">with</span>(<span class="kw">as.list</span>(parameters), {</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a>    dy =<span class="st"> </span><span class="op">-</span>a <span class="op">*</span><span class="st"> </span>Y</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a>    <span class="kw">list</span>(dy)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a>  })</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a>}</span></code></pre></div>
+<p>On renseigne ensuite la jacobienne <span class="math inline">\(\frac{\partial y&#39;}{\partial y}\)</span></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a>jac &lt;-<span class="st"> </span><span class="cf">function</span>(t, Y, parameters) {</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a>  <span class="kw">with</span>(<span class="kw">as.list</span>(parameters), {</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a>    PD[<span class="dv">1</span>, <span class="dv">1</span>] &lt;-<span class="st"> </span>a</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a>    <span class="kw">return</span>(PD)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a>  })</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a>}</span></code></pre></div>
+<p>On peut ensuite résoudre l’EDO pour <span class="math inline">\(a = 1\)</span> et <span class="math inline">\(y_0 = 1\)</span> sur l’intervalle <span class="math inline">\([0, 1]\)</span> des pas de temps de longeur <span class="math inline">\(0.01\)</span> comme suit:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a>params &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">a =</span> <span class="dv">1</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a>y0     &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a>times  &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">by =</span> <span class="fl">0.01</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a>PD     &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">0</span>, <span class="dt">nrow =</span> <span class="dv">1</span>, <span class="dt">ncol =</span> <span class="dv">1</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true"></a>out_atome &lt;-<span class="st"> </span><span class="kw">ode</span>(y0, times, model, <span class="dt">parms =</span> params, <span class="dt">jacfun =</span> jac)</span></code></pre></div>
+<p>Le résultat est une matrice: - une colonne pour le temps (reprend les valeurs de <code>times</code>) - une colonne par dimension dans le système d’équations différentielles</p>
+<p>On peut vérifier que la solution numérique (en bleu) est confondue avec la solution analytique (en rouge).</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a>plot_data &lt;-</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">data.frame</span>(out_atome) <span class="op">%&gt;%</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">rename</span>(<span class="dt">numeric =</span> X1) <span class="op">%&gt;%</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">analytic =</span> <span class="kw">exp</span>(<span class="op">-</span>time)) <span class="op">%&gt;%</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true"></a><span class="st">  </span><span class="kw">pivot_longer</span>(<span class="dt">cols =</span> <span class="op">-</span>time,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true"></a>               <span class="dt">names_to =</span> <span class="st">&quot;type&quot;</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true"></a>               <span class="dt">values_to =</span> <span class="st">&quot;y&quot;</span>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true"></a><span class="kw">ggplot</span>(plot_data, <span class="kw">aes</span>(<span class="dt">x =</span> time, <span class="dt">y =</span> y, <span class="dt">color =</span> type)) <span class="op">+</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true"></a><span class="st">  </span><span class="kw">ylim</span>(<span class="dv">0</span>, <span class="dv">1</span>) <span class="op">+</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="kw">c</span>(<span class="fl">0.95</span>, <span class="fl">0.95</span>),</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true"></a>        <span class="dt">legend.justification =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>),</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true"></a>        <span class="dt">legend.background =</span> <span class="kw">element_rect</span>(<span class="dt">fill =</span> <span class="ot">NA</span>))</span></code></pre></div>
+<p><img src="edo_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><code>ode</code> utilise la méthode de Runge-Kutta pour calculer <span class="math inline">\(y(t)\)</span> et renvoie uniquement les valeurs <span class="math inline">\(y(0), y(0.01), \dots, y(1)\)</span> mais fait néanmoins appel à des points intérmédiaires lors du calcul. On peut s’en convaincre en comparant les valeurs finales (<span class="math inline">\(y(1)\)</span>) obtenues avec <code>times = seq(0, 1, by = 0.01)</code> et <code>times = seq(0, 1, by = 1)</code>.</p>
+<p>On peut diagnostiquer la réussite de l’intégration numérique via la commande <code>diagnostics</code></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a><span class="kw">diagnostics</span>(out_atome)</span></code></pre></div>
+<pre><code>## 
+## --------------------
+## lsoda return code
+## --------------------
+## 
+##   return code (idid) =  2 
+##   Integration was successful.
+## 
+## --------------------
+## INTEGER values
+## --------------------
+## 
+##   1 The return code : 2 
+##   2 The number of steps taken for the problem so far: 102 
+##   3 The number of function evaluations for the problem so far: 133 
+##   5 The method order last used (successfully): 6 
+##   6 The order of the method to be attempted on the next step: 6 
+##   7 If return flag =-4,-5: the largest component in error vector 0 
+##   8 The length of the real work array actually required: 36 
+##   9 The length of the integer work array actually required: 21 
+##  14 The number of Jacobian evaluations and LU decompositions so far: 0 
+##  15 The method indicator for the last succesful step,
+##            1=adams (nonstiff), 2= bdf (stiff): 1 
+##  16 The current method indicator to be attempted on the next step,
+##            1=adams (nonstiff), 2= bdf (stiff): 1 
+##  
+## --------------------
+## RSTATE values
+## --------------------
+## 
+##   1 The step size in t last used (successfully): 0.01 
+##   2 The step size to be attempted on the next step: 0.01 
+##   3 The current value of the independent variable which the solver has reached: 1.00002 
+##   4 Tolerance scale factor &gt; 1.0 computed when requesting too much accuracy: 0 
+##   5 The value of t at the time of the last method switch, if any: 0 
+## </code></pre>
+</div>
+<div id="edo-classique-le-modèle-sir" class="section level3">
+<h3>EDO classique: le modèle SIR</h3>
+<p>Source <a href="https://kinglab.eeb.lsa.umich.edu/480/nls/de.html" class="uri">https://kinglab.eeb.lsa.umich.edu/480/nls/de.html</a> Nous considérons le modèle différentiel classique en épidémiologie.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a><span class="co"># Define differential System</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a>closed.sir.model &lt;-<span class="st"> </span><span class="cf">function</span> (t, state, parameters) {</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true"></a>  <span class="co">## first extract the state variables</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true"></a>  S &lt;-<span class="st"> </span>state[<span class="dv">1</span>]</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true"></a>  I &lt;-<span class="st"> </span>state[<span class="dv">2</span>]</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true"></a>  R &lt;-<span class="st"> </span>state[<span class="dv">3</span>]</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true"></a>  <span class="co">## now extract the parameters</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true"></a>  beta &lt;-<span class="st"> </span>parameters[<span class="dv">1</span>]</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true"></a>  gamma &lt;-<span class="st"> </span>parameters[<span class="dv">2</span>]</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true"></a>  N &lt;-<span class="st"> </span>S <span class="op">+</span><span class="st"> </span>I <span class="op">+</span><span class="st"> </span>R</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true"></a>  <span class="co">## now code the model equations</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true"></a>  dSdt &lt;-<span class="st"> </span><span class="op">-</span>beta <span class="op">*</span><span class="st"> </span>S <span class="op">*</span><span class="st"> </span>I<span class="op">/</span>N</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true"></a>  dIdt &lt;-<span class="st"> </span>beta <span class="op">*</span><span class="st"> </span>S <span class="op">*</span><span class="st"> </span>I<span class="op">/</span>N <span class="op">-</span><span class="st"> </span>gamma <span class="op">*</span><span class="st"> </span>I</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true"></a>  dRdt &lt;-<span class="st"> </span>gamma <span class="op">*</span><span class="st"> </span>I</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true"></a>  <span class="co">## combine results into a single vector</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true"></a>  dxdt &lt;-<span class="st"> </span><span class="kw">c</span>(dSdt,dIdt,dRdt)</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true"></a>  <span class="co">## return result as a list!</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true"></a>  <span class="kw">list</span>(dxdt)</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true"></a>}</span></code></pre></div>
+<p>Define parameters and times of evaluation</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a>parms &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">beta =</span> <span class="dv">400</span>,<span class="dt">gamma =</span>  <span class="dv">365</span><span class="op">/</span><span class="dv">13</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true"></a><span class="co"># times stamps</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true"></a>times &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">0</span>,<span class="dt">to =</span> <span class="dv">60</span><span class="op">/</span><span class="dv">365</span>,<span class="dt">by =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">365</span><span class="op">/</span><span class="dv">4</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true"></a><span class="co"># initial conditions</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true"></a>xstart &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">S =</span> <span class="dv">999</span>,<span class="dt">I =</span> <span class="dv">1</span>,<span class="dt">R =</span> <span class="dv">0</span>)</span></code></pre></div>
+<p>Solving with ODE</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true"></a>out.SIR &lt;-</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">ode</span>(<span class="dt">func =</span> closed.sir.model,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true"></a>      <span class="dt">y =</span> xstart,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true"></a>      <span class="dt">times =</span> times,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true"></a>      <span class="dt">parms =</span> parms,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true"></a>      <span class="dt">method =</span> <span class="st">&#39;lsodar&#39;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true"></a><span class="st">  </span><span class="kw">as.data.frame</span>()</span></code></pre></div>
+<p>And plot</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a>out.SIR <span class="op">%&gt;%</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">gather</span>(variable,value,<span class="op">-</span>time) <span class="op">%&gt;%</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> time,<span class="dt">y =</span> value,<span class="dt">color =</span> variable)) <span class="op">+</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&#39;time (yr)&#39;</span>,<span class="dt">y =</span> <span class="st">&#39;number of individuals&#39;</span>)</span></code></pre></div>
+<p><img src="edo_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+</div>
+<div id="edo-classique-modèle-de-lorenz" class="section level3">
+<h3>EDO classique: Modèle de Lorenz</h3>
+<p>Il s’agit d’une modélisation idéalisée de l’atmosphère. X, Y et Z représentent respectivement les variations verticale et horizontale de la température et le flux de convection.</p>
+<p><span class="math display">\[
+\left\{
+\begin{align}
+X&#39; &amp;= aX + YZ \\
+Y&#39; &amp;= b(Y-Z) \\
+Z&#39; &amp;= -XY + cY -Z \\
+\end{align}
+\right.
+\]</span></p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a>times &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">100</span>, <span class="dt">by =</span> <span class="fl">0.01</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true"></a>a &lt;-<span class="st"> </span><span class="dv">-8</span><span class="op">/</span><span class="dv">3</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true"></a>b &lt;-<span class="st"> </span><span class="dv">-10</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true"></a>c &lt;-<span class="st"> </span><span class="dv">28</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true"></a>lorenz &lt;-<span class="st"> </span><span class="cf">function</span>(t, y, parms) {</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true"></a>  <span class="kw">with</span>(<span class="kw">as.list</span>(y), {</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true"></a>    dX &lt;-<span class="st"> </span>a <span class="op">*</span><span class="st"> </span>X <span class="op">+</span><span class="st"> </span>Y <span class="op">*</span><span class="st"> </span>Z</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true"></a>    dY &lt;-<span class="st"> </span>b <span class="op">*</span><span class="st"> </span>(Y <span class="op">-</span><span class="st"> </span>Z)</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true"></a>    dZ &lt;-<span class="st"> </span><span class="op">-</span>X <span class="op">*</span><span class="st"> </span>Y <span class="op">+</span><span class="st"> </span>c <span class="op">*</span><span class="st"> </span>Y <span class="op">-</span><span class="st"> </span>Z</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true"></a>    <span class="kw">list</span>(<span class="kw">c</span>(dX, dY, dZ))</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true"></a>  })</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true"></a>}</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true"></a></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true"></a>out_lorenz &lt;-<span class="st"> </span><span class="kw">ode</span>(<span class="dt">y =</span> <span class="kw">c</span>(<span class="dt">X =</span> <span class="dv">1</span>, <span class="dt">Y =</span> <span class="dv">1</span>, <span class="dt">Z =</span> <span class="dv">1</span>), <span class="dt">times =</span> times, <span class="dt">func =</span> lorenz, <span class="dt">parms =</span> <span class="ot">NULL</span>)</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true"></a></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true"></a>df_lorenz &lt;-</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true"></a><span class="st">  </span>out_lorenz <span class="op">%&gt;%</span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true"></a><span class="st">  </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate_all</span>(as.numeric)</span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true"></a></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true"></a>df_lorenz</span></code></pre></div>
+<pre><code>## # A tibble: 10,001 x 4
+##     time     X     Y     Z
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1  0    1      1     1   
+##  2  0.01 0.985  1.01  1.26
+##  3  0.02 0.973  1.05  1.52
+##  4  0.03 0.965  1.11  1.80
+##  5  0.04 0.962  1.19  2.09
+##  6  0.05 0.964  1.29  2.40
+##  7  0.06 0.973  1.41  2.74
+##  8  0.07 0.990  1.55  3.11
+##  9  0.08 1.02   1.72  3.52
+## 10  0.09 1.06   1.91  3.97
+## # … with 9,991 more rows</code></pre>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true"></a><span class="kw">ggpairs</span>(df_lorenz,</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true"></a>        <span class="dt">lower =</span> <span class="kw">list</span>(<span class="dt">continuous =</span> <span class="kw">wrap</span>(<span class="st">&quot;points&quot;</span>, <span class="dt">size =</span> <span class="fl">0.1</span>)))</span></code></pre></div>
+<p><img src="edo_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+</div>
+<div id="edo-classique-réaction-de-belousov-zhabotinskii" class="section level3">
+<h3>EDO classique: Réaction de Belousov-Zhabotinskii</h3>
+Il s’agit d’une récation chimique exhibant des motifs périodiques.
+<center>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/PpyKSRo8Iec" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</center>
+<p><span class="math display">\[
+\begin{align}
+A+B \xrightarrow{k_A} 2A \\
+B+C \xrightarrow{k_B} 2B \\
+C+A \xrightarrow{k_C} 2C \\
+\end{align}
+\]</span></p>
+<p><span class="math display">\[
+\left\{
+\begin{align}
+\partial_t n_A = n_A (k_A n_B - k_C n_C) \\
+\partial_t n_B = n_B (k_B n_C - k_A n_A) \\
+\partial_t n_C = n_C (k_C n_A - k_B n_B) \\
+\end{align}
+\right.
+\]</span></p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true"></a>times &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">30</span>, <span class="dt">by =</span> <span class="fl">0.01</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true"></a>k_A &lt;-<span class="st"> </span><span class="dv">1</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true"></a>k_B &lt;-<span class="st"> </span><span class="dv">1</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true"></a>k_C &lt;-<span class="st"> </span><span class="dv">2</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true"></a>bz &lt;-<span class="st"> </span><span class="cf">function</span>(t, y, params) {</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true"></a>  <span class="kw">with</span>(<span class="kw">as.list</span>(y), {</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true"></a>    dA &lt;-<span class="st"> </span>A <span class="op">*</span><span class="st"> </span>(k_A <span class="op">*</span><span class="st"> </span>B <span class="op">-</span><span class="st"> </span>k_C <span class="op">*</span><span class="st"> </span>C)</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true"></a>    dB &lt;-<span class="st"> </span>B <span class="op">*</span><span class="st"> </span>(k_B <span class="op">*</span><span class="st"> </span>C <span class="op">-</span><span class="st"> </span>k_A <span class="op">*</span><span class="st"> </span>A)</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true"></a>    dC &lt;-<span class="st"> </span>C <span class="op">*</span><span class="st"> </span>(k_C <span class="op">*</span><span class="st"> </span>A <span class="op">-</span><span class="st"> </span>k_B <span class="op">*</span><span class="st"> </span>B)</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true"></a>    <span class="kw">list</span>(<span class="kw">c</span>(dA, dB, dC))</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true"></a>  })</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true"></a>}</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true"></a></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true"></a>out_bz &lt;-<span class="st"> </span><span class="kw">ode</span>(<span class="dt">y =</span> <span class="kw">c</span>(<span class="dt">A =</span> <span class="fl">0.6</span>, <span class="dt">B =</span> <span class="fl">0.6</span>, <span class="dt">C =</span> <span class="fl">0.3</span>), <span class="dt">times =</span> times, <span class="dt">func =</span> bz, <span class="dt">parms =</span> <span class="ot">NULL</span>)</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true"></a></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true"></a>out_bz <span class="op">%&gt;%</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true"></a><span class="st">  </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span></span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate_all</span>(as.numeric) <span class="op">%&gt;%</span></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true"></a><span class="st">  </span><span class="kw">pivot_longer</span>(<span class="op">-</span>time, <span class="dt">names_to =</span> <span class="st">&quot;variable&quot;</span>, <span class="dt">values_to =</span> <span class="st">&quot;value&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true"></a><span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span></span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true"></a><span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> time, <span class="dt">y =</span> value, <span class="dt">color =</span> variable) <span class="op">+</span></span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true"></a><span class="st">  </span><span class="kw">geom_line</span>()</span></code></pre></div>
+<p><img src="edo_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+</div>
+<div id="edp-classique" class="section level3">
+<h3>EDP classique</h3>
+<p>La résolution d’EDP est plus complexe et consiste à transformer les EDPs en EDOs en utilisant la méthode des différences finies.</p>
+<p>On illustre la démarche sur un modèle de diffusion de pestes (des aphides) sur une rangée de plantes positionnées entre <span class="math inline">\(x = 0\)</span> et <span class="math inline">\(x = 60\)</span>.</p>
+<p><span class="math display">\[
+\frac{\partial N}{\partial t} = - \frac{\partial F}{\partial x} + g \times N
+\]</span></p>
+<p>où le flux diffusif est donné par <span class="math inline">\(F = -D \frac{\partial N}{\partial x}\)</span> et les contraintes stipulent que la densité d’aphides tombe à <span class="math inline">\(0\)</span> aux deux bouts de la rangée de plantes: <span class="math inline">\(\forall t \geq 0, N(x=0, t) = N(x=60, t) = 0\)</span>.</p>
+<p>Au temps initial, les aphides ne sont présentes qu’au milieu de la rangée de plantes: <span class="math display">\[
+N(x, t = 0) = \begin{cases} 1 &amp; \text{if} \quad x = 30 \\ 0 &amp; \text{else} \end{cases}
+\]</span></p>
+<p>La méthodes des différences finies consiste à diviser le domaine en boîtes et à discrétiser l’équation comme suit <span class="math display">\[
+\frac{dN_i}{dt} = - \frac{F_{i, i+1} - F_{i-1, i}}{\Delta x_i} + g\times N_i
+\]</span> où <span class="math inline">\(N_i\)</span> représente la densité d’aphide au milieu de la boîte tandis que les flux sont définies aux interfaces entre boîtes: <span class="math display">\[
+F_{i-1, i} = -D_{i, i-1} \times \frac{N_i - N_{i-1}}{\Delta x_{i-1, i}}
+\]</span> pour se ramener à un système d’EDOs.</p>
+<p>On commence par définir les équations du modèle</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true"></a>Aphid &lt;-<span class="st"> </span><span class="cf">function</span>(t, APHIDS, parameters) {</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true"></a>  <span class="kw">with</span>(<span class="kw">as.list</span>(parameters), {</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true"></a>    <span class="co">## taille des boîtes</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true"></a>    deltax  &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.5</span>, <span class="kw">rep</span>(<span class="dv">1</span>, numboxes <span class="op">-</span><span class="st"> </span><span class="dv">1</span>), <span class="fl">0.5</span>)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true"></a>    <span class="co">## valeurs du flux aux interfaces</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true"></a>    Flux    &lt;-<span class="st"> </span><span class="op">-</span>D <span class="op">*</span><span class="st"> </span><span class="kw">diff</span>(<span class="kw">c</span>(<span class="dv">0</span>, APHIDS, <span class="dv">0</span>)) <span class="op">/</span><span class="st"> </span>deltax</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true"></a>    <span class="co">## valeurs des dérivées</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true"></a>    dAPHIDS &lt;-<span class="st"> </span><span class="op">-</span><span class="kw">diff</span>(Flux) <span class="op">/</span><span class="st"> </span>delx <span class="op">+</span><span class="st"> </span>APHIDS <span class="op">*</span><span class="st"> </span>r</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true"></a>    <span class="co"># the return value</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true"></a>    <span class="kw">list</span>(dAPHIDS)</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true"></a>  })</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true"></a>}</span></code></pre></div>
+<p>puis les paramètres du modèle et de la grille de discretisation:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true"></a>params &lt;-<span class="st"> </span><span class="kw">list</span>(</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true"></a>    D        &lt;-<span class="st"> </span><span class="fl">0.3</span>,    <span class="co"># m2/day  diffusion rate</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true"></a>    r        &lt;-<span class="st"> </span><span class="fl">0.01</span>,   <span class="co"># /day    net growth rate</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true"></a>    delx     &lt;-<span class="st"> </span><span class="dv">1</span>,      <span class="co"># m       thickness of boxes</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true"></a>    numboxes &lt;-<span class="st"> </span><span class="dv">60</span>,</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true"></a>    <span class="co"># distance of boxes on plant, m, 1 m intervals</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true"></a>    Distance &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dt">from =</span> <span class="fl">0.5</span>, <span class="dt">by =</span> delx, <span class="dt">length.out =</span> numboxes)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true"></a>)</span></code></pre></div>
+<p>et enfin les conditions intiales</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true"></a><span class="co"># Initial conditions:  # ind/m2</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true"></a>APHIDS        &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">0</span>, <span class="dt">times =</span> numboxes)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true"></a>APHIDS[<span class="dv">30</span><span class="op">:</span><span class="dv">31</span>] &lt;-<span class="st"> </span><span class="dv">1</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true"></a><span class="co"># initialise state variables</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true"></a>state         &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">APHIDS =</span> APHIDS)</span></code></pre></div>
+<p>on peut alors laisser la densité évoluer sur 200 jours avec un rendu par jour:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true"></a>out_aphide &lt;-<span class="st"> </span><span class="kw">ode.1D</span>(state, <span class="dt">times =</span> <span class="dv">0</span><span class="op">:</span><span class="dv">200</span>, Aphid, <span class="dt">parms =</span> params,</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true"></a>              <span class="dt">nspec =</span> <span class="dv">1</span>, <span class="dt">names =</span> <span class="st">&quot;Aphid&quot;</span>)</span></code></pre></div>
+<p>Le résultat est comme auparavant une matrice avec la première colonne pour le temps et une colonne par EDO dans la discrétisation.</p>
+<p>On peut utiliser ce résultat pour voir la diffusion des aphides dans les plantes au cours du temps:</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true"></a>out_aphide <span class="op">%&gt;%</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true"></a><span class="st">  </span>data.frame <span class="op">%&gt;%</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">pivot_longer</span>(<span class="dt">cols =</span> <span class="op">-</span>time,</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true"></a>               <span class="dt">names_to =</span> <span class="st">&quot;location&quot;</span>,</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true"></a>               <span class="dt">names_pattern =</span> <span class="st">&quot;APHIDS(.*)&quot;</span>,</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true"></a>               <span class="dt">values_to =</span> <span class="st">&quot;density&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">location =</span> <span class="kw">as.integer</span>(location)) <span class="op">%&gt;%</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> time, <span class="dt">y =</span> location, <span class="dt">fill =</span> density)) <span class="op">+</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true"></a><span class="st">  </span><span class="kw">geom_tile</span>() <span class="op">+</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true"></a><span class="st">  </span><span class="kw">scale_fill_viridis_c</span>()</span></code></pre></div>
+<p><img src="edo_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+</div>
+<div id="equation-différentielle-à-retard" class="section level3">
+<h3>Equation différentielle à retard</h3>
+<p>Cet exemple est tiré du document : <a href="https://cran.r-project.org/web/packages/deSolve/vignettes/deSolve.pdf" class="uri">https://cran.r-project.org/web/packages/deSolve/vignettes/deSolve.pdf</a> .</p>
+<p>Le modèle logistique est un modèle de dynamique de population simple dans lequel une population évolue jusqu’à atteindre un plateau suivant la fonction <span class="math inline">\(x&#39;(t)=r.x(t).[\frac{1-x(t)}{M}]\)</span> (M est le nombre d’individus que peut suporter l’écosystème à l’équilibre). Le terme densité-dépendant <span class="math inline">\(\frac{1-x(t)}{M}\)</span> peut jouer sur l’écosystème avec un retard ce qui amène à écrire la EDR suivante : <span class="math inline">\(x&#39;(t)=r.x(t).[\frac{1-x(t - \tau)}{M}]\)</span>.</p>
+<p>Dans le cas d’une population de lemming, le lag est fixé à 9 mois (0.74 année), le temps de croissance d’un lemming jusqu’au stade adulte. Le paramètre r est fixé sur la base données expérimentales. Le paramètre M contrôlant la capacité biotique du milieu est fixé à 19.</p>
+<p>Les lignes de codes qui suivent permettent de simuler et de visualiser l’évolution d’une population de lemming. Le dernier plot représente l’évolution de <span class="math inline">\(x(t)\)</span> en fonction de <span class="math inline">\(x(t-\tau)\)</span>.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true"></a><span class="co"># DDE function</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true"></a>derivs &lt;-<span class="st"> </span><span class="cf">function</span>(t, y, parms) {</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true"></a>  <span class="cf">if</span> (t <span class="op">&lt;</span><span class="st"> </span><span class="dv">0</span>) {</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true"></a>    lag &lt;-<span class="st"> </span><span class="dv">19</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true"></a>  } <span class="cf">else</span> {</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true"></a>    lag &lt;-<span class="st"> </span><span class="kw">lagvalue</span>(t <span class="op">-</span><span class="st"> </span><span class="fl">0.74</span>)</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true"></a>  }</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true"></a>  dy &lt;-<span class="st"> </span>r <span class="op">*</span><span class="st"> </span>y <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>lag <span class="op">/</span><span class="st"> </span>m)</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true"></a>  <span class="kw">list</span>(dy, <span class="dt">dy =</span> dy)</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true"></a>}</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true"></a></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true"></a><span class="co"># parameters</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true"></a>r &lt;-<span class="st"> </span><span class="fl">3.5</span>; m &lt;-<span class="st"> </span><span class="dv">19</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true"></a></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true"></a><span class="co"># initial values and times</span></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true"></a>yinit &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">y =</span> <span class="fl">19.001</span>)</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true"></a>times &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="op">-</span><span class="fl">0.74</span>, <span class="dv">40</span>, <span class="dt">by =</span> <span class="fl">0.01</span>)</span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true"></a></span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true"></a>yout &lt;-<span class="st"> </span><span class="kw">dede</span>(<span class="dt">y =</span> yinit, <span class="dt">times =</span> times, <span class="dt">func =</span> derivs,</span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true"></a>             <span class="dt">parms =</span> <span class="ot">NULL</span>, <span class="dt">atol =</span> <span class="fl">1e-10</span>)</span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true"></a></span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true"></a>df_out &lt;-</span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true"></a><span class="st">  </span>yout <span class="op">%&gt;%</span></span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true"></a><span class="st">  </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span></span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate_all</span>(as.numeric) <span class="op">%&gt;%</span></span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">yend =</span> <span class="kw">lead</span>(y), <span class="dt">dy.yend =</span> <span class="kw">lead</span>(dy.y))</span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true"></a></span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true"></a><span class="kw">ggplot</span>(df_out) <span class="op">+</span></span>
+<span id="cb22-29"><a href="#cb22-29" aria-hidden="true"></a><span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> time, <span class="dt">y =</span> y) <span class="op">+</span></span>
+<span id="cb22-30"><a href="#cb22-30" aria-hidden="true"></a><span class="st">  </span><span class="kw">geom_line</span>()</span></code></pre></div>
+<p><img src="edo_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true"></a><span class="kw">ggplot</span>(df_out) <span class="op">+</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> y, <span class="dt">y =</span> dy.y, <span class="dt">xend =</span> yend, <span class="dt">yend =</span> dy.yend) <span class="op">+</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">geom_segment</span>() <span class="op">+</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;y&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;y&#39;&quot;</span>)</span></code></pre></div>
+<pre><code>## Warning: Removed 1 rows containing missing values (geom_segment).</code></pre>
+<p><img src="edo_files/figure-html/unnamed-chunk-19-2.png" width="672" /></p>
+</div>
+</div>
+<div id="diffeqr" class="section level2">
+<h2>diffeqr</h2>
+<p>Il s’agit d’une interface R pour utiliser le package Julia <a href="https://diffeq.sciml.ai/dev/">DifferentialEquations.jl</a></p>
+<p>Sites du package sur le <a href="https://CRAN.R-project.org/package=diffeqr">CRAN</a> et sur <a href="https://github.com/SciML">GitHub</a></p>
+<div id="installation" class="section level3">
+<h3>Installation</h3>
+<p>Pour l’utiliser il faut installer Julia, en le téléchargeant <a href="https://julialang.org/downloads/">ici</a></p>
+<p>Utiliser le package DifferentialEquations.jl depuis R. Le package ne fonctionne pas avec la version 4.0 donc j’installe la version 3.6 avec <a href="https://docs.conda.io/en/latest/miniconda.html">conda</a>.</p>
+<p>Installation de R avec conda</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true"></a><span class="ex">conda</span> create r=3.6 -n diffeqr -c r</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true"></a><span class="ex">conda</span> activate diffeqr</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true"></a><span class="ex">conda</span> install r-irkernel</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true"></a><span class="ex">conda</span> install jupyter</span></code></pre></div>
+</div>
+</div>
+<div id="installation-des-packages-julia" class="section level2">
+<h2>Installation des packages Julia</h2>
+<p>Cela peut prendre beaucoup de temps (10 minutes):</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode julia"><code class="sourceCode julia"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true"></a><span class="kw">using</span> Pkg</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true"></a>Pkg.add([<span class="st">&quot;Plots&quot;</span><span class="op">,</span> <span class="st">&quot;DifferentialEquations&quot;</span><span class="op">,</span> <span class="st">&quot;RCall&quot;</span>])</span></code></pre></div>
+<p>Test du code Julia</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode julia"><code class="sourceCode julia"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true"></a><span class="kw">using</span> OrdinaryDiffEq</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true"></a></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true"></a><span class="kw">function</span> lorenz(du<span class="op">,</span>u<span class="op">,</span>p<span class="op">,</span>t)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true"></a>     du[<span class="fl">1</span>] <span class="op">=</span> p[<span class="fl">1</span>]<span class="op">*</span>(u[<span class="fl">2</span>]<span class="op">-</span>u[<span class="fl">1</span>])</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true"></a>     du[<span class="fl">2</span>] <span class="op">=</span> u[<span class="fl">1</span>]<span class="op">*</span>(p[<span class="fl">2</span>]<span class="op">-</span>u[<span class="fl">3</span>]) <span class="op">-</span> u[<span class="fl">2</span>]</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true"></a>     du[<span class="fl">3</span>] <span class="op">=</span> u[<span class="fl">1</span>]<span class="op">*</span>u[<span class="fl">2</span>] <span class="op">-</span> p[<span class="fl">3</span>]<span class="op">*</span>u[<span class="fl">3</span>]</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true"></a><span class="kw">end</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true"></a></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true"></a>u0 <span class="op">=</span> [<span class="fl">1.0</span><span class="op">;</span><span class="fl">0.0</span><span class="op">;</span><span class="fl">0.0</span>]</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true"></a>tspan <span class="op">=</span> (<span class="fl">0.0</span><span class="op">,</span><span class="fl">100.0</span>)</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true"></a>prob <span class="op">=</span> ODEProblem(lorenz<span class="op">,</span>u0<span class="op">,</span>tspan)</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true"></a>sol <span class="op">=</span> solve(prob)</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true"></a>plot(sol<span class="op">,</span>vars<span class="op">=</span>(<span class="fl">1</span><span class="op">,</span><span class="fl">2</span><span class="op">,</span><span class="fl">3</span>))</span></code></pre></div>
+</div>
+<div id="installation-des-packages-r" class="section level2">
+<h2>Installation des packages R</h2>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true"></a><span class="kw">install.packages</span>(<span class="st">&quot;JuliaCall&quot;</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true"></a><span class="kw">library</span>(JuliaCall)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true"></a>julia &lt;-<span class="st"> </span><span class="kw">julia_setup</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true"></a><span class="kw">julia_call</span>(<span class="st">&quot;sqrt&quot;</span>, <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true"></a><span class="kw">julia_installed_package</span>(<span class="st">&quot;DifferentialEquations&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true"></a><span class="kw">julia_library</span>(<span class="st">&quot;DifferentialEquations&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true"></a><span class="kw">install.packages</span>(<span class="st">&quot;diffeqr&quot;</span>)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true"></a><span class="kw">install.packages</span>(<span class="st">&quot;plotly&quot;</span>)</span></code></pre></div>
+<div id="modèle-de-lorenz" class="section level3">
+<h3>Modèle de Lorenz</h3>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true"></a>de &lt;-<span class="st"> </span>diffeqr<span class="op">::</span><span class="kw">diffeq_setup</span>()</span></code></pre></div>
+<p>Définition de la dérivée</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true"></a>f &lt;-<span class="st"> </span><span class="cf">function</span>(u,p,t) {</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true"></a>  du1 =<span class="st"> </span>p[<span class="dv">1</span>]<span class="op">*</span>(u[<span class="dv">2</span>]<span class="op">-</span>u[<span class="dv">1</span>])</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true"></a>  du2 =<span class="st"> </span>u[<span class="dv">1</span>]<span class="op">*</span>(p[<span class="dv">2</span>]<span class="op">-</span>u[<span class="dv">3</span>]) <span class="op">-</span><span class="st"> </span>u[<span class="dv">2</span>]</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true"></a>  du3 =<span class="st"> </span>u[<span class="dv">1</span>]<span class="op">*</span>u[<span class="dv">2</span>] <span class="op">-</span><span class="st"> </span>p[<span class="dv">3</span>]<span class="op">*</span>u[<span class="dv">3</span>]</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true"></a>  <span class="kw">return</span>(<span class="kw">c</span>(du1,du2,du3))</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true"></a>}</span></code></pre></div>
+<p>Les paramètres sont contenus dans un vecteur <code>p</code>.</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true"></a>u0 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">1.0</span>,<span class="fl">0.0</span>,<span class="fl">0.0</span>)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true"></a>tspan &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.0</span>,<span class="fl">100.0</span>)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true"></a>p &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">10.0</span>,<span class="fl">28.0</span>,<span class="dv">8</span><span class="op">/</span><span class="dv">3</span>)</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true"></a>prob &lt;-<span class="st"> </span>de<span class="op">$</span><span class="kw">ODEProblem</span>(f, u0, tspan, p)</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true"></a>sol &lt;-<span class="st"> </span>de<span class="op">$</span><span class="kw">solve</span>(prob)</span></code></pre></div>
+<p>Les méthodes numériques pour la résolution sont très nombreuses. Voir la page <a href="https://diffeq.sciml.ai/dev/solvers/ode_solve/">ODE solvers</a>.</p>
+<p>La solution <code>sol$u</code> est une liste de vecteurs, et <code>sol$u[i]</code> est le vecteur u[i] au temps <code>sol$t[i]</code>. On peut le transformer en matrice R avec <code>sapply</code>:</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true"></a>mat &lt;-<span class="st"> </span><span class="kw">sapply</span>(sol<span class="op">$</span>u,identity)</span></code></pre></div>
+<p>Chaque ligne est une série temporelle. Transformation en data.frame</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true"></a>udf &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(<span class="kw">t</span>(mat))</span></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true"></a><span class="kw">matplot</span>(sol<span class="op">$</span>t,udf,<span class="st">&quot;l&quot;</span>,<span class="dt">col=</span><span class="dv">1</span><span class="op">:</span><span class="dv">3</span>)</span></code></pre></div>
+<div class="figure">
+<img src="https://user-images.githubusercontent.com/1814174/39012314-ef7a8fe2-43c8-11e8-9dde-1a8b87d3cfa4.png" alt="" />
+<p class="caption">timeseries</p>
+</div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true"></a>plotly<span class="op">::</span><span class="kw">plot_ly</span>(udf, <span class="dt">x =</span> <span class="op">~</span>V1, <span class="dt">y =</span> <span class="op">~</span>V2, <span class="dt">z =</span> <span class="op">~</span>V3, <span class="dt">type =</span> <span class="st">&#39;scatter3d&#39;</span>, <span class="dt">mode =</span> <span class="st">&#39;lines&#39;</span>)</span></code></pre></div>
+<div class="figure">
+<img src="https://user-images.githubusercontent.com/1814174/39012384-27ee7262-43c9-11e8-84d2-1edf937288ae.png" alt="" />
+<p class="caption">plotly_plot</p>
+</div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true"></a>abstol &lt;-<span class="st"> </span><span class="fl">1e-8</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true"></a>reltol &lt;-<span class="st"> </span><span class="fl">1e-8</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true"></a>saveat &lt;-<span class="st"> </span><span class="dv">0</span><span class="op">:</span><span class="dv">10000</span><span class="op">/</span><span class="dv">100</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true"></a>sol &lt;-<span class="st"> </span>de<span class="op">$</span><span class="kw">solve</span>(prob,<span class="dt">abstol=</span>abstol,<span class="dt">reltol=</span>reltol,<span class="dt">saveat=</span>saveat)</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true"></a>udf &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(<span class="kw">t</span>(<span class="kw">sapply</span>(sol<span class="op">$</span>u,identity)))</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true"></a>plotly<span class="op">::</span><span class="kw">plot_ly</span>(udf, <span class="dt">x =</span> <span class="op">~</span>V1, <span class="dt">y =</span> <span class="op">~</span>V2, <span class="dt">z =</span> <span class="op">~</span>V3, <span class="dt">type =</span> <span class="st">&#39;scatter3d&#39;</span>, <span class="dt">mode =</span> <span class="st">&#39;lines&#39;</span>)</span></code></pre></div>
+<div class="figure">
+<img src="https://user-images.githubusercontent.com/1814174/39012651-e03124e6-43c9-11e8-8496-bbee87987a37.png" alt="" />
+<p class="caption">precise_solution</p>
+</div>
+</div>
+<div id="transformation-de-toutes-la-variables-en-variables-julia" class="section level3">
+<h3>Transformation de toutes la variables en variables Julia</h3>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true"></a>julf &lt;-<span class="st"> </span>JuliaCall<span class="op">::</span><span class="kw">julia_eval</span>(<span class="st">&quot;</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true"></a><span class="st">function julf(du,u,p,t)</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true"></a><span class="st">  du[1] = 10.0*(u[2]-u[1])</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true"></a><span class="st">  du[2] = u[1]*(28.0-u[3]) - u[2]</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true"></a><span class="st">  du[3] = u[1]*u[2] - (8/3)*u[3]</span></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true"></a><span class="st">end&quot;</span>)</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true"></a>JuliaCall<span class="op">::</span><span class="kw">julia_assign</span>(<span class="st">&quot;u0&quot;</span>, u0)</span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true"></a>JuliaCall<span class="op">::</span><span class="kw">julia_assign</span>(<span class="st">&quot;p&quot;</span>, p)</span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true"></a>JuliaCall<span class="op">::</span><span class="kw">julia_assign</span>(<span class="st">&quot;tspan&quot;</span>, tspan)</span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true"></a>prob3 =<span class="st"> </span>JuliaCall<span class="op">::</span><span class="kw">julia_eval</span>(<span class="st">&quot;ODEProblem(julf, u0, tspan, p)&quot;</span>)</span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true"></a>sol =<span class="st"> </span>de<span class="op">$</span><span class="kw">solve</span>(prob3,de<span class="op">$</span><span class="kw">Tsit5</span>())</span></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true"></a><span class="kw">system.time</span>({ <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">100</span>){ de<span class="op">$</span><span class="kw">solve</span>(prob    ,de<span class="op">$</span><span class="kw">Tsit5</span>()) }})</span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true"></a><span class="kw">system.time</span>({ <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">100</span>){ de<span class="op">$</span><span class="kw">solve</span>(fastprob,de<span class="op">$</span><span class="kw">Tsit5</span>()) }})</span></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true"></a><span class="kw">system.time</span>({ <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">100</span>){ de<span class="op">$</span><span class="kw">solve</span>(prob3   ,de<span class="op">$</span><span class="kw">Tsit5</span>()) }})</span></code></pre></div>
+</div>
+<div id="stochastic-differential-equation-sde-examples" class="section level3">
+<h3>Stochastic Differential Equation (SDE) Examples</h3>
+<p>On utilise deux fonctions <code>f</code> et <code>g</code>, où <code>du = f(u,t)dt + g(u,t)dW_t</code></p>
+</div>
+</div>
+<div id="résolution-dune-sde" class="section level2">
+<h2>Résolution d’une SDE</h2>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true"></a>f &lt;-<span class="st"> </span><span class="cf">function</span>(u,p,t) {</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true"></a>  du1 =<span class="st"> </span>p[<span class="dv">1</span>]<span class="op">*</span>(u[<span class="dv">2</span>]<span class="op">-</span>u[<span class="dv">1</span>])</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true"></a>  du2 =<span class="st"> </span>u[<span class="dv">1</span>]<span class="op">*</span>(p[<span class="dv">2</span>]<span class="op">-</span>u[<span class="dv">3</span>]) <span class="op">-</span><span class="st"> </span>u[<span class="dv">2</span>]</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true"></a>  du3 =<span class="st"> </span>u[<span class="dv">1</span>]<span class="op">*</span>u[<span class="dv">2</span>] <span class="op">-</span><span class="st"> </span>p[<span class="dv">3</span>]<span class="op">*</span>u[<span class="dv">3</span>]</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true"></a>  <span class="kw">return</span>(<span class="kw">c</span>(du1,du2,du3))</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true"></a>}</span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true"></a>g &lt;-<span class="st"> </span><span class="cf">function</span>(u,p,t) {</span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true"></a>  <span class="kw">return</span>(<span class="kw">c</span>(<span class="fl">0.3</span><span class="op">*</span>u[<span class="dv">1</span>],<span class="fl">0.3</span><span class="op">*</span>u[<span class="dv">2</span>],<span class="fl">0.3</span><span class="op">*</span>u[<span class="dv">3</span>]))</span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true"></a>}</span>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true"></a>u0 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">1.0</span>,<span class="fl">0.0</span>,<span class="fl">0.0</span>)</span>
+<span id="cb45-11"><a href="#cb45-11" aria-hidden="true"></a>tspan &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.0</span>,<span class="fl">1.0</span>)</span>
+<span id="cb45-12"><a href="#cb45-12" aria-hidden="true"></a>p &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">10.0</span>,<span class="fl">28.0</span>,<span class="dv">8</span><span class="op">/</span><span class="dv">3</span>)</span>
+<span id="cb45-13"><a href="#cb45-13" aria-hidden="true"></a></span>
+<span id="cb45-14"><a href="#cb45-14" aria-hidden="true"></a>tspan &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.0</span>,<span class="fl">100.0</span>)</span>
+<span id="cb45-15"><a href="#cb45-15" aria-hidden="true"></a>prob &lt;-<span class="st"> </span>de<span class="op">$</span><span class="kw">SDEProblem</span>(f,g,u0,tspan,p)</span>
+<span id="cb45-16"><a href="#cb45-16" aria-hidden="true"></a>fastprob &lt;-<span class="st"> </span>diffeqr<span class="op">::</span><span class="kw">jitoptimize_sde</span>(de,prob)</span>
+<span id="cb45-17"><a href="#cb45-17" aria-hidden="true"></a>sol &lt;-<span class="st"> </span>de<span class="op">$</span><span class="kw">solve</span>(fastprob,<span class="dt">saveat=</span><span class="fl">0.005</span>)</span>
+<span id="cb45-18"><a href="#cb45-18" aria-hidden="true"></a>udf &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(<span class="kw">t</span>(<span class="kw">sapply</span>(sol<span class="op">$</span>u,identity)))</span>
+<span id="cb45-19"><a href="#cb45-19" aria-hidden="true"></a>plotly<span class="op">::</span><span class="kw">plot_ly</span>(udf, <span class="dt">x =</span> <span class="op">~</span>V1, <span class="dt">y =</span> <span class="op">~</span>V2, <span class="dt">z =</span> <span class="op">~</span>V3, <span class="dt">type =</span> <span class="st">&#39;scatter3d&#39;</span>, <span class="dt">mode =</span> <span class="st">&#39;lines&#39;</span>)</span></code></pre></div>
+<div class="figure">
+<img src="https://user-images.githubusercontent.com/1814174/39019723-216c3210-43df-11e8-82c0-2e676f53e235.png" alt="" />
+<p class="caption">solution sde</p>
+</div>
+<div id="version-avec-desolve" class="section level3">
+<h3>Version avec <code>desolve</code></h3>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true"></a><span class="kw">library</span>(deSolve)</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true"></a>Lorenz &lt;-<span class="st"> </span><span class="cf">function</span>(t, state, parameters) {</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true"></a>  <span class="kw">with</span>(<span class="kw">as.list</span>(<span class="kw">c</span>(state, parameters)), {</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true"></a>    dX &lt;-<span class="st">  </span>a <span class="op">*</span><span class="st"> </span>X <span class="op">+</span><span class="st"> </span>Y <span class="op">*</span><span class="st"> </span>Z</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true"></a>    dY &lt;-<span class="st">  </span>b <span class="op">*</span><span class="st"> </span>(Y <span class="op">-</span><span class="st"> </span>Z)</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true"></a>    dZ &lt;-<span class="st"> </span><span class="op">-</span>X <span class="op">*</span><span class="st"> </span>Y <span class="op">+</span><span class="st"> </span>c <span class="op">*</span><span class="st"> </span>Y <span class="op">-</span><span class="st"> </span>Z</span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true"></a>    <span class="kw">list</span>(<span class="kw">c</span>(dX, dY, dZ))</span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true"></a>  })</span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true"></a>}</span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true"></a></span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true"></a>parameters &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">a =</span> <span class="dv">-8</span><span class="op">/</span><span class="dv">3</span>, <span class="dt">b =</span> <span class="dv">-10</span>, <span class="dt">c =</span> <span class="dv">28</span>)</span>
+<span id="cb46-12"><a href="#cb46-12" aria-hidden="true"></a>state      &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">X =</span> <span class="dv">1</span>, <span class="dt">Y =</span> <span class="dv">1</span>, <span class="dt">Z =</span> <span class="dv">1</span>)</span>
+<span id="cb46-13"><a href="#cb46-13" aria-hidden="true"></a>times      &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">100</span>, <span class="dt">by =</span> <span class="fl">0.01</span>)</span>
+<span id="cb46-14"><a href="#cb46-14" aria-hidden="true"></a>out &lt;-<span class="st"> </span><span class="kw">ode</span>(<span class="dt">y =</span> state, <span class="dt">times =</span> times, <span class="dt">func =</span> Lorenz, <span class="dt">parms =</span> parameters)</span>
+<span id="cb46-15"><a href="#cb46-15" aria-hidden="true"></a></span>
+<span id="cb46-16"><a href="#cb46-16" aria-hidden="true"></a>lorenz_solve &lt;-<span class="st"> </span><span class="cf">function</span> (i){</span>
+<span id="cb46-17"><a href="#cb46-17" aria-hidden="true"></a>  state      &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">X =</span> <span class="kw">runif</span>(<span class="dv">1</span>), <span class="dt">Y =</span> <span class="kw">runif</span>(<span class="dv">1</span>), <span class="dt">Z =</span> <span class="kw">runif</span>(<span class="dv">1</span>))</span>
+<span id="cb46-18"><a href="#cb46-18" aria-hidden="true"></a>  parameters &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">a =</span> <span class="dv">-8</span><span class="op">/</span><span class="dv">3</span> <span class="op">*</span><span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>), <span class="dt">b =</span> <span class="dv">-10</span> <span class="op">*</span><span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>), <span class="dt">c =</span> <span class="dv">28</span> <span class="op">*</span><span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>))</span>
+<span id="cb46-19"><a href="#cb46-19" aria-hidden="true"></a>  out &lt;-<span class="st"> </span><span class="kw">ode</span>(<span class="dt">y =</span> state, <span class="dt">times =</span> times, <span class="dt">func =</span> Lorenz, <span class="dt">parms =</span> parameters)</span>
+<span id="cb46-20"><a href="#cb46-20" aria-hidden="true"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true"></a><span class="kw">system.time</span>({ <span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">1000</span>,lorenz_solve) })</span></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true"></a>prob_func &lt;-<span class="st"> </span><span class="cf">function</span> (prob,i,rep){</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true"></a>  de<span class="op">$</span><span class="kw">remake</span>(prob,<span class="dt">u0=</span><span class="kw">runif</span>(<span class="dv">3</span>)<span class="op">*</span>u0,<span class="dt">p=</span><span class="kw">runif</span>(<span class="dv">3</span>)<span class="op">*</span>p)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true"></a>}</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true"></a>ensembleprob =<span class="st"> </span>de<span class="op">$</span><span class="kw">EnsembleProblem</span>(fastprob, <span class="dt">prob_func =</span> prob_func, <span class="dt">safetycopy=</span><span class="ot">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true"></a><span class="kw">system.time</span>({ de<span class="op">$</span><span class="kw">solve</span>(ensembleprob,de<span class="op">$</span><span class="kw">Tsit5</span>(),de<span class="op">$</span><span class="kw">EnsembleSerial</span>(),<span class="dt">trajectories=</span><span class="dv">1000</span>,<span class="dt">saveat=</span><span class="fl">0.01</span>) })</span></code></pre></div>
+</div>
+</div>
+<div id="estimation-des-paramètres" class="section level2">
+<h2>Estimation des paramètres</h2>
+<p>On chercher mainenant à estimer les paramètres structurels d’un système diférentiel à partir d’observations bruitées. On l’applique sur le SIR.</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true"></a>sigma &lt;-<span class="st">  </span><span class="dv">20</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true"></a>noisy &lt;-<span class="st"> </span>out.SIR</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true"></a>noisy<span class="op">$</span>S  &lt;-<span class="st"> </span><span class="kw">pmax</span>(out.SIR<span class="op">$</span>S  <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(<span class="kw">length</span>(out.SIR<span class="op">$</span>time),<span class="dv">0</span>,sigma),<span class="dv">0</span>)</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true"></a>noisy<span class="op">$</span>I  &lt;-<span class="st"> </span><span class="kw">pmax</span>(out.SIR<span class="op">$</span>I  <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(<span class="kw">length</span>(out.SIR<span class="op">$</span>time),<span class="dv">0</span>,sigma),<span class="dv">0</span>)</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true"></a>noisy<span class="op">$</span>R  &lt;-<span class="st"> </span><span class="kw">pmax</span>(out.SIR<span class="op">$</span>R  <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(<span class="kw">length</span>(out.SIR<span class="op">$</span>time),<span class="dv">0</span>,sigma),<span class="dv">0</span>)</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true"></a></span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true"></a></span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true"></a>noisy <span class="op">%&gt;%</span></span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true"></a><span class="st">  </span><span class="kw">gather</span>(variable,value,<span class="op">-</span>time) <span class="op">%&gt;%</span></span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> time,<span class="dt">y =</span> value,<span class="dt">color =</span> variable)) <span class="op">+</span></span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span></span>
+<span id="cb50-12"><a href="#cb50-12" aria-hidden="true"></a><span class="st">  </span><span class="kw">theme_classic</span>() <span class="op">+</span></span>
+<span id="cb50-13"><a href="#cb50-13" aria-hidden="true"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&#39;time (yr)&#39;</span>,<span class="dt">y =</span> <span class="st">&#39;number of individuals&#39;</span>)</span></code></pre></div>
+<p><img src="edo_files/figure-html/unnamed-chunk-44-1.png" width="672" /></p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true"></a>observ &lt;-<span class="st"> </span>noisy[,<span class="dv">2</span><span class="op">:</span><span class="dv">4</span>]</span></code></pre></div>
+<p>Utiliser une méthode des moindres carrés habituelles est rendue compliquée par le fait que la fonction de régression <span class="math inline">\(f\)</span> est solution d’une quat diff donc n’a pas de solution explicite. De plus, chaque évaluation de la fonction (par un schéma numérique) est couteux d’un point de vue computationnel.</p>
+<p>Une autre approche est d’exprimer <span class="math inline">\(f\)</span> dans une base (spline par exemple), cette fonction devra d’une part s’ajuster aux donnnées et d’autre part être solution du système (qui est introduit comme une pénalité). Cette méthode qui date de 2007, est implémentée dans le package <code>pcode</code> La méthode est décrite dans la <a href="https://cran.r-project.org/web/packages/pCODE/vignettes/pcode-vignette.html">vignette</a> du pacakge.</p>
+<p>On définit dabord une base de décomposition pour les fonctions (package fda)</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true"></a><span class="co">#&quot; basis list</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true"></a>knots &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>,<span class="kw">max</span>(times),<span class="dt">length.out=</span><span class="dv">21</span>)</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true"></a><span class="co">#order of basis functions</span></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true"></a>norder &lt;-<span class="st"> </span><span class="dv">4</span></span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true"></a><span class="co">#number of basis funtions</span></span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true"></a>nbasis &lt;-<span class="st"> </span><span class="kw">length</span>(knots) <span class="op">+</span><span class="st"> </span>norder <span class="op">-</span><span class="st"> </span><span class="dv">2</span></span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true"></a><span class="co">#creating Bspline basis</span></span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true"></a>basis_dim1  &lt;-<span class="st"> </span><span class="kw">create.bspline.basis</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="kw">max</span>(times)),nbasis,norder,<span class="dt">breaks =</span> knots)</span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true"></a>basis =<span class="st"> </span><span class="kw">list</span>(basis_dim1,basis_dim1,basis_dim1)</span></code></pre></div>
+<p>Puis on optimise:</p>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true"></a>pcode.result &lt;-<span class="st"> </span><span class="kw">pcode</span>(<span class="dt">data =</span> observ, <span class="dt">time =</span> times, <span class="dt">ode.model =</span> closed.sir.model,</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true"></a>                      <span class="dt">par.initial =</span> <span class="kw">c</span>(<span class="dv">100</span>,<span class="dv">1</span>), <span class="dt">par.names =</span> <span class="kw">c</span>(<span class="st">&#39;beta&#39;</span>,<span class="st">&#39;gamma&#39;</span>),<span class="dt">state.names =</span> <span class="kw">c</span>(<span class="st">&#39;S&#39;</span>,<span class="st">&#39;I&#39;</span>,<span class="st">&#39;R&#39;</span>),</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true"></a>                      <span class="dt">basis.list =</span> basis, <span class="dt">lambda =</span> <span class="fl">1e2</span>)</span></code></pre></div>
+</div>
+<div id="jeton-de-reproductilité" class="section level2">
+<h2>Jeton de reproductilité</h2>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true"></a><span class="kw">sessionInfo</span>()</span></code></pre></div>
+<pre><code>## R version 3.6.3 (2020-02-29)
+## Platform: x86_64-conda_cos6-linux-gnu (64-bit)
+## Running under: Ubuntu 18.04.5 LTS
+## 
+## Matrix products: default
+## BLAS/LAPACK: /usr/share/miniconda/envs/finistR2020/lib/libopenblasp-r0.3.10.so
+## 
+## locale:
+##  [1] LC_CTYPE=C.UTF-8       LC_NUMERIC=C           LC_TIME=C.UTF-8       
+##  [4] LC_COLLATE=C.UTF-8     LC_MONETARY=C.UTF-8    LC_MESSAGES=C.UTF-8   
+##  [7] LC_PAPER=C.UTF-8       LC_NAME=C              LC_ADDRESS=C          
+## [10] LC_TELEPHONE=C         LC_MEASUREMENT=C.UTF-8 LC_IDENTIFICATION=C   
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+##  [1] fda_5.1.5.1          Matrix_1.2-18        deSolve_1.28        
+##  [4] GGally_2.0.0         ggdist_2.2.0         distributional_0.2.0
+##  [7] forcats_0.5.0        stringr_1.4.0        dplyr_1.0.2         
+## [10] purrr_0.3.4          readr_1.3.1          tidyr_1.1.2         
+## [13] tibble_3.0.3         ggplot2_3.3.2        tidyverse_1.3.0     
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_1.0.5            lattice_0.20-41       lubridate_1.7.9      
+##  [4] palmerpenguins_0.1.0  assertthat_0.2.1      digest_0.6.25        
+##  [7] utf8_1.1.4            R6_2.4.1              cellranger_1.1.0     
+## [10] plyr_1.8.6            backports_1.1.9       reprex_0.3.0         
+## [13] evaluate_0.14         httr_1.4.2            pillar_1.4.6         
+## [16] rlang_0.4.7           readxl_1.3.1          rstudioapi_0.11      
+## [19] blob_1.2.1            rmarkdown_2.3         splines_3.6.3        
+## [22] labeling_0.3          munsell_0.5.0         broom_0.7.0          
+## [25] compiler_3.6.3        modelr_0.1.8          xfun_0.16            
+## [28] pkgconfig_2.0.3       htmltools_0.5.0       tidyselect_1.1.0     
+## [31] JuliaCall_0.17.1.9000 viridisLite_0.3.0     reshape_0.8.8        
+## [34] fansi_0.4.1           crayon_1.3.4          dbplyr_1.4.4         
+## [37] withr_2.2.0           grid_3.6.3            jsonlite_1.7.0       
+## [40] gtable_0.3.0          lifecycle_0.2.0       DBI_1.1.0            
+## [43] magrittr_1.5          scales_1.1.1          cli_2.0.2            
+## [46] stringi_1.4.6         farver_2.0.3          fs_1.5.0             
+## [49] xml2_1.3.2            ellipsis_0.3.1        generics_0.0.2       
+## [52] vctrs_0.3.4           cowplot_1.0.0         RColorBrewer_1.1-2   
+## [55] tools_3.6.3           glue_1.4.2            hms_0.5.3            
+## [58] yaml_2.2.1            colorspace_1.4-1      rvest_0.3.6          
+## [61] knitr_1.29            haven_2.3.1</code></pre>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

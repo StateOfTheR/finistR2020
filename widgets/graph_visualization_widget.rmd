@@ -1,0 +1,472 @@
+---
+title: "Widget for network vizualisation"
+author: "Saint-Clair Chabert-Liddell et Sophie Donnet"
+date: "August 25, 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Visualisation interactive de réseaux
+
+
+## Présentation des packages
+
+Dans ce qui suit, nous allons utiliser les package suivants :
+
+  * [tidygraph](https://tidygraph.data-imaginist.com/index.html) pour manipuler nos réseaux
+  * [igraph](https://igraph.org/r/) car c'est encore la structure de donner de réseaux la plus commune
+  * [graphlayouts](http://graphlayouts.schochastics.net/) pour manipuler des graph complets
+  * [networkd3D](https://christophergandrud.github.io/networkD3/) Interactive widget
+  * [threejs](https://bwlewis.github.io/rthreejs/) pour plot en 3d interactif
+  * [ggiraph](https://davidgohel.github.io/ggiraph/index.html) pour mettre des popup sur les noeuds du réseau
+  * [visNetwork](https://datastorm-open.github.io/visNetwork/) pour faire des plots interactifs où l'on peut déplacer les noeuds.
+Inspirer de :  http://blog.schochastics.net/post/visualizing-multilevel-networks-with-graphlayouts/
+
+```{r echo=FALSE}
+library(ggraph)
+library(tidygraph)
+library(graphlayouts)
+library(igraph)
+library(networkD3)
+library(threejs)
+```
+
+Nous allons utilisé comme exemple le jeu de données mulitiniveaux de graphlayouts.
+```{r}
+data("multilvl_ex", package = "graphlayouts")
+```
+
+On va utiliser le package [MLVSBM](https://Chabert-Liddell.github.io/MLVSBM/) pour attribuer des blocks aux noeuds du réseau.
+```{r}
+super_adj <- as_adjacency_matrix(multilvl_ex, sparse =  FALSE)
+adj_upper  <- super_adj[order(rownames(super_adj))[1:50],
+                        order(rownames(super_adj))[1:50]]
+adj_lower  <- super_adj[order(rownames(super_adj))[51:170],
+                        order(rownames(super_adj))[51:170]]
+affiliation <- super_adj[order(rownames(super_adj))[51:170],
+                         order(rownames(super_adj))[1:50]]
+```
+
+```{r}
+library(MLVSBM)
+my_mlvsbm <- mlvsbm_create_network(X = list(I = adj_lower,
+                                            O = adj_upper),
+                                   A = affiliation)
+fit <- mlvsbm_estimate_network(mlv = my_mlvsbm)
+```
+
+```{r}
+V(multilvl_ex)$block[order(rownames(super_adj))] <- c(fit$Z$O, fit$Z$I + 4)
+```
+
+
+On définit un layout avec la fonction suivante du package graphlayouts.
+Une matrice de taille $n \times d$ est retourné où $n$ est le nombre total de noeud du réseau et $d$ est le nombre de dimension du plot. 
+
+On peut faire un layout pour tout le réseau. La fonction d'optimisation pour le layout est appliqué à tous les réseaux conjointements.
+```{r}
+xy <- layout_as_multilevel(multilvl_ex,type = "all", alpha = 25, beta = 45)
+```
+
+
+ 
+```{r}
+as_tbl_graph(multilvl_ex) %>%
+  activate(edges) %>% 
+  mutate(block = ifelse(.N()$block[to] == .N()$block[from], 
+                        .N()$block[to], 
+                        NA)) %>% 
+  ggraph( "manual", x = xy[, 1], y = xy[, 2]) +
+  geom_edge_link0(aes(
+    filter = (node1.lvl == 1 & node2.lvl == 1),
+    edge_colour = block
+  ),
+  alpha = 0.5, edge_width = 0.2) +
+  geom_edge_link0(
+    aes(filter = (node1.lvl != node2.lvl)),
+    alpha = 0.3,
+    edge_width = 0.1,
+    edge_colour = "black"
+  ) +
+  geom_edge_link0(aes(
+    filter = (node1.lvl == 2 & node2.lvl == 2),
+    edge_colour = block
+  ),
+  edge_width = 0.2, alpha = 0.5) +
+  geom_node_point(aes(
+    fill = block,
+    shape = as.factor(lvl),
+    size = nsize
+  )) +
+    ggforce::geom_mark_hull(
+    aes(x, y, group = block, fill = block, label=block),
+    concavity = 4,
+    expand = unit(2, "mm"),
+    alpha = 0.25
+  ) +
+  scale_shape_manual(values = c(21, 22)) +
+  scale_size_continuous(range = c(1.5, 4.5)) +
+  scale_fill_viridis(option = "A") +
+  scale_edge_colour_viridis(option = "A",  na.value = "grey50") +
+  scale_edge_alpha_manual(values = c(0.1, 0.7)) +
+  theme_graph() +
+  coord_cartesian(clip = "off", expand = TRUE) +
+  theme(legend.position = "none")
+```
+
+Ou bien définir un fonction de layout différent par niveau. 
+
+```{r}
+xy <- layout_as_multilevel(multilvl_ex,type = "separate",
+                           FUN1 = layout_as_backbone,
+                           FUN2 = layout_with_stress,
+                           alpha = 25, beta = 45)
+```
+
+```{r}
+as_tbl_graph(multilvl_ex) %>%
+  activate(edges) %>% 
+  mutate(block = ifelse(.N()$block[to] == .N()$block[from], 
+                        .N()$block[to], 
+                        NA)) %>% 
+  ggraph( "manual", x = xy[, 1], y = xy[, 2]) +
+  geom_edge_link0(aes(
+    filter = (node1.lvl == 1 & node2.lvl == 1),
+    edge_colour = block
+  ),
+  alpha = 0.5, edge_width = 0.2) +
+  geom_edge_link0(
+    aes(filter = (node1.lvl != node2.lvl)),
+    alpha = 0.3,
+    edge_width = 0.1,
+    edge_colour = "black"
+  ) +
+  geom_edge_link0(aes(
+    filter = (node1.lvl == 2 & node2.lvl == 2),
+    edge_colour = block
+  ),
+  edge_width = 0.2, alpha = 0.5) +
+  geom_node_point(aes(
+    fill = block,
+    shape = as.factor(lvl),
+    size = nsize
+  )) +
+  ggforce::geom_mark_hull(
+    aes(x, y, group = block, fill = block, label=block),
+    concavity = 4,
+    expand = unit(2, "mm"),
+    alpha = 0.25
+  ) +
+  scale_shape_manual(values = c(21, 22)) +
+  scale_size_continuous(range = c(1.5, 4.5)) +
+  scale_fill_viridis(option = "A") +
+  scale_edge_colour_viridis(option = "A",  na.value = "grey50") +
+  scale_edge_alpha_manual(values = c(0.1, 0.7)) +
+  theme_graph() +
+  coord_cartesian(clip = "off", expand = TRUE) +
+  theme(legend.position = "none")
+```
+
+
+Ou alors fixer le layout d'un niveau et ordonné l'autre niveau de manière à minimiser la longueur des liens (ou le nombre de croisement des liens ?) interniveaux.
+
+```{r}
+xy <- layout_as_multilevel(multilvl_ex,type = "fix2",
+                           FUN2 = layout_with_stress,
+                           alpha = 25, beta = 45)
+
+as_tbl_graph(multilvl_ex) %>%
+  activate(edges) %>% 
+  mutate(block = ifelse(.N()$block[to] == .N()$block[from], 
+                        .N()$block[to], 
+                        NA)) %>% 
+  ggraph( "manual", x = xy[, 1], y = xy[, 2]) +
+  geom_edge_link0(aes(
+    filter = (node1.lvl == 1 & node2.lvl == 1),
+    edge_colour = block
+  ),
+  alpha = 0.5, edge_width = 0.2) +
+  geom_edge_link0(
+    aes(filter = (node1.lvl != node2.lvl)),
+    alpha = 0.3,
+    edge_width = 0.1,
+    edge_colour = "black"
+  ) +
+  geom_edge_link0(aes(
+    filter = (node1.lvl == 2 & node2.lvl == 2),
+    edge_colour = block
+  ),
+  edge_width = 0.2, alpha = 0.5) +
+  geom_node_point(aes(
+    fill = block,
+    shape = as.factor(lvl),
+    size = nsize
+  )) +
+  scale_shape_manual(values = c(21, 22)) +
+  scale_size_continuous(range = c(1.5, 4.5)) +
+  scale_fill_viridis(option = "A") +
+  scale_edge_colour_viridis(option = "A",  na.value = "grey50") +
+  scale_edge_alpha_manual(values = c(0.1, 0.7)) +
+  theme_graph() +
+  coord_cartesian(clip = "off", expand = TRUE) +
+  theme(legend.position = "none")
+```
+
+Fixer le layout du niveau du dessous :
+```{r}
+xy <- layout_as_multilevel(multilvl_ex,
+                           type = "fix1",
+                           FUN1 = layout_as_backbone,
+                           alpha = 25, beta = 45)
+
+as_tbl_graph(multilvl_ex) %>%
+  activate(edges) %>% 
+  mutate(block = ifelse(.N()$block[to] == .N()$block[from], 
+                        .N()$block[to], 
+                        NA)) %>% 
+  ggraph( "manual", x = xy[, 1], y = xy[, 2]) +
+  geom_edge_link0(aes(
+    filter = (node1.lvl == 1 & node2.lvl == 1),
+    edge_colour = block
+  ),
+  alpha = 0.5, edge_width = 0.2) +
+  geom_edge_link0(
+    aes(filter = (node1.lvl != node2.lvl)),
+    alpha = 0.3,
+    edge_width = 0.1,
+    edge_colour = "black"
+  ) +
+  geom_edge_link0(aes(
+    filter = (node1.lvl == 2 & node2.lvl == 2),
+    edge_colour = block
+  ),
+  edge_width = 0.2, alpha = 0.5) +
+  geom_node_point(aes(
+    fill = block,
+    shape = as.factor(lvl),
+    size = nsize
+  )) +
+  scale_shape_manual(values = c(21, 22)) +
+  scale_size_continuous(range = c(1.5, 4.5)) +
+  scale_fill_viridis(na.value = "grey50", option = "A") +
+  scale_edge_colour_viridis( na.value = "grey50", option = "A") +
+  scale_edge_alpha_manual(values = c(0.1, 0.7)) +
+  theme_graph() +
+  coord_cartesian(clip = "off", expand = TRUE) +
+  theme(legend.position = "none")
+```
+
+
+## Représentation avec widget interactif avec threejs
+
+Avec threejs, on peut faire un graph en 3d sur le quel on peut effectuer des rotations ou bien zoomer. 
+On peut également animé le graph pour effectuer des transitions d'un layout à u autre :
+
+```{r}
+V(multilvl_ex)$color <- scales::viridis_pal(option = "A")(10)[V(multilvl_ex)$block]
+V(multilvl_ex)$vertex.label <- V(multilvl_ex)$name
+    
+graphjs(multilvl_ex, 
+        layout = list(
+          layout_as_multilevel(multilvl_ex, type = "all", alpha = 25, beta = 45,
+                               project2D = FALSE),
+          layout_as_multilevel(multilvl_ex,type = "separate",
+                           FUN1 = layout_as_backbone,
+                           FUN2 = layout_with_stress,
+                           project2D = FALSE),
+          layout_as_multilevel(multilvl_ex,
+                           type = "fix1",
+                           FUN1 = layout_as_backbone,
+                           alpha = 25, beta = 45, project2D = FALSE),
+          layout_as_multilevel(multilvl_ex,
+                           type = "fix2",
+                           FUN2 = layout_with_stress,
+                           alpha = 25, beta = 45, project2D = FALSE)
+          ),
+        main=list("all layout", "separate layout",
+                  "lower layout", "upper layout"),
+        fpl=300)
+```
+
+
+
+
+
+En 3d standard avec \code{threejs}.
+```{r}
+xyz <- layout_as_multilevel(multilvl_ex,type = "separate",
+                           FUN1 = layout_as_backbone,
+                           FUN2 = layout_with_stress,
+                           project2D = FALSE)
+multilvl_ex$layout <- xyz
+V(multilvl_ex)$color <- scales::viridis_pal(option = "A")(10)[V(multilvl_ex)$block]
+V(multilvl_ex)$vertex.label <- V(multilvl_ex)$name
+    
+graphjs(multilvl_ex, bg="white", vertex.shape="sphere")
+```
+
+## network3D et forcenetwork
+
+Le package network3d permet de cliquer sur certaine partie du réseau. Mais on ne peut pas lui imposer le layout défini avec les package graphlayouts ou igraph.
+```{r}
+xy <- layout_as_multilevel(multilvl_ex,
+                           type = "separate",
+                           FUN1 = layout_as_backbone,
+                           FUN2 = layout_with_stress,
+                           alpha = 25, beta = 45)
+
+net_d3 <- as_tbl_graph(multilvl_ex) %>%
+  activate(edges) %>% 
+  mutate(block = ifelse(.N()$block[to] == .N()$block[from], 
+                        .N()$block[to], 
+                        NA)) %>%  igraph_to_networkD3(group = V(multilvl_ex)$block)
+
+forceNetwork(Links = net_d3$links, Nodes = net_d3$nodes,
+             Source = 'source', Target = 'target', NodeID = 'name',
+             Group = 'group', opacity = .8)
+
+```
+Il ne semble pas y avoir de moyen d'importe un layout...
+
+
+## Avec ggiraph
+
+Avec ggiraph, on peut faire apparaitre un popup pour avoir des informations sur les noeuds (et/ou les arêtes ?).
+
+```{r}
+library(ggiraph)
+```
+
+```{r}
+xy <- layout_as_multilevel(multilvl_ex,type = "separate",
+                           FUN1 = layout_as_backbone,
+                           FUN2 = layout_with_stress,
+                           alpha = 25, beta = 45)
+
+p <- as_tbl_graph(multilvl_ex) %>%
+  activate(edges) %>% 
+  mutate(block = ifelse(.N()$block[to] == .N()$block[from], 
+                        .N()$block[to], 
+                        NA)) %>% 
+  ggraph( "manual", x = xy[, 1], y = xy[, 2]) +
+  geom_edge_link0(aes(
+    filter = (node1.lvl == 1 & node2.lvl == 1),
+    edge_colour = block
+  ),
+  alpha = 0.5, edge_width = 0.2) +
+  geom_edge_link0(
+    aes(filter = (node1.lvl != node2.lvl)),
+    alpha = 0.3,
+    edge_width = 0.1,
+    edge_colour = "black",
+    edge_linetype = "dashed"
+  ) +
+  geom_edge_link0(aes(
+    filter = (node1.lvl == 2 & node2.lvl == 2),
+    edge_colour = block
+  ),
+  edge_width = 0.2, alpha = 0.5) +
+  geom_point_interactive(aes(
+    x = x,
+    y = y,
+    fill = block,
+    shape = as.factor(lvl),
+    size = nsize, 
+    tooltip = paste0(name, ": ", "\n",
+                      "group: ", grp, "\n",
+                      "block: ", block, "\n",
+                      "degree: ", nsize)
+  )) +
+  scale_shape_manual(values = c(21, 22)) +
+  scale_size_continuous(range = c(1.5, 4.5)) +
+  scale_fill_viridis(option = "A") +
+  scale_edge_colour_viridis(option = "A",  na.value = "grey50") +
+  scale_edge_alpha_manual(values = c(0.1, 0.7)) +
+  theme_graph() +
+  coord_cartesian(clip = "off", expand = TRUE) +
+  theme(legend.position = "none")
+```
+
+```{r}
+girafe(ggobj = p, 
+        options = list(opts_tooltip(use_fill = TRUE),
+                       opts_hover_inv(css = "opacity:0.1;"),
+    opts_hover(css = "fill:red;")))
+```
+
+## Widget interactif avec visNetwork (S. Donnet)
+
+
+On propose d'utiliser le package *visNetwork* (développé par un dirigeant de RStudio). 
+
+Essai sur un cas simple. 
+```{r cars}
+library(visNetwork)
+nodes <- data.frame(id = 1:3,
+                    color.background = c("red", "blue", "green"),
+                    color.highlight.background = c("red", NA, "red"),
+                    shadow.size = c(5, 10, 15))
+
+edges <- data.frame(from = c(1,2), to = c(1,3),
+                    label = LETTERS[1:2],
+                    font.color =c ("red", "blue"),
+                    font.size = c(10,20))
+
+
+visNetwork(nodes, edges)
+```
+Cela semble joli. 
+De plus, on peut spécifier des caratérisqiques globales ou locales pour les neouds et arêtes. 
+
+On essaie donc sur un réseaux petit mais avec plus de contraintes. 
+
+```{r plot2 data}
+load('myDataNetwork.rda')
+
+list_Net <- resMBM$list_Net
+whichModel = 1
+dataR6 <- GREMLIN:::formattingData(list_Net,v_distrib = resMBM$fittedModel[[whichModel]]$paramEstim$v_distrib)
+Q <- length(resMBM$fittedModel[[1]]$paramEstim$list_pi)
+nbNet <- length(resMBM$fittedModel[[1]]$paramEstim$list_theta)
+param <- resMBM$fittedModel[[whichModel]]$paramEstim
+v_K <- param$v_K
+labelNode <- lapply(1:Q,function(q){1:v_K[q]})
+sizeNode <- lapply(1:Q,function(q){param$list_pi[[q]]})
+cumVK <-  c(0,cumsum(v_K))
+codeNode <- lapply(2:(Q + 1),function(q){seq(cumVK[q - 1] + 1,cumVK[q],1)})
+
+myNodes = as.data.frame(unlist(codeNode))
+names(myNodes) = 'id'
+myNodes$shadow.size <- 1
+myNodes$group <- rep(dataR6$namesFG,v_K)
+mycol <-  palette(rainbow(Q))
+myshapes <-  c("square", "triangle",  "star",
+                      "ellipse", "database", "text", "diamond")[1:Q]
+myNodes$label = unlist(lapply(1:Q,function(q){1:v_K[q]}))
+myNodes$color.highlight.background <- 'NA'
+myNodes$value <- unlist(sizeNode)*rep(dataR6$v_NQ,v_K)
+myEdges <- as.data.frame(cbind(sample(1:7,10,replace=TRUE),sample(1:7,10,replace=TRUE)))
+names(myEdges) <- c('from','to')
+```
+On définit un dataframe pour les noeuds et un pour les arêtes. 
+
+```{r}
+
+P <- visNetwork(myNodes,myEdges)
+for (q in 1:Q) {
+ P    <- P %>% visGroups(groupname = dataR6$namesFG[q], color = mycol[q], shape = myshapes[q])
+}
+P %>% visLegend( main = "Functional Groups")
+
+```
+
+
+Avis : Il est difficile de contrôler à la fois les options globales et par noeuds.
+Le rendu est un peu  artisanal (par exemple certaines shapes on un label dedans, d'autres en dessous) et gadget. 
+Le rendu joli grâce aux ombres mais difficilement utilisable pour des dessins automatiques. 
+Par ailleurs, le côté widget n'est pas utile pour les petits réseaux (vue mesoscopiques des SBM)
+Je vais plutôt essayer avec `ggraph`.
+

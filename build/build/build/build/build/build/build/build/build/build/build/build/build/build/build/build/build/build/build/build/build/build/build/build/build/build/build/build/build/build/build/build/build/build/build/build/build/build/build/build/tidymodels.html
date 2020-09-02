@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Antoine Bichat" />
+
+
+<title>Introduction à tidymodels</title>
+
+<script src="site_libs/header-attrs-2.3/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #c4a000; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #000000; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #000000; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #000000; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">FinistR 2020</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Accueil
+  </a>
+</li>
+<li>
+  <a href="https://github.com/StateOfTheR/finistR2020">
+    <span class="fa fa-github"></span>
+     
+    Dépôt GitHub
+  </a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fas fa fas fa-r-project"></span>
+     
+    R avancé
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="advanced_r.html">Progammation avec le tidyverse</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fas fa fas fa-chart-bar"></span>
+     
+    Mathématique
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="gam.html">Modèles GAM</a>
+    </li>
+    <li>
+      <a href="edo.html">Équations différentielles avec R</a>
+    </li>
+    <li>
+      <a href="distributions.html">Manipulation des distributions</a>
+    </li>
+    <li>
+      <a href="tidymodels.html">Tidymodels</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Introduction à tidymodels</h1>
+<h4 class="author">Antoine Bichat</h4>
+<h4 class="date">8/27/2020</h4>
+
+</div>
+
+
+<div id="packages-et-données" class="section level1">
+<h1>Packages et données</h1>
+<p>Comme <code>tidyverse</code>, <code>tidymodels</code> est un métapackage. Il a été créé et est maintenu (entre autre) par l’auteur de <code>caret</code>, et a pour but de le remplacer.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="kw">library</span>(tidymodels)</span></code></pre></div>
+<pre><code>## ── Attaching packages ────────────────────────────────────── tidymodels 0.1.1 ──</code></pre>
+<pre><code>## ✔ broom     0.7.0      ✔ recipes   0.1.13
+## ✔ dials     0.0.8      ✔ rsample   0.0.7 
+## ✔ infer     0.5.3      ✔ tune      0.1.1 
+## ✔ modeldata 0.0.2      ✔ workflows 0.1.3 
+## ✔ parsnip   0.1.3      ✔ yardstick 0.0.7</code></pre>
+<pre><code>## ── Conflicts ───────────────────────────────────────── tidymodels_conflicts() ──
+## ✖ nlme::collapse()      masks dplyr::collapse()
+## ✖ scales::discard()     masks purrr::discard()
+## ✖ Matrix::expand()      masks tidyr::expand()
+## ✖ magrittr::extract()   masks tidyr::extract()
+## ✖ dplyr::filter()       masks stats::filter()
+## ✖ recipes::fixed()      masks stringr::fixed()
+## ✖ infer::generate()     masks distributional::generate()
+## ✖ dplyr::lag()          masks stats::lag()
+## ✖ Matrix::pack()        masks tidyr::pack()
+## ✖ MASS::select()        masks dplyr::select()
+## ✖ magrittr::set_names() masks purrr::set_names()
+## ✖ yardstick::spec()     masks readr::spec()
+## ✖ recipes::step()       masks stats::step()
+## ✖ Matrix::unpack()      masks tidyr::unpack()</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="kw">library</span>(modeldata)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a><span class="kw">library</span>(forcats)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a><span class="kw">library</span>(skimr)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a><span class="kw">library</span>(vip)</span></code></pre></div>
+<pre><code>## 
+## Attaching package: &#39;vip&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:utils&#39;:
+## 
+##     vi</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a><span class="kw">theme_set</span>(<span class="kw">theme_bw</span>())</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a><span class="kw">set.seed</span>(<span class="dv">42</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a><span class="kw">data</span>(<span class="st">&quot;stackoverflow&quot;</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a>stackoverflow</span></code></pre></div>
+<pre><code>## # A tibble: 5,594 x 21
+##    Country Salary YearsCodedJob OpenSource Hobby CompanySizeNumb… Remote
+##    &lt;fct&gt;    &lt;dbl&gt;         &lt;int&gt;      &lt;dbl&gt; &lt;dbl&gt;            &lt;dbl&gt; &lt;fct&gt; 
+##  1 United… 1.00e5            20          0     1             5000 Remote
+##  2 United… 1.30e5            20          1     1             1000 Remote
+##  3 United… 1.75e5            16          0     1            10000 Not r…
+##  4 Germany 6.45e4             4          0     0             1000 Not r…
+##  5 India   6.64e3             1          0     1             5000 Not r…
+##  6 United… 6.50e4             1          0     1               20 Not r…
+##  7 United… 1.10e5            13          0     1               20 Not r…
+##  8 Germany 5.38e4             4          1     0             5000 Not r…
+##  9 United… 1.09e5             7          1     1               20 Not r…
+## 10 Germany 8.39e4            17          1     1               20 Not r…
+## # … with 5,584 more rows, and 14 more variables: CareerSatisfaction &lt;int&gt;,
+## #   Data_scientist &lt;dbl&gt;, Database_administrator &lt;dbl&gt;,
+## #   Desktop_applications_developer &lt;dbl&gt;,
+## #   Developer_with_stats_math_background &lt;dbl&gt;, DevOps &lt;dbl&gt;,
+## #   Embedded_developer &lt;dbl&gt;, Graphic_designer &lt;dbl&gt;,
+## #   Graphics_programming &lt;dbl&gt;, Machine_learning_specialist &lt;dbl&gt;,
+## #   Mobile_developer &lt;dbl&gt;, Quality_assurance_engineer &lt;dbl&gt;,
+## #   Systems_administrator &lt;dbl&gt;, Web_developer &lt;dbl&gt;</code></pre>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true"></a><span class="kw">skim</span>(stackoverflow)</span></code></pre></div>
+<table>
+<caption>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td align="left">Name</td>
+<td align="left">stackoverflow</td>
+</tr>
+<tr class="even">
+<td align="left">Number of rows</td>
+<td align="left">5594</td>
+</tr>
+<tr class="odd">
+<td align="left">Number of columns</td>
+<td align="left">21</td>
+</tr>
+<tr class="even">
+<td align="left">_______________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Column type frequency:</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">factor</td>
+<td align="left">2</td>
+</tr>
+<tr class="odd">
+<td align="left">numeric</td>
+<td align="left">19</td>
+</tr>
+<tr class="even">
+<td align="left">________________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Group variables</td>
+<td align="left">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: factor</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="left">ordered</th>
+<th align="right">n_unique</th>
+<th align="left">top_counts</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Country</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="left">FALSE</td>
+<td align="right">5</td>
+<td align="left">Uni: 2791, Uni: 1023, Ger: 757, Ind: 538</td>
+</tr>
+<tr class="even">
+<td align="left">Remote</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="left">FALSE</td>
+<td align="right">2</td>
+<td align="left">Not: 5019, Rem: 575</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">mean</th>
+<th align="right">sd</th>
+<th align="right">p0</th>
+<th align="right">p25</th>
+<th align="right">p50</th>
+<th align="right">p75</th>
+<th align="right">p100</th>
+<th align="left">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Salary</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">71969.10</td>
+<td align="right">40003.65</td>
+<td align="right">1136.36</td>
+<td align="right">45018.94</td>
+<td align="right">65000</td>
+<td align="right">100000</td>
+<td align="right">197000</td>
+<td align="left">▃▇▅▂▁</td>
+</tr>
+<tr class="even">
+<td align="left">YearsCodedJob</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">7.45</td>
+<td align="right">5.96</td>
+<td align="right">0.00</td>
+<td align="right">3.00</td>
+<td align="right">5</td>
+<td align="right">11</td>
+<td align="right">20</td>
+<td align="left">▇▅▂▂▂</td>
+</tr>
+<tr class="odd">
+<td align="left">OpenSource</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0.34</td>
+<td align="right">0.48</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="left">▇▁▁▁▅</td>
+</tr>
+<tr class="even">
+<td align="left">Hobby</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0.76</td>
+<td align="right">0.43</td>
+<td align="right">0.00</td>
+<td align="right">1.00</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="left">▂▁▁▁▇</td>
+</tr>
+<tr class="odd">
+<td align="left">CompanySizeNumber</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">2138.55</td>
+<td align="right">3754.60</td>
+<td align="right">1.00</td>
+<td align="right">20.00</td>
+<td align="right">100</td>
+<td align="right">1000</td>
+<td align="right">10000</td>
+<td align="left">▇▁▁▁▂</td>
+</tr>
+<tr class="even">
+<td align="left">CareerSatisfaction</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">7.58</td>
+<td align="right">1.68</td>
+<td align="right">0.00</td>
+<td align="right">7.00</td>
+<td align="right">8</td>
+<td align="right">9</td>
+<td align="right">10</td>
+<td align="left">▁▁▂▇▅</td>
+</tr>
+<tr class="odd">
+<td align="left">Data_scientist</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0.07</td>
+<td align="right">0.26</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td align="left">Database_administrator</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0.14</td>
+<td align="right">0.34</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="odd">
+<td align="left">Desktop_applications_developer</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0.28</td>
+<td align="right">0.45</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="left">▇▁▁▁▃</td>
+</tr>
+<tr class="even">
+<td align="left">Developer_with_stats_math_background</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0.11</td>
+<td align="right">0.31</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="odd">
+<td align="left">DevOps</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0.12</td>
+<td align="right">0.33</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td align="left">Embedded_developer</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0.08</td>
+<td align="right">0.27</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="odd">
+<td align="left">Graphic_designer</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0.03</td>
+<td align="right">0.16</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td align="left">Graphics_programming</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0.03</td>
+<td align="right">0.18</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="odd">
+<td align="left">Machine_learning_specialist</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0.03</td>
+<td align="right">0.17</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td align="left">Mobile_developer</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0.20</td>
+<td align="right">0.40</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="left">▇▁▁▁▂</td>
+</tr>
+<tr class="odd">
+<td align="left">Quality_assurance_engineer</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0.03</td>
+<td align="right">0.18</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td align="left">Systems_administrator</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0.11</td>
+<td align="right">0.31</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="odd">
+<td align="left">Web_developer</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0.72</td>
+<td align="right">0.45</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="left">▃▁▁▁▇</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="ensemble-de-test-et-dapprentissage" class="section level1">
+<h1>Ensemble de test et d’apprentissage</h1>
+<p>On utilise le package <code>rsample</code> pour séparer notre jeu de données en deux.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a>split &lt;-<span class="st"> </span><span class="kw">initial_split</span>(stackoverflow, <span class="dt">prop =</span> <span class="fl">0.8</span>, <span class="dt">strata =</span> Country)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true"></a>split</span></code></pre></div>
+<pre><code>## &lt;Analysis/Assess/Total&gt;
+## &lt;4476/1118/5594&gt;</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true"></a>df_train &lt;-<span class="st"> </span><span class="kw">training</span>(split)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true"></a>df_train</span></code></pre></div>
+<pre><code>## # A tibble: 4,476 x 21
+##    Country Salary YearsCodedJob OpenSource Hobby CompanySizeNumb… Remote
+##    &lt;fct&gt;    &lt;dbl&gt;         &lt;int&gt;      &lt;dbl&gt; &lt;dbl&gt;            &lt;dbl&gt; &lt;fct&gt; 
+##  1 United… 1.00e5            20          0     1             5000 Remote
+##  2 India   6.64e3             1          0     1             5000 Not r…
+##  3 United… 6.50e4             1          0     1               20 Not r…
+##  4 United… 1.10e5            13          0     1               20 Not r…
+##  5 Germany 5.38e4             4          1     0             5000 Not r…
+##  6 United… 1.09e5             7          1     1               20 Not r…
+##  7 Germany 8.39e4            17          1     1               20 Not r…
+##  8 United… 5.10e4             1          0     0               20 Not r…
+##  9 United… 3.25e4             1          1     0               10 Not r…
+## 10 United… 9.00e4            10          1     0               10 Not r…
+## # … with 4,466 more rows, and 14 more variables: CareerSatisfaction &lt;int&gt;,
+## #   Data_scientist &lt;dbl&gt;, Database_administrator &lt;dbl&gt;,
+## #   Desktop_applications_developer &lt;dbl&gt;,
+## #   Developer_with_stats_math_background &lt;dbl&gt;, DevOps &lt;dbl&gt;,
+## #   Embedded_developer &lt;dbl&gt;, Graphic_designer &lt;dbl&gt;,
+## #   Graphics_programming &lt;dbl&gt;, Machine_learning_specialist &lt;dbl&gt;,
+## #   Mobile_developer &lt;dbl&gt;, Quality_assurance_engineer &lt;dbl&gt;,
+## #   Systems_administrator &lt;dbl&gt;, Web_developer &lt;dbl&gt;</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true"></a>df_test &lt;-<span class="st"> </span><span class="kw">testing</span>(split)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true"></a>df_test</span></code></pre></div>
+<pre><code>## # A tibble: 1,118 x 21
+##    Country Salary YearsCodedJob OpenSource Hobby CompanySizeNumb… Remote
+##    &lt;fct&gt;    &lt;dbl&gt;         &lt;int&gt;      &lt;dbl&gt; &lt;dbl&gt;            &lt;dbl&gt; &lt;fct&gt; 
+##  1 United… 1.30e5            20          1     1             1000 Remote
+##  2 United… 1.75e5            16          0     1            10000 Not r…
+##  3 Germany 6.45e4             4          0     0             1000 Not r…
+##  4 United… 3.00e4             1          0     1               20 Not r…
+##  5 United… 3.25e4             2          0     1               10 Not r…
+##  6 United… 1.14e5            20          1     1               20 Not r…
+##  7 United… 1.00e5            14          0     1               20 Not r…
+##  8 Germany 1.08e4             1          0     1               10 Not r…
+##  9 United… 5.00e4             2          1     1               10 Not r…
+## 10 United… 6.38e4            17          0     1              500 Not r…
+## # … with 1,108 more rows, and 14 more variables: CareerSatisfaction &lt;int&gt;,
+## #   Data_scientist &lt;dbl&gt;, Database_administrator &lt;dbl&gt;,
+## #   Desktop_applications_developer &lt;dbl&gt;,
+## #   Developer_with_stats_math_background &lt;dbl&gt;, DevOps &lt;dbl&gt;,
+## #   Embedded_developer &lt;dbl&gt;, Graphic_designer &lt;dbl&gt;,
+## #   Graphics_programming &lt;dbl&gt;, Machine_learning_specialist &lt;dbl&gt;,
+## #   Mobile_developer &lt;dbl&gt;, Quality_assurance_engineer &lt;dbl&gt;,
+## #   Systems_administrator &lt;dbl&gt;, Web_developer &lt;dbl&gt;</code></pre>
+</div>
+<div id="préparation-des-données" class="section level1">
+<h1>Préparation des données</h1>
+<p>Le package <code>recipes</code> permet de créer des recettes afin de préparer les données pour l’analyse. Ici, on va binariser les variables factorielles (<code>Country</code> et <code>Remote</code>) puis on normalise tous les prédicteurs (donc toutes les variables sauf <code>Salary</code>).</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true"></a>rec &lt;-</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">recipe</span>(df_train, Salary <span class="op">~</span><span class="st"> </span>.) <span class="op">%&gt;%</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">step_dummy</span>(Country, Remote) <span class="op">%&gt;%</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">step_normalize</span>(<span class="kw">all_predictors</span>())</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true"></a>rec</span></code></pre></div>
+<pre><code>## Data Recipe
+## 
+## Inputs:
+## 
+##       role #variables
+##    outcome          1
+##  predictor         20
+## 
+## Operations:
+## 
+## Dummy variables from Country, Remote
+## Centering and scaling for all_predictors()</code></pre>
+<p>Pour l’instant, on a spécifié la recette, mais on ne l’a pas entrainée. Pour cela, on utilise la fonction <code>prep</code>.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true"></a><span class="kw">prep</span>(rec)</span></code></pre></div>
+<pre><code>## Data Recipe
+## 
+## Inputs:
+## 
+##       role #variables
+##    outcome          1
+##  predictor         20
+## 
+## Training data contained 4476 data points and no missing data.
+## 
+## Operations:
+## 
+## Dummy variables from Country, Remote [trained]
+## Centering and scaling for YearsCodedJob, OpenSource, ... [trained]</code></pre>
+<p>Pour appliquer la recette au jeu de donnée qui a servi à l’entraîner, on utilise <code>juice</code>.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true"></a>juiced &lt;-</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true"></a><span class="st">  </span>rec <span class="op">%&gt;%</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">prep</span>() <span class="op">%&gt;%</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">juice</span>()</span></code></pre></div>
+<p>On a bien binarisé et centré les variables.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true"></a><span class="kw">colnames</span>(juiced)</span></code></pre></div>
+<pre><code>##  [1] &quot;YearsCodedJob&quot;                       
+##  [2] &quot;OpenSource&quot;                          
+##  [3] &quot;Hobby&quot;                               
+##  [4] &quot;CompanySizeNumber&quot;                   
+##  [5] &quot;CareerSatisfaction&quot;                  
+##  [6] &quot;Data_scientist&quot;                      
+##  [7] &quot;Database_administrator&quot;              
+##  [8] &quot;Desktop_applications_developer&quot;      
+##  [9] &quot;Developer_with_stats_math_background&quot;
+## [10] &quot;DevOps&quot;                              
+## [11] &quot;Embedded_developer&quot;                  
+## [12] &quot;Graphic_designer&quot;                    
+## [13] &quot;Graphics_programming&quot;                
+## [14] &quot;Machine_learning_specialist&quot;         
+## [15] &quot;Mobile_developer&quot;                    
+## [16] &quot;Quality_assurance_engineer&quot;          
+## [17] &quot;Systems_administrator&quot;               
+## [18] &quot;Web_developer&quot;                       
+## [19] &quot;Salary&quot;                              
+## [20] &quot;Country_Germany&quot;                     
+## [21] &quot;Country_India&quot;                       
+## [22] &quot;Country_United.Kingdom&quot;              
+## [23] &quot;Country_United.States&quot;               
+## [24] &quot;Remote_Not.remote&quot;</code></pre>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true"></a><span class="kw">mean</span>(juiced<span class="op">$</span>YearsCodedJob)</span></code></pre></div>
+<pre><code>## [1] -3.929356e-17</code></pre>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true"></a><span class="kw">var</span>(juiced<span class="op">$</span>YearsCodedJob)</span></code></pre></div>
+<pre><code>## [1] 1</code></pre>
+<p>Pour appliquer la recette à un autre jeu de données, il faut utilise <code>bake</code>.</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true"></a>rec <span class="op">%&gt;%</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">prep</span>() <span class="op">%&gt;%</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">bake</span>(df_test) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">pull</span>(YearsCodedJob) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true"></a><span class="st">  </span><span class="kw">mean</span>()</span></code></pre></div>
+<pre><code>## [1] -0.006506893</code></pre>
+<p>On remarque que ça n’est pas centré : on a normalisé avec la moyenne et la variance du jeu de donnée d’entraînement.</p>
+</div>
+<div id="spécification-dun-modèle-de-regression-linéaire" class="section level1">
+<h1>Spécification d’un modèle de regression linéaire</h1>
+<p>On crée un modèle de régression avec <code>parsnip::linear_reg</code>.</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true"></a>spec_lr &lt;-</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">linear_reg</span>() <span class="op">%&gt;%</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">set_engine</span>(<span class="st">&quot;lm&quot;</span>)</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true"></a></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true"></a>spec_lr</span></code></pre></div>
+<pre><code>## Linear Regression Model Specification (regression)
+## 
+## Computational engine: lm</code></pre>
+<p>Le workflow est l’objet central de l’anaylse : il combine une recette (ou une formule) et une spécification de modèle.</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true"></a>wkf_lr &lt;-</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">workflow</span>() <span class="op">%&gt;%</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">add_recipe</span>(rec) <span class="op">%&gt;%</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">add_model</span>(spec_lr)</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true"></a>wkf_lr</span></code></pre></div>
+<pre><code>## ══ Workflow ════════════════════════════════════════════════════════════════════
+## Preprocessor: Recipe
+## Model: linear_reg()
+## 
+## ── Preprocessor ────────────────────────────────────────────────────────────────
+## 2 Recipe Steps
+## 
+## ● step_dummy()
+## ● step_normalize()
+## 
+## ── Model ───────────────────────────────────────────────────────────────────────
+## Linear Regression Model Specification (regression)
+## 
+## Computational engine: lm</code></pre>
+</div>
+<div id="ajustement-de-la-regression-linéaire-et-prédictions" class="section level1">
+<h1>Ajustement de la regression linéaire et prédictions</h1>
+<p>On ajuste le workflow sur le jeu de données d’apprentissage.</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true"></a>wkf_lr_fit &lt;-</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true"></a><span class="st">  </span>wkf_lr <span class="op">%&gt;%</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">fit</span>(df_train)</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true"></a>wkf_lr_fit</span></code></pre></div>
+<pre><code>## ══ Workflow [trained] ══════════════════════════════════════════════════════════
+## Preprocessor: Recipe
+## Model: linear_reg()
+## 
+## ── Preprocessor ────────────────────────────────────────────────────────────────
+## 2 Recipe Steps
+## 
+## ● step_dummy()
+## ● step_normalize()
+## 
+## ── Model ───────────────────────────────────────────────────────────────────────
+## 
+## Call:
+## stats::lm(formula = ..y ~ ., data = data)
+## 
+## Coefficients:
+##                          (Intercept)                         YearsCodedJob  
+##                              71691.2                               14438.0  
+##                           OpenSource                                 Hobby  
+##                               1942.5                                 332.5  
+##                    CompanySizeNumber                    CareerSatisfaction  
+##                               3705.2                                1722.6  
+##                       Data_scientist                Database_administrator  
+##                                461.9                               -1586.8  
+##       Desktop_applications_developer  Developer_with_stats_math_background  
+##                              -2294.7                                 789.2  
+##                               DevOps                    Embedded_developer  
+##                               1467.8                                 299.5  
+##                     Graphic_designer                  Graphics_programming  
+##                              -1517.5                                -240.9  
+##          Machine_learning_specialist                      Mobile_developer  
+##                                855.7                                 202.2  
+##           Quality_assurance_engineer                 Systems_administrator  
+##                               -743.9                               -1150.8  
+##                        Web_developer                       Country_Germany  
+##                              -1610.7                               -1780.0  
+##                        Country_India                Country_United.Kingdom  
+##                             -11466.7                               -1311.1  
+##                Country_United.States                     Remote_Not.remote  
+##                              17885.6                                -836.5</code></pre>
+<p>On peut extraire le modèle ajusté avec <code>pull_workflow_fit</code>.</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true"></a>fit_lr &lt;-</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true"></a><span class="st">  </span>wkf_lr_fit <span class="op">%&gt;%</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">pull_workflow_fit</span>()</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true"></a>fit_lr </span></code></pre></div>
+<pre><code>## parsnip model object
+## 
+## Fit time:  7ms 
+## 
+## Call:
+## stats::lm(formula = ..y ~ ., data = data)
+## 
+## Coefficients:
+##                          (Intercept)                         YearsCodedJob  
+##                              71691.2                               14438.0  
+##                           OpenSource                                 Hobby  
+##                               1942.5                                 332.5  
+##                    CompanySizeNumber                    CareerSatisfaction  
+##                               3705.2                                1722.6  
+##                       Data_scientist                Database_administrator  
+##                                461.9                               -1586.8  
+##       Desktop_applications_developer  Developer_with_stats_math_background  
+##                              -2294.7                                 789.2  
+##                               DevOps                    Embedded_developer  
+##                               1467.8                                 299.5  
+##                     Graphic_designer                  Graphics_programming  
+##                              -1517.5                                -240.9  
+##          Machine_learning_specialist                      Mobile_developer  
+##                                855.7                                 202.2  
+##           Quality_assurance_engineer                 Systems_administrator  
+##                               -743.9                               -1150.8  
+##                        Web_developer                       Country_Germany  
+##                              -1610.7                               -1780.0  
+##                        Country_India                Country_United.Kingdom  
+##                             -11466.7                               -1311.1  
+##                Country_United.States                     Remote_Not.remote  
+##                              17885.6                                -836.5</code></pre>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true"></a><span class="kw">tidy</span>(fit_lr)</span></code></pre></div>
+<pre><code>## # A tibble: 24 x 5
+##    term                                 estimate std.error statistic   p.value
+##    &lt;chr&gt;                                   &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+##  1 (Intercept)                            71691.      342.   210.    0.       
+##  2 YearsCodedJob                          14438.      364.    39.7   2.70e-295
+##  3 OpenSource                              1943.      356.     5.46  4.92e-  8
+##  4 Hobby                                    333.      350.     0.949 3.42e-  1
+##  5 CompanySizeNumber                       3705.      350.    10.6   7.39e- 26
+##  6 CareerSatisfaction                      1723.      350.     4.92  8.81e-  7
+##  7 Data_scientist                           462.      383.     1.21  2.28e-  1
+##  8 Database_administrator                 -1587.      393.    -4.04  5.46e-  5
+##  9 Desktop_applications_developer         -2295.      360.    -6.37  2.09e- 10
+## 10 Developer_with_stats_math_background     789.      359.     2.20  2.80e-  2
+## # … with 14 more rows</code></pre>
+<p>On peut prédire avec la fonction <code>predict</code>.</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true"></a>wkf_lr_fit <span class="op">%&gt;%</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">predict</span>(df_train)</span></code></pre></div>
+<pre><code>## # A tibble: 4,476 x 1
+##      .pred
+##      &lt;dbl&gt;
+##  1  95665.
+##  2   3812.
+##  3  76595.
+##  4 104515.
+##  5  50056.
+##  6  94181.
+##  7  80331.
+##  8  77865.
+##  9  41784.
+## 10 101619.
+## # … with 4,466 more rows</code></pre>
+<p>On fait de même sur l’ensemble de test.</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true"></a>df_test_lr &lt;-</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true"></a><span class="st">  </span>wkf_lr_fit <span class="op">%&gt;%</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">predict</span>(df_test) <span class="op">%&gt;%</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">bind_cols</span>(df_test)</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true"></a>df_test_lr</span></code></pre></div>
+<pre><code>## # A tibble: 1,118 x 22
+##     .pred Country Salary YearsCodedJob OpenSource Hobby CompanySizeNumb… Remote
+##     &lt;dbl&gt; &lt;fct&gt;    &lt;dbl&gt;         &lt;int&gt;      &lt;dbl&gt; &lt;dbl&gt;            &lt;dbl&gt; &lt;fct&gt; 
+##  1 1.33e5 United… 1.30e5            20          1     1             1000 Remote
+##  2 1.22e5 United… 1.75e5            16          0     1            10000 Not r…
+##  3 4.40e4 Germany 6.45e4             4          0     0             1000 Not r…
+##  4 3.29e4 United… 3.00e4             1          0     1               20 Not r…
+##  5 3.98e4 United… 3.25e4             2          0     1               10 Not r…
+##  6 8.83e4 United… 1.14e5            20          1     1               20 Not r…
+##  7 1.03e5 United… 1.00e5            14          0     1               20 Not r…
+##  8 3.30e4 Germany 1.08e4             1          0     1               10 Not r…
+##  9 7.49e4 United… 5.00e4             2          1     1               10 Not r…
+## 10 7.28e4 United… 6.38e4            17          0     1              500 Not r…
+## # … with 1,108 more rows, and 14 more variables: CareerSatisfaction &lt;int&gt;,
+## #   Data_scientist &lt;dbl&gt;, Database_administrator &lt;dbl&gt;,
+## #   Desktop_applications_developer &lt;dbl&gt;,
+## #   Developer_with_stats_math_background &lt;dbl&gt;, DevOps &lt;dbl&gt;,
+## #   Embedded_developer &lt;dbl&gt;, Graphic_designer &lt;dbl&gt;,
+## #   Graphics_programming &lt;dbl&gt;, Machine_learning_specialist &lt;dbl&gt;,
+## #   Mobile_developer &lt;dbl&gt;, Quality_assurance_engineer &lt;dbl&gt;,
+## #   Systems_administrator &lt;dbl&gt;, Web_developer &lt;dbl&gt;</code></pre>
+<p>On calcule le RMSE et le R² sur l’ensemble de test avec des fonctions du package <code>yardstick</code>.</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true"></a>my_metrics &lt;-<span class="st"> </span><span class="kw">metric_set</span>(rmse, rsq)</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true"></a></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true"></a><span class="kw">my_metrics</span>(df_test_lr, <span class="dt">truth =</span> Salary, <span class="dt">estimate =</span> .pred)</span></code></pre></div>
+<pre><code>## # A tibble: 2 x 3
+##   .metric .estimator .estimate
+##   &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+## 1 rmse    standard   23774.   
+## 2 rsq     standard       0.661</code></pre>
+</div>
+<div id="forêts-aléatoires-et-hyperparamètres" class="section level1">
+<h1>Forêts aléatoires et hyperparamètres</h1>
+<p>Spécification du modèle et du workflow associé.</p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true"></a>spec_rf &lt;-</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">rand_forest</span>(<span class="dt">trees =</span> <span class="dv">1000</span>, <span class="dt">min_n =</span> <span class="kw">tune</span>(), <span class="dt">mtry =</span> <span class="kw">tune</span>()) <span class="op">%&gt;%</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">set_mode</span>(<span class="st">&quot;regression&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">set_engine</span>(<span class="st">&quot;ranger&quot;</span>, <span class="dt">importance =</span> <span class="st">&quot;impurity&quot;</span>) <span class="co"># importance pour vip</span></span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true"></a>spec_rf</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true"></a></span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true"></a>wkf_rf &lt;-</span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true"></a><span class="st">  </span><span class="kw">workflow</span>() <span class="op">%&gt;%</span></span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true"></a><span class="st">  </span><span class="kw">add_recipe</span>(rec) <span class="op">%&gt;%</span></span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true"></a><span class="st">  </span><span class="kw">add_model</span>(spec_rf)</span></code></pre></div>
+<p>On va déterminer la région dans laquelle on va optimiser les paramètres grâce au package <code>dials</code>. <code>min_n</code> a des valeurs limite par défaut mais il faut ajuster <code>mtry</code> par rapport au jeu de données. On crée ensuite un grille non régulière qui maximise l’entropie.</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true"></a>grid &lt;-</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true"></a><span class="st">  </span>spec_rf <span class="op">%&gt;%</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">parameters</span>() <span class="op">%&gt;%</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">update</span>(<span class="dt">mtry =</span> <span class="kw">finalize</span>(<span class="kw">mtry</span>(), <span class="kw">select</span>(juiced, <span class="op">-</span>Salary))) <span class="op">%&gt;%</span></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true"></a><span class="st">  </span><span class="kw">grid_max_entropy</span>(<span class="dt">size =</span> <span class="dv">20</span>)</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true"></a>grid</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true"></a><span class="kw">ggplot</span>(grid) <span class="op">+</span></span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true"></a><span class="st">  </span><span class="kw">aes</span>(mtry, min_n) <span class="op">+</span></span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true"></a><span class="st">  </span><span class="kw">geom_point</span>()</span></code></pre></div>
+<p>k-folds pour la cross-validation, avec <code>rsample</code>.</p>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true"></a>kfolds &lt;-<span class="st"> </span><span class="kw">vfold_cv</span>(df_train)</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true"></a>kfolds</span></code></pre></div>
+<p>On optimise avec <code>tune</code>.</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true"></a>tuned &lt;-<span class="st"> </span><span class="kw">tune_grid</span>(wkf_rf, <span class="dt">resamples =</span> kfolds, <span class="dt">grid =</span> grid,</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true"></a>                   <span class="dt">control =</span> <span class="kw">control_grid</span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>),</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true"></a>                   <span class="dt">metrics =</span> my_metrics)</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true"></a>tuned</span></code></pre></div>
+<p>On inspecte les modèles.</p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true"></a><span class="kw">autoplot</span>(tuned)</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true"></a><span class="kw">collect_metrics</span>(tuned)</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true"></a><span class="kw">show_best</span>(tuned, <span class="dt">metric =</span> <span class="st">&quot;rmse&quot;</span>)</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true"></a><span class="kw">select_best</span>(tuned, <span class="dt">metric =</span> <span class="st">&quot;rmse&quot;</span>)</span></code></pre></div>
+<p>On ajuste un modèle avec les meilleurs paramètres.</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true"></a>wkf_rf_fit &lt;-</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true"></a><span class="st">  </span>tuned <span class="op">%&gt;%</span></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">select_best</span>(<span class="dt">metric =</span> <span class="st">&quot;rmse&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">finalize_workflow</span>(wkf_rf, .) <span class="op">%&gt;%</span></span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true"></a><span class="st">  </span><span class="kw">last_fit</span>(split, <span class="dt">metrics =</span> my_metrics)</span></code></pre></div>
+<p>Calcule des métriques ce dernier modèle.</p>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true"></a><span class="kw">collect_metrics</span>(wkf_rf_fit)</span></code></pre></div>
+<p>On rapelle que le RMSE pour la regression linéaire vaut 2.3774464^{4}.</p>
+</div>
+<div id="importance-des-variables" class="section level1">
+<h1>Importance des variables</h1>
+<p>On va utiliser le package <code>vip</code> pour calculer le poids des différentes variables dans chaque modèle.</p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true"></a><span class="kw">vi</span>(fit_lr)</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true"></a></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true"></a>fit_lr <span class="op">%&gt;%</span></span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">vi</span>() <span class="op">%&gt;%</span></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Variable =</span> <span class="kw">fct_rev</span>(<span class="kw">as_factor</span>(Variable))) <span class="op">%&gt;%</span></span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true"></a><span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span></span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true"></a><span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Importance, <span class="dt">y =</span> Variable, <span class="dt">fill =</span> Sign) <span class="op">+</span></span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true"></a><span class="st">  </span><span class="kw">geom_col</span>() <span class="op">+</span></span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="ot">NULL</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true"></a>fit_rf &lt;-</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true"></a><span class="st">  </span>wkf_rf_fit <span class="op">%&gt;%</span></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">pull</span>(.workflow) <span class="op">%&gt;%</span></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">first</span>() <span class="op">%&gt;%</span></span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true"></a><span class="st">  </span><span class="kw">pull_workflow_fit</span>()</span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true"></a><span class="kw">vi</span>(fit_rf)</span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true"></a><span class="kw">vip</span>(fit_rf)</span></code></pre></div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

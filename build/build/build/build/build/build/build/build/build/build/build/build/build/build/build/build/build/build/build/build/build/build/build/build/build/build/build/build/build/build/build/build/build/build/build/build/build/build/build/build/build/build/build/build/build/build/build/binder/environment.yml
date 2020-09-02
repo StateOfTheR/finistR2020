@@ -1,0 +1,34 @@
+name: finistR2020
+channels:
+  - conda-forge
+dependencies:
+  - graph-tool
+  - jupytext
+  - numpy
+  - matplotlib
+  - pandoc
+  - r-base=3.6.3
+  - r-codetools
+  - r-cowplot
+  - r-desolve
+  - r-devtools
+  - r-distributional
+  - r-dt
+  - r-fda
+  - r-forcats
+  - r-ggally
+  - r-ggdist
+  - r-ggforce
+  - r-irkernel
+  - r-rnaturalearth
+  - r-plotly
+  - r-rcpp
+  - r-rcpparmadillo
+  - r-readods
+  - r-reticulate
+  - r-rmarkdown
+  - r-skimr
+  - r-stringi
+  - r-tidyverse
+  - r-tidymodels
+  - r-vip

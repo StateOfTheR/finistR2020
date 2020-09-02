@@ -1,0 +1,85 @@
+---
+title: "topogram"
+author: "Antoine Bichat"
+date: "25/08/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+```
+
+`topogram` permet de créer des cartogrammes, c'est à dire des cartes pour lesquelle la surface des territoires représentés est proportionnelle à une variable.
+
+Nous allons représenter le nombre des victimes du coronavirus par pays.
+
+```{r, message=FALSE}
+# remotes::install_github("RamiKrispin/coronavirus")
+library(coronavirus)
+library(tidyverse)
+```
+
+On récupère et met en forme le jeu de donnée des cas de coronavirus au `r Sys.Date()`.
+
+```{r}
+df_covid <-
+  coronavirus %>%
+  filter(type == "death") %>%
+  group_by(country) %>%
+  summarise(total_death = sum(cases), .groups = "drop") %>% # sommer les morts journaliers
+  mutate(country = case_when(country == "US" ~ "United States", # pour le left_join()
+                             country == "Congo (Kinshasa)" ~ "Dem. Rep. Congo",
+                             country == "Congo (Brazzaville)" ~ "Congo",
+                             country == "Cote d'Ivoire" ~ "Côte d'Ivoire",
+                             country == "Central African Republic" ~ "Central African Rep.",
+                             country == "Taiwan*" ~ "Taiwan",
+                             country == "Equatorial Guinea" ~ "Eq. Guinea",
+                             country == "South Sudan" ~ "S. Sudan",
+                             country == "Western Sahara" ~ "W. Sahara",
+                             country == "Korea, South" ~ "Korea",
+                             country == "Czechia" ~ "Czech Rep.",
+                             country == "Laos" ~ "Lao PDR",
+                             country == "Bosnia and Herzegovina" ~ "Bosnia and Herz.",
+                             TRUE    ~ country), # il reste d'autres inadéquations dans les noms
+         total_death = total_death + 1) # pour éviter les 0
+df_covid
+```
+
+On récupère la carte du monde et on la fusionne le jeu de données du coronavirus.
+
+```{r}
+# install.packages("rnaturalearth")
+# remotes::install_github("dreamRs/topogram")
+# remotes::install_github("ropensci/rnaturalearthhires")
+library(rnaturalearth)
+library(coronavirus)
+library(topogram)
+library(sf)
+```
+
+
+```{r}
+world_covid <- 
+  countries110 %>% 
+  st_as_sf() %>% 
+  left_join(df_covid, by = c("name" = "country")) %>% 
+  drop_na(total_death) %>% 
+  select(name, total_death)
+world_covid
+```
+
+La fontion `topogram` fait le travail.
+
+```{r}
+topogram(shape = world_covid,
+         value = "total_death",
+         tooltip_label = ~ name,
+         n_iteration = 100,
+         unit_value = "deaths",
+         format_value = ".2s") %>% # D3 format for two significant digits
+  add_labs(title = "Number of death by Covid-19") %>%
+  add_legend(title = "", orientation = "vertical",
+             label_format = ".2s")
+```
+
+
