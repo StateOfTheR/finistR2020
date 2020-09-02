@@ -1,5 +1,5 @@
-name: "FinistR, édition 2019"
-output_dir: "../docs"
+name: "FinistR, édition 2020"
+output_dir: "./build"
 navbar:
  title: "FinistR 2020"
  left:
