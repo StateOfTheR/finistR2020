@@ -1,4 +1,4 @@
-name: rmarkdown website
+name: build website
 on:
   push:
     branches:
@@ -7,21 +7,25 @@ on:
 jobs:
   website:
     name: Build website with rmarkdown
-    if: "contains(github.event.head_commit.message, 'website')"
+    if: "!contains(github.event.head_commit.message, 'skip')"
     runs-on: "ubuntu-latest"
     steps:
-      - name: apt install
-        run: sudo apt-get install -yq libicu-dev
       - uses: actions/checkout@v2
         with:
-          ref: master
+          ref: website
+      - name: apt install
+        run: xargs -a binder/apt.txt sudo apt-get install
+      - name: Install Julia
+        run: julia -e 'using Pkg; Pkg.add("DifferentialEquations")'
       - uses: goanpeca/setup-miniconda@v1
         with:
+          auto-update-conda: true
           environment-file: binder/environment.yml
           activate-environment: test
       - shell: bash -l {0}
         run: |
-          conda run -n test Rscript -e 'rmarkdown::render_site(input="finistR2020_website")'
+          conda run -n finistR2020 Rscript binder/install.R
+          conda run -n finistR2020 Rscript -e 'rmarkdown::render_site(input="finistR2020_website")'
       - name: GitHub Pages action
         uses: peaceiris/actions-gh-pages@v3
         with:
