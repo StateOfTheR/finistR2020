@@ -17,7 +17,7 @@ dependencies:
   - r-ggally
   - r-ggforce
   - r-irkernel
-  - r-naturalearth
+  - r-rnaturalearth
   - r-plotly
   - r-rcpp
   - r-rcpparmadillo
