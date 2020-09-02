@@ -94,6 +94,6 @@ julia -e 'using Pkg; Pkg.add("DifferentialEquations")'
 ```bash
 conda env create -f binder/environment.yml
 conda activate finistR2020
-Rscript install.R
+Rscript binder/install.R
 Rscript -e "rmarkdown::render_site()'
 ```
