@@ -16,14 +16,15 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 Pour pouvoir utiliser `Python` dans `Rmarkdown` il faut utiliser le package `reticulate`.
-On peut lui préciser le chemin de la version que l'on veut utiliser une certaine version plutôt que celle par défaut. Si une version de `Python` est déjà chargée, il faut relancer la session `R` pour que la modification soit appliqué.
+On peut lui préciser le chemin de la version que l'on veut utiliser une certaine version plutôt que celle par défaut. Si une version de `Python` est déjà chargée, il faut relancer la session `R` pour que la modification soit appliqué. Dans notre exemple nous allons utiliser l'environnement conda `finistR2020` qui est décrit dans le fichier `binder/environment.yml`.
 ```{r}
 library(reticulate)
+use_condaenv("finistR2020")
 reticulate::py_config()
 ```
 
 Il suffit alors de créer un chunk avec `python` comme langage. Tous les objets `R` de l'environnement sont accessible via la commande `r.`.
-```{python}
+```{r}
 x = 2
 print(x)
 r.x = x
@@ -38,7 +39,7 @@ typeof(y)
 ```
 
 Il faut faire attention à la transformation automatique des types de `R` vers `python`, ce dernier étant plus pointilleux que `R` la dessus.
-```{python}
+```{r}
 z = [i**2 for i in range(int(r.y))]
 
 print(z)
@@ -54,7 +55,7 @@ library(igraph)
 library(tidyverse)
 ```
 
-```{python}
+```{r}
 import graph_tool.all as gt
 import matplotlib.pyplot as plt
 import numpy as np
@@ -62,26 +63,26 @@ import math
 import time
 ```
 
-```{python}
+```{r}
 g = gt.collection.data["football"]
 print(g)
 ```
 
 
-```{python}
+```{r}
 state = gt.minimize_blockmodel_dl(g)
 m = state.get_matrix()
 ```
 
 Les plots `matplotlib` sortent très bien dans le notebook, mais ce n'est pas le cas des plots interactifs. Ceux-ci ouvrent une fenêtre `python` interactive et bloquent la compilation du document.
 
-```{python}
+```{r}
 plt.matshow(m.todense())
 ```
 
 
 Si l'on décide de sortir un plot *inline*,  la fenêtre virtuelle ne s'ouvre pas et l'on récupère juste l'adresse mémoire du graph stocker.
-```{python}
+```{r}
 pv = None
 for i in range(1000):
      ret = state.mcmc_sweep(niter=10)
@@ -92,12 +93,12 @@ p = gt.graph_draw(g, pos=g.vp["pos"], vertex_shape="pie",
 ```
 
 On obtient des représentations graphiques sur des graph assez gros (1500 noeuds) rapidement.
-```{python}
+```{r}
 g = gt.price_network(1500)
 deg = g.degree_property_map("in")
 deg.a = 4 * (np.sqrt(deg.a) * 0.5 + 0.4)
 ```
-```{python}
+```{r}
 
 ebet = gt.betweenness(g)[1]
 ebet.a /= ebet.a.max() / 10.
@@ -114,7 +115,7 @@ gt.graph_draw(g, pos=pos, vertex_size=deg, vertex_fill_color=deg, vorder=deg,
               #output="graph-draw.pdf")
 ```
 Et l'on peut également sortir des plots interactifs avec graphviz.
-```{python}
+```{r}
 g = gt.price_network(1500)
 deg = g.degree_property_map("in")
 deg.a = 2 * (np.sqrt(deg.a) * 0.5 + 0.4)
@@ -122,14 +123,14 @@ ebet = gt.betweenness(g)[1]
 #gt.graphviz_draw(g, vcolor=deg, vorder=deg, elen=10,
 #                 ecolor=ebet, eorder=ebet, )#, output="graphviz-draw.pdf")
 ```
-```{python}
+```{r}
 plt.switch_backend('Agg')
 g = gt.price_network(3000)
 pos = gt.sfdp_layout(g)
 gt.graph_draw(g, pos=pos)#, output="graph-draw-sfdp.pdf")
 ```
 
-```{python}
+```{r}
 g = gt.collection.data["netscience"]
 g = gt.GraphView(g, vfilt=gt.label_largest_component(g))
 g.purge_vertices()
@@ -148,7 +149,7 @@ gt.graph_draw(g, pos=pos, vertex_fill_color=b, vertex_shape=shape,
 
 
 Un essaie de plot hiérarchique:
-```{python}
+```{r}
 g = gt.collection.data["celegansneural"]
 state = gt.minimize_nested_blockmodel_dl(g, deg_corr=True)
 gt.draw_hierarchy(state, output="./celegansneural_hier.png")
@@ -157,7 +158,7 @@ gt.draw_hierarchy(state, output="./celegansneural_hier.png")
 
 Si l'on fit un sbm sur un graph, l'autoplot sur l'état des blocks du graphe se fait automatiquement. 
 
-```{python}
+```{r}
 t0 = time.time()
 g = gt.collection.data["polbooks"]
 
@@ -172,7 +173,7 @@ print(t)
 
 state.entropy()
 ```
-```{python}
+```{r}
 
 state.draw(pos=g.vp["pos"], vertex_shape=state.get_blocks())#,
 state.draw(output = "gt_plot.png" )
@@ -188,7 +189,7 @@ On peut passer le réseau via la matrice d'adjacence de `python` à `R`, mais on
 Malheureusement, cela ne fonctionne pas. Toutes les méthodes de `graph_tool` sur les noeuds et les arêtes renvoient des itérateurs. Il est nécessaire de les transformer en vecteur avec de les utiliser en `R`.
 
 
-```{python}
+```{r}
 blocks = [b for b in state.get_blocks()]
 A = gt.adjacency(g)
 g.save(file_name= "/home/stc/Documents/StateOfTheR/FinistR2020/graph_gt.graphml", fmt="graphml")
@@ -233,11 +234,11 @@ igraph::graph_from_adjacency_matrix(
   A, mode = "directed") %>% igraph::write_graph(file = "graph_test.graphml", format = "graphml")
 ```
 
-```{python}
+```{r}
 gr = gt.load_graph(file_name="~/Documents/StateOfTheR/FinistR2020/graph_test.graphml", fmt="graphml")
 ```
 
-```{python}
+```{r}
 gr.set_directed = False
 gt.minimize_blockmodel_dl(gr, deg_corr=False)
 ```
