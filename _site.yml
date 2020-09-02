@@ -1,0 +1,32 @@
+name: "FinistR, édition 2019"
+output_dir: "../docs"
+navbar:
+ title: "FinistR 2020"
+ left:
+  - text: "Accueil"
+    icon: fa-home
+    href: index.html
+  - text: "Dépôt GitHub"
+    icon: fa-github
+    href: https://github.com/StateOfTheR/finistR2020
+ right:
+  - text: "R avancé"
+    icon: fas fa-r-project
+    menu:
+        - text: "Progammation avec le tidyverse"
+          href: advanced_r.html
+  - text: "Mathématique"
+    icon: fas fa-chart-bar
+    menu:
+        - text: "Modèles GAM"
+          href: gam.html     
+        - text: "Équations différentielles avec R"
+          href: edo.html
+        - text: "Manipulation des distributions"
+          href: distributions.html
+        - text: "Tidymodels"
+          href: tidymodels.html
+output:
+  html_document:
+    theme: flatly
+    highlight: tango
