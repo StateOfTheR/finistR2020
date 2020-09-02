@@ -17,6 +17,7 @@ dependencies:
   - r-fda
   - r-forcats
   - r-ggally
+  - r-ggdist
   - r-ggforce
   - r-irkernel
   - r-rnaturalearth
@@ -26,6 +27,8 @@ dependencies:
   - r-readods
   - r-reticulate
   - r-rmarkdown
+  - r-skimr
   - r-stringi
   - r-tidyverse
-  - r-cowplot
+  - r-tidymodels
+  - r-vip
