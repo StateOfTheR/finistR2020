@@ -1,7 +1,7 @@
 ---
-title: "topogram"
-author: "Antoine Bichat"
-date: "25/08/2020"
+title: "Cartogrammes"
+author: "State of the R"
+date: "24-28/08/2020"
 output: html_document
 ---
 
@@ -64,7 +64,7 @@ world_covid <-
   st_as_sf() %>% 
   left_join(df_covid, by = c("name" = "country")) %>% 
   drop_na(total_death) %>% 
-  select(name, total_death)
+  dplyr::select(name, total_death)
 world_covid
 ```
 

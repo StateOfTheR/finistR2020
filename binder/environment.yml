@@ -16,6 +16,7 @@ dependencies:
   - r-devtools
   - r-distributional
   - r-dt
+  - r-edgebundler
   - r-fda
   - r-forcats
   - r-ggally
@@ -24,6 +25,7 @@ dependencies:
   - r-learnr
   - r-igraph
   - r-irkernel
+  - r-networkd3
   - r-rlang
   - r-plotly
   - r-purrr
@@ -33,9 +35,12 @@ dependencies:
   - r-readods
   - r-reticulate
   - r-rmarkdown
+  - r-scatterd3
+  - r-sf
   - r-skimr
   - r-stringi
   - r-swirl
+  - r-threejs
   - r-tidyverse
   - r-tidymodels
   - r-vip

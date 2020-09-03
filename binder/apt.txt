@@ -1,4 +1,9 @@
 libicu-dev
 libstdc++6
 cmake
-
+libudunits2-dev
+libgdal-dev
+libjq-dev
+libprotobuf-dev
+protobuf-compiler
+libv8-dev

@@ -21,6 +21,15 @@ navbar:
           href: github_actions.html     
         - text: "Binder"
           href: binderetal.html     
+  - text: "Widgets"
+    icon: far fa-
+    menu:
+        - text: "Cartogrammes"
+          href: topogram.html
+        - text: "Timevis"
+          href: timevis.html
+        - text: "ggiraph, plotly"
+          href: ggiraph.html
   - text: "R avancé"
     icon: far fa-keyboard
     menu:
