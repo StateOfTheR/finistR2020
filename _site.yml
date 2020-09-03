@@ -20,7 +20,7 @@ navbar:
         - text: "Interface avec KeOps"
           href: RKeOps.html     
   - text: "R avancé"
-    icon: fas fa-r-project
+    icon: fab fa-r-project
     menu:
         - text: "Progammation avec le tidyverse"
           href: advanced_r.html
