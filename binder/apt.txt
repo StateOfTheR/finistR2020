@@ -8,3 +8,4 @@ libprotobuf-dev
 protobuf-compiler
 libv8-dev
 libxi6
+libxfixes3
