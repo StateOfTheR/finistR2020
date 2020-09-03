@@ -61,6 +61,15 @@ Pour l'instant, on a spécifié la recette, mais on ne l'a pas entrainée. Pour 
 prep(rec)
 ```
 
+On a accès aux paramètres de préparation des données via la fonction `tidy` sur la recette entrainée. On regarde ici les quantités pour centrer et réduire chaque variable, soit la deuxième étape de la recette.
+
+```{r}
+rec %>% 
+  prep() %>% 
+  tidy(2) %>% 
+  arrange(terms)
+```
+
 Pour appliquer la recette au jeu de donnée qui a servi à l'entraîner, on utilise `juice`.
 
 ```{r}
@@ -88,7 +97,8 @@ rec %>%
   mean()
 ```
 
-On remarque que ça n'est pas centré : on a normalisé avec la moyenne et la variance du jeu de donnée d'entraînement.
+On remarque que ça n'est pas centré : on a normalisé le jeu de données de test avec la moyenne et la variance du jeu de données d'entraînement.
+
 
 # Spécification d'un modèle de regression linéaire
 
@@ -111,6 +121,7 @@ wkf_lr <-
   add_model(spec_lr)
 wkf_lr
 ```
+
 
 # Ajustement de la regression linéaire et prédictions
 
@@ -158,9 +169,6 @@ my_metrics <- metric_set(rmse, rsq)
 my_metrics(df_test_lr, truth = Salary, estimate = .pred)
 ```
 
-```{r setup2, include=FALSE}
-knitr::opts_chunk$set(eval = FALSE)
-```
 
 # Forêts aléatoires et hyperparamètres
 
@@ -182,12 +190,15 @@ wkf_rf <-
 On va déterminer la région dans laquelle on va optimiser les paramètres grâce au package `dials`. `min_n` a des valeurs limite par défaut mais il faut ajuster `mtry` par rapport au jeu de données. On crée ensuite un grille non régulière qui maximise l'entropie.
 
 ```{r grid}
-grid <-
-  spec_rf %>%
-  parameters() %>%
-  update(mtry = finalize(mtry(), select(juiced, -Salary))) %>%
-  grid_max_entropy(size = 20)
+grid <- grid_max_entropy(min_n(), 
+                         finalize(mtry(), select(juiced, -Salary)), 
+                         size = 20)
 grid
+```
+
+On a finalisé `mtry` car la plage de valeur que cet hyperparamètre peut prendre dépend du jeu de données (le nombre de prédicteurs en l'occurence).
+
+```{r}
 ggplot(grid) +
   aes(mtry, min_n) +
   geom_point()
@@ -201,6 +212,10 @@ kfolds
 ```
 
 On optimise avec `tune`.
+
+```{r setup2, include=FALSE}
+knitr::opts_chunk$set(eval = FALSE)
+```
 
 ```{r tune, cache=TRUE, cache.lazy=FALSE}
 tuned <- tune_grid(wkf_rf, resamples = kfolds, grid = grid,
@@ -218,7 +233,7 @@ show_best(tuned, metric = "rmse")
 select_best(tuned, metric = "rmse")
 ```
 
-On ajuste un modèle avec les meilleurs paramètres.
+On ajuste un modèle avec les meilleurs paramètres. Après avoir défini les hyperparamètres du modèle via `finalize_workflow`, la fonction `last_fit` apprend les paramètres du modèle sur le jeu de d'entrainement et prédit sur le jeu de données test.
 
 ```{r lastfit}
 wkf_rf_fit <-
@@ -228,13 +243,14 @@ wkf_rf_fit <-
   last_fit(split, metrics = my_metrics)
 ```
 
-Calcule des métriques ce dernier modèle.
+Calcul des métriques de ce dernier modèle.
 
 ```{r}
 collect_metrics(wkf_rf_fit)
 ```
 
-On rapelle que le RMSE pour la regression linéaire vaut `r  my_metrics(df_test_lr, truth = Salary, estimate = .pred)$.estimate[1]`.
+On rapelle que le RMSE pour la regression linéaire vaut `r round(my_metrics(df_test_lr, truth = Salary, estimate = .pred)$.estimate[1])`.
+
 
 # Importance des variables
 
@@ -262,3 +278,9 @@ vi(fit_rf)
 vip(fit_rf)
 ```
 
+
+# Jeton de reproductilité
+
+```{r}
+sessionInfo()
+```
