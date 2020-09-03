@@ -1,7 +1,6 @@
 ---
 title: "Faire un tutoriel contenant du R avec learnr et gradethis"
 author: "Pierre Gloaguen"
-date: ""
 output: html_document
 ---
 
