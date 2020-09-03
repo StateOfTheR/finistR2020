@@ -1,7 +1,7 @@
 ---
-title: "torch"
-author: "JA and TLM"
-date: "8/25/2020"
+title: "Accéder au fonctionalité 'torch' en R"
+author: "State of the R"
+date: "24-28/08/2020"
 output: html_document
 ---
 

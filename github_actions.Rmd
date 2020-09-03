@@ -1,7 +1,7 @@
 ---
 title: "GitHub Actions avec R"
-author: "MP Etienne, P. Navaro,  P. Neuvial"
-date: "8/26/2020"
+author: "State of the R"
+date: "24-28/08/2020"
 output: html_document
 ---
 

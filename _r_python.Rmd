@@ -1,7 +1,7 @@
 ---
 title: "Représentation et inférence de réseaux avec R et Python"
-author: "Saint-Clair Chabert-Liddell"
-date: "August 26, 2020"
+author: "State of the R"
+date: "24-28/08/2020"
 output: 
   html_document: 
     df_print: tibble

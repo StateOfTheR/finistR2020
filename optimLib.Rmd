@@ -1,8 +1,7 @@
 ---
-title: "Outils d'optimisation: optimLib"
-subtitle: "Interfaçage d'une bibliothèque C++ d'optimisation, alternative à `optim`"
-author: "Saint-Clair Chabert-Liddell, Julien Chiquet"
-date: "24/08/2020"
+title: "OptimLib: interfaçage d'une bibliothèque C++ d'optimisation, alternative à `optim`"
+author: "State of the R"
+date: "24-28/08/2020"
 output: html_document
 ---
 

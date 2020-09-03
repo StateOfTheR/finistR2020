@@ -1,7 +1,7 @@
 ---
 title: "Gérer des citations bib(La)tex dans un RMarkdown"
-author: "JA"
-date: "8/27/2020"
+author: "State of the R"
+date: "24-28/08/2020"
 output: html_document
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: "Équations différentielles avec R"
-author: "Atelier EDO"
-date: "25/08/2020"
+author: "State of the R"
+date: "24-28/08/2020"
 output: html_document
 ---
 
