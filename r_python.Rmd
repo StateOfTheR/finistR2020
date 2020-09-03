@@ -81,16 +81,17 @@ plt.matshow(m.todense())
 ```
 
 
-Si l'on décide de sortir un plot *inline*,  la fenêtre virtuelle ne s'ouvre pas et l'on récupère juste l'adresse mémoire du graph stocker.
-```{python}
+Si l'on décide de sortir un plot *inline*,  la fenêtre virtuelle ne s'ouvre pas et l'on récupère juste l'adresse mémoire du graph stocker. Il faut sauver dans un fichier et insérer "à la main"
+```{python graph_fig}
 pv = None
 for i in range(1000):
      ret = state.mcmc_sweep(niter=10)
      pv = state.collect_vertex_marginals(pv)
 gt.mf_entropy(g, pv)
 p = gt.graph_draw(g, pos=g.vp["pos"], vertex_shape="pie",
-                  vertex_pie_fractions=pv, inline= True)
+                  vertex_pie_fractions=pv, inline= True, output = "img/hier.png")
 ```
+![plot hierarchique](img/hier.png)
 
 On obtient des représentations graphiques sur des graph assez gros (1500 noeuds) rapidement.
 ```{python}
@@ -111,9 +112,12 @@ for e in g.edges():
     control[e] = [0.3, d, 0.7, d]
 gt.graph_draw(g, pos=pos, vertex_size=deg, vertex_fill_color=deg, vorder=deg,
               edge_color=ebet, eorder=eorder, edge_pen_width=ebet,
-              edge_control_points=control) # some curvy edges
-              #output="graph-draw.pdf")
+              edge_control_points=control, # some curvy edges
+              output="graph-draw.png")
 ```
+
+![graph1500](img/graph-draw.png)
+
 Et l'on peut également sortir des plots interactifs avec graphviz.
 ```{python, eval = FALSE}
 g = gt.price_network(1500)
@@ -149,12 +153,12 @@ gt.graph_draw(g, pos=pos, vertex_fill_color=b, vertex_shape=shape,
 
 Un essaie de plot hiérarchique:
 
-```{python}
+```{python celegans_hier}
 g = gt.collection.data["celegansneural"]
 state = gt.minimize_nested_blockmodel_dl(g, deg_corr=True)
-gt.draw_hierarchy(state, output="./celegansneural_hier.png")
+gt.draw_hierarchy(state, output="img/celegansneural_hier.png")
 ```
-![plot hierarchique](./celegansneural_hier.png)
+![plot hierarchique](img/celegansneural_hier.png)
 
 Si l'on fit un sbm sur un graph, l'autoplot sur l'état des blocks du graphe se fait automatiquement. 
 
@@ -173,13 +177,11 @@ print(t)
 
 state.entropy()
 ```
-```{python}
 
-state.draw(pos=g.vp["pos"], vertex_shape=state.get_blocks())#,
-state.draw(output = "gt_plot.png" )
-#...            output="polbooks_blocks_mdl.svg")
+```{python}
+state.draw(pos=g.vp["pos"], vertex_shape=state.get_blocks(), output="img/polbooks_blocks_mdl.svg")
 ```
-![Image graph tools](./gt_plot.png)
+![Image graph tools](img/polbooks_blocks_mdl.svg)
 
 
 
@@ -190,15 +192,15 @@ On peut passer le réseau via la matrice d'adjacence de `python` à `R`, mais on
 Malheureusement, cela ne fonctionne pas. Toutes les méthodes de `graph_tool` sur les noeuds et les arêtes renvoient des itérateurs. Il est nécessaire de les transformer en vecteur avec de les utiliser en `R`.
 
 
-```{python, eval = FALSE}
+```{python}
 blocks = [b for b in state.get_blocks()]
 A = gt.adjacency(g)
-g.save(file_name= "/home/stc/Documents/StateOfTheR/FinistR2020/graph_gt.graphml", fmt="graphml")
+## g.save(file_name= "/home/stc/Documents/StateOfTheR/FinistR2020/graph_gt.graphml", fmt="graphml")
 ```
 
-```{r, eval = FALSE}
-g <- igraph::read.graph("/home/stc/Documents/StateOfTheR/FinistR2020/graph_gt.graphml",                         format = "graphml")
-```
+<!-- ```{r, eval = FALSE} -->
+<!-- g <- igraph::read.graph("/home/stc/Documents/StateOfTheR/FinistR2020/graph_gt.graphml",                         format = "graphml") -->
+<!-- ``` -->
 
 
 ```{r}
@@ -232,7 +234,7 @@ igraph::graph_from_adjacency_matrix(
   A, mode = "directed") %>% igraph::write_graph(file = "graph_test.graphml", format = "graphml")
 ```
 
-```{python, evala = FALSE}
+```{python, eval = FALSE}
 gr = gt.load_graph(file_name="~/Documents/StateOfTheR/FinistR2020/graph_test.graphml", fmt="graphml")
 ```
 
