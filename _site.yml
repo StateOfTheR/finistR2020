@@ -25,7 +25,7 @@ navbar:
     icon: far fa-
     menu:
         - text: "Cartogrammes"
-          href: topogram.html
+        #   href: topogram.html
         - text: "Timevis"
           href: timevis.html
         - text: "ggiraph, plotly"

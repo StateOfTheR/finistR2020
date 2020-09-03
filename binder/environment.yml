@@ -22,7 +22,7 @@ dependencies:
   - r-ggally
   - r-ggdist
   - r-ggforce
-  - r-learnr
+#  - r-learnr
   - r-igraph
   - r-irkernel
   - r-networkd3
