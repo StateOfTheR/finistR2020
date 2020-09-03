@@ -1,8 +1,3 @@
----
-output: github_document
----
-
-
 
 # Ateliers Finist'R 2020
 
@@ -14,7 +9,7 @@ La restitution se fait sous forme de site web. Le site de l'édition 2020 [sera 
 
 # Participants
 
-![plot of chunk fig-group](img/groupe2020.jpeg)
+![Team FinistR2020](img/groupe2020.jpeg)
 
 - 1er rang: Pierre Navaro, Pierre Gloaguen, Julie Aubert, Julien Chiquet, Baptiste Alglave, Gaspar Massiot, Tam Le Mihn
 - 2ème rang: Pierre Neuvial, Pierre Barbillon, Saint-Clair Chabert Liddell, Antoine Bichat, Mahendra Mariadassou, Marie-Pierre Étienne, Sophie Donnet
