@@ -191,7 +191,7 @@ On va déterminer la région dans laquelle on va optimiser les paramètres grâc
 
 ```{r grid}
 grid <- grid_max_entropy(min_n(), 
-                         finalize(mtry(), select(juiced, -Salary)), 
+                         finalize(mtry(), dplyr::select(juiced, -Salary)), 
                          size = 20)
 grid
 ```
@@ -217,7 +217,7 @@ On optimise avec `tune`.
 knitr::opts_chunk$set(eval = FALSE)
 ```
 
-```{r tune, cache=TRUE, cache.lazy=FALSE}
+```{r tune}
 tuned <- tune_grid(wkf_rf, resamples = kfolds, grid = grid,
                    control = control_grid(verbose = FALSE),
                    metrics = my_metrics)

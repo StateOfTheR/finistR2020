@@ -56,9 +56,9 @@ the formula $\partial_x K(x_i,y_j) = -\tfrac{1}{\sigma^2}(x_i - y_j) \exp(-\|x_i
 
 ### One-slide summary
 
-<!-- ```{r fig-take-home, echo=FALSE} -->
-<!-- knitr::include_graphics("img/rkeops_take-home.png") -->
-<!-- ``` -->
+```{r fig-take-home, echo=FALSE}
+knitr::include_graphics("img/rkeops_take-home.png")
+```
 
 
 ## Installation
