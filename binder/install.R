@@ -13,9 +13,9 @@ remotes::install_github("mlverse/torch")
 install.packages("rkeops")
 
 ## tidy truc
+install.packages("tidyverse")
 install.packages("tidymodels")
 install.packages("modeldata")
-install.packages("tidyverse")
 install.packages("skimr")
 install.packages("vip")
 
