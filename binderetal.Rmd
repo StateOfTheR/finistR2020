@@ -127,7 +127,7 @@ One note on the Docker container, that is built on mybinder.org: while the insta
 
 Si les tutoriaux sont ditribués comme recommandés par les auteurs de `learnr`, c'est à dire dans le dossier `inst/tutorials/` d'un package, on peut créer un binder très facilement via [mybinder.org](https://mybinder.org/) et déployer des serveurs Rstudio à la volée via le lien fourni de type (https://mybinder.org/v2/gh/mahendra-mariadassou/L1fdvGenetics/master?urlpath=rstudio). Le suffixe `?urlpath=rstudio` permet de lancer une instance de rstudio dans le binder. 
 
-![Interface de binder](images/binder_example.png)
+![Interface de binder](img/binder_example.png)
 
 #### Points d'attention
 

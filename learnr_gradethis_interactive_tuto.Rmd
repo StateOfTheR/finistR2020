@@ -6,7 +6,6 @@ output:
 runtime: shiny_prerendered
 ---
 
-
 ## Démarrer: en tête `yaml` et `setup` chunk
 
 Tout tutoriel doit débuter avec l'en tête yaml (voir `help(learnr::tutorial)` dans `R` pour les différentes options):
@@ -66,7 +65,6 @@ Il est essentiel de **nommer** le chunk associé (ici, on a nommé le chunk `add
 ````markdown
 `r ''````{r add, exercise=TRUE}
 add <- function() {
-  
 }
 ```
 ````
@@ -112,7 +110,6 @@ L'écriture de tous ces codes renvoie le chunk suivant, dans
 
 ```{r add, exercise=TRUE}
 add <- function() {
-  
 }
 ```
 

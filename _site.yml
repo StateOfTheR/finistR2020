@@ -10,17 +10,31 @@ navbar:
     icon: fa-github
     href: https://github.com/StateOfTheR/finistR2020
  right:
+  - text: "Communication"
+    icon: fas fa-at
+    menu:
+  - text: "Enseignement"
+    icon: fas fa-teacher
+    menu:
+        - text: "LearnR and gradethis"
+          href: learnr_gradethis_interactive_tuto.html     
+        - text: "Interface avec KeOps"
+          href: RKeOps.html     
   - text: "Intégration continue"
     icon: fas fa-gear
     menu:
         - text: "GithubActions"
           href: github_actions.html     
-  - text: "Communication"
-    icon: fas fa-at
+        - text: "Binder"
+          href: binderetal.html     
+  - text: "R avancé et interface"
+    icon: far fa-keyboard
     menu:
         - text: "R et Python"
-          href: citr.html     
-        - text: "r_python.html"
+          href: r_python.html
+        - text: "Progammation avec le tidyverse"
+          href: advanced_r.html
+        - text: "Bibliographie"
           href: citr.html     
   - text: "Optimisation"
     icon: fas fa-biohazard
@@ -31,21 +45,16 @@ navbar:
           # href: torch.html     
         - text: "Interface avec KeOps"
           href: RKeOps.html     
-  - text: "Programmation R avancé"
-    icon: far fa-keyboard
-    menu:
-        - text: "Progammation avec le tidyverse"
-          href: advanced_r.html
   - text: "Outils mathématiques"
     icon: fas fa-chart-bar
     menu:
-        - text: "Modèles GAM"
+        - text: "Modèles additifs - GAM"
           href: gam.html     
         - text: "Équations différentielles avec R"
           href: edo.html
         - text: "Manipulation des distributions"
           href: distributions.html
-        - text: "Tidymodels"
+        - text: "Tidymodels, séries temporelles"
           href: tidymodels.html
 output:
   html_document:

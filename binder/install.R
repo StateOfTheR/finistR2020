@@ -4,19 +4,10 @@ local({
   options(repos = r)
 })
 
-install.packages("sbm")
-install.packages("palmerpenguins")
-
-## optim 
+## non-CRAN packages
+devtools::install_github("https://github.com/rstudio-education/gradethis")
 devtools::install_github("StateOfTheR/optimLibR")
-remotes::install_github("mlverse/torch")
-install.packages("rkeops")
-
-## Rmarkdown
-install.packages("bibtex")
-
-## rlang
-install.packages("rlang")
+devtools::install_github("mlverse/torch")
 
 ## Julia and co
 devtools::install_github("Non-Contradiction/JuliaCall")
