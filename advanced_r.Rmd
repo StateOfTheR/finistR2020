@@ -275,7 +275,7 @@ summarize_penguins(species == "Adelie", island, bill_depth_mm, mean, na.rm = TRU
 Le jeu de données VMS_data contient les données spatialisées des captures (`LE_KG`), des efforts (`HF`) et des indices d'abondance (`CPUE`) par navire (`aggreg_level`) des chalutiers ciblant les espèces démersales (`OTB_DEF`) dans le golfe de Gascogne. La donnée est aggrégée à l'échelle des cellules (`layer`) d'une grille de résolution 0.05°. Les captures et les indices d'abondance pour chaque espèce sont en colonne.
 
 ```{r}
-load("VMS_data.RData")
+load("data/VMS_data.RData")
 VMS_data <- as_tibble(VMS_data)
 ```
 
