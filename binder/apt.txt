@@ -7,3 +7,4 @@ libjq-dev
 libprotobuf-dev
 protobuf-compiler
 libv8-dev
+libxi6
