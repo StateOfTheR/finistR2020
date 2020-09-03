@@ -9,3 +9,7 @@ Manifest.toml
 build
 index_cache/
 tidymodels_cache/
+*.html
+*_cache/
+*_files/
+site_libs

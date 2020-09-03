@@ -30,22 +30,17 @@ De plus, on peut régler des options du tutoriel dans le chunk `setup`.
 ## Packages
 
 # L'utilisation de require semble à privilégier pour le déploiment sur shiny apps
-require(tidyverse)
-require(learnr)
+library(tidyverse)
+library(learnr)
 # devtools::install_github("https://github.com/rstudio-education/gradethis")
-require(gradethis)
+library(gradethis)
 
 # Options du tutoriel (voir l'aide)
 tutorial_options(
   exercise.checker = gradethis::grade_learnr, # Pour checker
 )
 
-# Options knitr classiques
-
-knitr::opts_chunk$set(echo = FALSE) 
-
 # Objets pour exercices
-
 my_data <- tibble(x = 1:10, y = runif(10))
 ```
 
@@ -278,3 +273,5 @@ grade_code(correct = "Très bon", incorrect = "Essaye encore!") # Message circon
 ## Publication sur `shinyapps`
 
 Un tutorial `learnr` peut être déployé sur `shinyapps`. Il faut pour cela avoir un compte sur shinyapps.io. Ensuite, on peut publier directement depuis Rstudio (ongle `Publish` en haut à droite de `Run`.)
+
+
