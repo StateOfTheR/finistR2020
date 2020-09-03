@@ -1,9 +1,10 @@
 ---
-title: "Ateliers Finist'R 2020"
 output: github_document
 ---
 
 
+
+# Ateliers Finist'R 2020
 
 L'atelier Finist'R 2020 -- ou *bootcamp R* se tiendra à la [station biologique de Roscoff](http://www.sb-roscoff.fr/) du 24 au 28 août 2020.
 
