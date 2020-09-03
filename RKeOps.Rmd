@@ -103,23 +103,12 @@ args = c("x = Vi(3)",      # vector indexed by i (of dim 3)
          "s = Pm(1)")      # parameter (scalar)
 ```
 
-So far, so good but at the compilation step I get an error with `cmake`:
+Then we compile the formula:
 
-```{r eval=FALSE}
+```{r compile-formula}
 # compilation
-> op <- keops_kernel(formula, args)
-Compiling headersb72ec1124da8340d0118a99af in /Users/pneuvial/Library/R/4.0/library/rkeops:
-       formula: Sum_Reduction(Exp(-s * SqNorm2(x - y)) * b, 0)
-       aliases: decltype(Vi(0,3)) x ;decltype(Vj(1,3)) y ;decltype(Vj(2,6)) b ;decltype(Pm(3,1)) s ;
-       dtype  : float
-...
-Error in compile_formula(formula, var_aliases$var_aliases, dllname) : 
-  Error during cmake call.
+op <- keops_kernel(formula, args)
 ```
-
-so I filed an [issue](https://github.com/getkeops/keops/issues/89).
-
-We can still go a bit further:
 
 ```{r after-compilation}
 # data and parameter values
@@ -131,22 +120,22 @@ B <- matrix(runif(ny*6), nrow=ny)   # matrix 150 x 6
 s <- 0.2
 ```
 
-Next we turn on gpu computation:
+If your machine is GPU friendly gpu computation can be turned on, otherwise CPU should be used
 
-```{r}
-# run computations on GPU (to be used only if relevant)
-use_gpu()
+```{r use-cpu-gpu}
+# use_gpu()
+use_cpu()
 ```
 
-The next step (provided that compilation worked above) will be:
+Finally we can perform the desired kernel operation:
 
-```{r eval=FALSE}
+```{r doit}
 # computation (order of the input arguments should be similar to `args`)
 res <- op(list(X, Y, B, s))
-res
+str(res)
 ```
 
-Note: Julien and Saint-Clair got this to work well on linux (using CPU and not GPU).
+The author of the package is very responsive: he has fixed a [Mac-specific compiling issue](https://github.com/getkeops/keops/issues/89) I had when trying to run this vignette.
 
 ## Session information
 
