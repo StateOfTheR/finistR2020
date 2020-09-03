@@ -10,6 +10,11 @@ navbar:
     icon: fa-github
     href: https://github.com/StateOfTheR/finistR2020
  right:
+  - text: "Intégration continue"
+    icon: fas fa-chart-bar
+    menu:
+        - text: "GithubActions"
+          href: github_actions.html     
   - text: "Optimisation"
     icon: fas fa-chart-bar
     menu:
@@ -19,12 +24,12 @@ navbar:
           href: torch.html     
         - text: "Interface avec KeOps"
           href: RKeOps.html     
-  - text: "R avancé"
+  - text: "Programmation R avancé"
     icon: fas fa-r-project
     menu:
         - text: "Progammation avec le tidyverse"
           href: advanced_r.html
-  - text: "Mathématique"
+  - text: "Outils mathématiques"
     icon: fas fa-chart-bar
     menu:
         - text: "Modèles GAM"

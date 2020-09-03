@@ -12,6 +12,7 @@ devtools::install_github("StateOfTheR/optimLibR")
 remotes::install_github("mlverse/torch")
 install.packages("rkeops")
 
+## Julia and co
 devtools::install_github("Non-Contradiction/JuliaCall")
 library(JuliaCall)
 julia <- julia_setup()
