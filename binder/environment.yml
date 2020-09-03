@@ -7,6 +7,7 @@ dependencies:
   - numpy
   - matplotlib
   - pandoc
+  - r-aricode
   - r-base=3.6.3
   - r-bibtex
   - r-codetools
