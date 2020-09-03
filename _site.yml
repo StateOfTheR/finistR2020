@@ -18,7 +18,9 @@ navbar:
   - text: "Communication"
     icon: fas fa-at
     menu:
-        - text: "Bibliographie"
+        - text: "R et Python"
+          href: citr.html     
+        - text: "r_python.html"
           href: citr.html     
   - text: "Optimisation"
     icon: fas fa-biohazard

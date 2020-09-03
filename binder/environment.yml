@@ -19,9 +19,11 @@ dependencies:
   - r-ggally
   - r-ggdist
   - r-ggforce
+  - r-igraph
   - r-irkernel
   - r-rnaturalearth
   - r-plotly
+  - r-purrr
   - r-rcpp
   - r-rcpparmadillo
   - r-readods
