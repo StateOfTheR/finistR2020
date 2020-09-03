@@ -20,20 +20,12 @@ La restitution se fait sous forme de site web. Le site de l'édition 2020 [sera 
 
 # Participants
 
-- Alglave Baptiste
-- Aubert Julie
-- Barbillon Pierre
-- Bichat Antoine
-- Chabert Liddell Saint-Clair
-- Chiquet Julien
-- Donnet Sophie
-- Étienne Marie-Pierre
-- Gloaguen Pierre
-- Le Minh Tam
-- Mariadassou Mahendra
-- Massiot Gaspard
-- Navaro Pierre
-- Neuvial Pierre
+```{r fig-group, echo=FALSE}
+knitr::include_graphics("img/groupe2020.jpeg")
+```
+
+- 1er rang: Pierre Navaro, Pierre Gloaguen, Julie Aubert, Julien Chiquet, Baptiste Alglave, Gaspar Massiot, Tam Le Mihn
+- 2ème rang: Pierre Neuvial, Pierre Barbillon, Saint-Clair Chabert Liddell, Antoine Bichat, Mahendra Mariadassou, Marie-Pierre Étienne, Sophie Donnet
 
 # Programme 
 

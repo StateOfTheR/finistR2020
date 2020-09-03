@@ -23,21 +23,13 @@ La station biologique de Roscoff va accueillir  la quatrième édition du R Boot
 
 ## Qui
 
-- Alglave Baptiste
-- Aubert	Julie
-- Barbillon	Pierre
-- Bichat	Antoine
-- Chabert Liddell	Saint-Clair
-- Chiquet	Julien
-- Donnet	Sophie
-- Etienne	Marie-Pierre
-- Gloaguen	Pierre
-- Le Minh Tam
-- Mariadassou	Mahendra
-- Massiot Gaspard
-- Navaro	Pierre
-- Neuvial Pierre
- 
+```{r fig-group, echo=FALSE}
+knitr::include_graphics("img/groupe2020.jpeg")
+```
+
+- 1er rang: Pierre Navaro, Pierre Gloaguen, Julie Aubert, Julien Chiquet, Baptiste Alglave, Gaspar Massiot, Tam Le Mihn
+- 2ème rang: Pierre Neuvial, Pierre Barbillon, Saint-Clair Chabert Liddell, Antoine Bichat, Mahendra Mariadassou, Marie-Pierre Étienne, Sophie Donnet
+
 <!-- ![Équipe finistR2019](img/finistr_team_2019.jpeg) -->
 
 <!-- ### 1er rang -->
@@ -66,7 +58,6 @@ La station biologique de Roscoff va accueillir  la quatrième édition du R Boot
 <!-- - [Pierre Gestraud](https://science.curie.fr/members/pierre-gestraud/) (Institut Curie) -->
 <!-- - [Pierre Gloaguen](https://papayoun.github.io/) (UMR MIA Paris - Agroparistech) -->
 <!-- - [Pierre Navaro](https://irmar.univ-rennes1.fr/interlocuteurs/pierre-navaro) (IRMAR - CNRS) -->
-
 
 ## Quoi
 
