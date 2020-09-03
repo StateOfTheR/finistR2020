@@ -17,7 +17,7 @@ navbar:
     icon: fas fa-teacher
     menu:
         - text: "LearnR and gradethis"
-          href: learnr_gradethis_interactive_tuto.html     
+          # href: learnr_gradethis_interactive_tuto.html     
         - text: "Swirl"
           href: swirl.html     
         - text: "Interface avec KeOps"
