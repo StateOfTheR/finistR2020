@@ -76,7 +76,7 @@ m = state.get_matrix()
 
 Les plots `matplotlib` sortent très bien dans le notebook, mais ce n'est pas le cas des plots interactifs. Ceux-ci ouvrent une fenêtre `python` interactive et bloquent la compilation du document.
 
-```{python}
+```{python, eval = FALSE}
 plt.matshow(m.todense())
 ```
 
@@ -115,7 +115,7 @@ gt.graph_draw(g, pos=pos, vertex_size=deg, vertex_fill_color=deg, vorder=deg,
               #output="graph-draw.pdf")
 ```
 Et l'on peut également sortir des plots interactifs avec graphviz.
-```{python}
+```{python, eval = FALSE}
 g = gt.price_network(1500)
 deg = g.degree_property_map("in")
 deg.a = 2 * (np.sqrt(deg.a) * 0.5 + 0.4)
@@ -123,13 +123,13 @@ ebet = gt.betweenness(g)[1]
 #gt.graphviz_draw(g, vcolor=deg, vorder=deg, elen=10,
 #                 ecolor=ebet, eorder=ebet, )#, output="graphviz-draw.pdf")
 ```
-```{python}
+```{python, eval = FALSE}
 g = gt.price_network(3000)
 pos = gt.sfdp_layout(g)
 gt.graph_draw(g, pos=pos)#, output="graph-draw-sfdp.pdf")
 ```
 
-```{python}
+```{python, eval =FALSE}
 g = gt.collection.data["netscience"]
 g = gt.GraphView(g, vfilt=gt.label_largest_component(g))
 g.purge_vertices()
@@ -148,6 +148,7 @@ gt.graph_draw(g, pos=pos, vertex_fill_color=b, vertex_shape=shape,
 
 
 Un essaie de plot hiérarchique:
+
 ```{python}
 g = gt.collection.data["celegansneural"]
 state = gt.minimize_nested_blockmodel_dl(g, deg_corr=True)
@@ -183,19 +184,20 @@ state.draw(output = "gt_plot.png" )
 
 
 ## Passe de `python` à `R`
+
 On peut passer le réseau via la matrice d'adjacence de `python` à `R`, mais on aimerait mieux  sortir un objet `graphml` qui est bien lu par `igraph`.
 
 Malheureusement, cela ne fonctionne pas. Toutes les méthodes de `graph_tool` sur les noeuds et les arêtes renvoient des itérateurs. Il est nécessaire de les transformer en vecteur avec de les utiliser en `R`.
 
 
-```{python}
+```{python, eval = FALSE}
 blocks = [b for b in state.get_blocks()]
 A = gt.adjacency(g)
 g.save(file_name= "/home/stc/Documents/StateOfTheR/FinistR2020/graph_gt.graphml", fmt="graphml")
 ```
 
-```{r}
-#g <- igraph::read.graph("/home/stc/Documents/StateOfTheR/FinistR2020/graph_gt.graphml",                         format = "graphml")
+```{r, eval = FALSE}
+g <- igraph::read.graph("/home/stc/Documents/StateOfTheR/FinistR2020/graph_gt.graphml",                         format = "graphml")
 ```
 
 
@@ -225,19 +227,16 @@ py$blocks +1
 Les clustering obtenus par `graph-tool` et sbm (`blockmodels`) sont très proche pour le sbm simple.
 
 
-
-
-
-```{r}
+```{r, eval = FALSE}
 igraph::graph_from_adjacency_matrix(
   A, mode = "directed") %>% igraph::write_graph(file = "graph_test.graphml", format = "graphml")
 ```
 
-```{python}
+```{python, evala = FALSE}
 gr = gt.load_graph(file_name="~/Documents/StateOfTheR/FinistR2020/graph_test.graphml", fmt="graphml")
 ```
 
-```{python}
+```{python, eval = FALSE}
 gr.set_directed = False
 gt.minimize_blockmodel_dl(gr, deg_corr=False)
 ```

@@ -27,8 +27,8 @@ navbar:
     menu:
         - text: "Bibliothèque OptimLib"
           href: OptimLib.html     
-        - text: "Interface avec torch"
-          href: torch.html     
+        - text: "Interface avec torch (plante)"
+          # href: torch.html     
         - text: "Interface avec KeOps"
           href: RKeOps.html     
   - text: "Programmation R avancé"
