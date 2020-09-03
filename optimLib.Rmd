@@ -41,6 +41,10 @@ algorithm_name(<initial and final values>, <objective function>, <objective func
 
 Nous avons proposé une première version d'un [package R **optimLibR** intégrant de manière minimale la librarie C++](https://github.com/StateOfTheR/optimLibR)
 
+```{r, eval=FALSE}
+devtools::install_github("StateOfTheR/optimLibR")
+```
+
 ```{r}
 library(optimLibR)
 ```
@@ -61,7 +65,7 @@ Nous avons intégré au package les deux fonctions de tests C+++ proposée par K
 
 Consider searching for the global minimum of the [Ackley function](https://en.wikipedia.org/wiki/Ackley_function):
 
-![Ackley](ackley_fn_3d.png)
+![Ackley](img/ackley_fn_3d.png)
 
 This is a well-known test function with many local minima. Newton-type methods (such as BFGS) are sensitive to the choice of initial values, and will perform rather poorly here. As such, we will employ a global search method; in this case: Differential Evolution.
 

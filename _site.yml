@@ -10,6 +10,15 @@ navbar:
     icon: fa-github
     href: https://github.com/StateOfTheR/finistR2020
  right:
+  - text: "Optimisation"
+    icon: fas fa-chart-bar
+    menu:
+        - text: "Bibliothèque OptimLib"
+          href: OptimLib.html     
+        - text: "Interface avec torch"
+          href: torch.html     
+        - text: "Interface avec KeOps"
+          href: RKeOps.html     
   - text: "R avancé"
     icon: fas fa-r-project
     menu:
