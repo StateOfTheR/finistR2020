@@ -18,6 +18,8 @@ navbar:
     menu:
         - text: "LearnR and gradethis"
           href: learnr_gradethis_interactive_tuto.html     
+        - text: "Swirl"
+          href: swirl.html     
         - text: "Interface avec KeOps"
           href: RKeOps.html     
   - text: "Intégration continue"
