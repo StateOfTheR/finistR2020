@@ -10,3 +10,4 @@ jobs:
       with:
         NO_PUSH: true
         MYBINDERORG_TAG: ${{ github.event.ref }}
+        IMAGE_NAME: stateofther/finistr2020
