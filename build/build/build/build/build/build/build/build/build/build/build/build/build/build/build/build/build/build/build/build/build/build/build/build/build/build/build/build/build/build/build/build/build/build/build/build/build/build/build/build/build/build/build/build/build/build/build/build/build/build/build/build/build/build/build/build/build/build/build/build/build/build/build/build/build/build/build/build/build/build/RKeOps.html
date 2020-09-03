@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="P. Neuvial for finistR2020" />
+
+
+<title>RKeOps</title>
+
+<script src="site_libs/header-attrs-2.3/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #c4a000; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #000000; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #000000; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #000000; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">FinistR 2020</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Accueil
+  </a>
+</li>
+<li>
+  <a href="https://github.com/StateOfTheR/finistR2020">
+    <span class="fa fa-github"></span>
+     
+    Dépôt GitHub
+  </a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown-header">Communication</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fas fa fas fa-teacher"></span>
+     
+    Enseignement
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="learnr_gradethis.html">LearnR and gradethis</a>
+    </li>
+    <li>
+      <a href="swirl.html">Swirl</a>
+    </li>
+    <li>
+      <a href="RKeOps.html">Interface avec KeOps</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fas fa fas fa-gear"></span>
+     
+    Intégration continue
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="github_actions.html">GithubActions</a>
+    </li>
+    <li>
+      <a href="binderetal.html">Binder</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="far fa far fa-keyboard"></span>
+     
+    R avancé et interface
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="r_python.html">R et Python</a>
+    </li>
+    <li>
+      <a href="advanced_r.html">Progammation avec le tidyverse</a>
+    </li>
+    <li>
+      <a href="citr.html">Bibliographie</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fas fa fas fa-biohazard"></span>
+     
+    Optimisation
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="OptimLib.html">Bibliothèque OptimLib</a>
+    </li>
+    <li class="dropdown-header">Interface avec torch (plante)</li>
+    <li>
+      <a href="RKeOps.html">Interface avec KeOps</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fas fa fas fa-chart-bar"></span>
+     
+    Outils mathématiques
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="gam.html">Modèles additifs - GAM</a>
+    </li>
+    <li>
+      <a href="edo.html">Équations différentielles avec R</a>
+    </li>
+    <li>
+      <a href="distributions.html">Manipulation des distributions</a>
+    </li>
+    <li>
+      <a href="tidymodels.html">Tidymodels, séries temporelles</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">RKeOps</h1>
+<h4 class="author">P. Neuvial for finistR2020</h4>
+<h4 class="date">24/08/2020</h4>
+
+</div>
+
+
+<div id="motivation-scalable-kernel-operations" class="section level2">
+<h2>Motivation: scalable kernel operations</h2>
+<p>Sources:</p>
+<ul>
+<li><a href="https://gdurif.perso.math.cnrs.fr/files/material/slides_useR_2020_Durif_KeOps.pdf">Presentation</a> of <a href="https://gdurif.perso.math.cnrs.fr/">Ghislain Durif</a> at useR! 2020</li>
+<li><a href="https://www.kernel-operations.io/keops/introduction/why_using_keops.html">Documentation of KeOps</a></li>
+</ul>
+<p><a href="http://www.kernel-operations.io/">KeOps</a> stands for “Kernel Operations”. <a href="https://cran.r-project.org/package=rkeops">RKeOps</a> is an R package interfacing the KeOps library.</p>
+<p>Kernels are widely used in Statistics and Learning:</p>
+<ul>
+<li>Kernel density estimation</li>
+<li>Classification/Regression: SVM, K-NN, etc…</li>
+<li>Kernel embeddings to compare distributions</li>
+<li>Interpolation and Kriging</li>
+<li>Optimal Transport</li>
+</ul>
+<p>The main motivation behind KeOps is the need to compute fast and scalable kernel operations such as Gaussian convolutions (<strong>RBF kernel products</strong>). For <strong>very large values</strong> of <span class="math inline">\(M\)</span>and <span class="math inline">\(N\)</span>, given :</p>
+<ul>
+<li>a <strong>target</strong> point cloud <span class="math inline">\((x_i)_{i=1}^M \in \mathbb R^{M \times D}\)</span>,</li>
+<li>a <strong>source</strong> point cloud <span class="math inline">\((y_j)_{j=1}^N \in \mathbb R^{N \times D}\)</span>,</li>
+<li>a <strong>signal</strong> <span class="math inline">\((b_j)_{j=1}^N \in \mathbb R^{N}\)</span> attached to the <span class="math inline">\(y_j\)</span>’s,</li>
+</ul>
+<p>KeOps allows you to compute efficiently the array <span class="math inline">\((a_i)_{i=1}^M \in \mathbb R^{M}\)</span> given by</p>
+<p><span class="math display">\[ a_i =  \sum_j K(x_i,y_j) b_j,  \qquad i=1,\cdots,M,\]</span> where <span class="math inline">\(K\)</span> is e.g. the Gaussian Kernel: <span class="math inline">\(K(x,y) = \exp\left(-\Vert x_i - y_j \Vert^2/(2\sigma^2) \right)\)</span>.</p>
+<p>These types of operations involve <em>reductions</em> of very large arrays e.g. row-wise or column-wise matrix sums:</p>
+<p><img src="img/rkeops_fig-1.png" /><!-- --></p>
+<div id="automatic-differentiation" class="section level3">
+<h3>Automatic differentiation</h3>
+<p>Thanks to KeOps’ <strong>automatic differentiation</strong> module, you can also get access to the gradient of the <span class="math inline">\(a_i\)</span>’s with respect to the <span class="math inline">\(x_i\)</span>’s:</p>
+<p><span class="math display">\[   a_i&#39; =  \sum_{j=1}^N \partial_x K(x_i,y_j) b_j,  \qquad i=1,\cdots,M,\]</span></p>
+<p>without having to code the formula <span class="math inline">\(\partial_x K(x_i,y_j) = -\tfrac{1}{\sigma^2}(x_i - y_j) \exp(-\|x_i - y_j\|^2 / 2 \sigma^2)\)</span>!</p>
+</div>
+<div id="one-slide-summary" class="section level3">
+<h3>One-slide summary</h3>
+<p><img src="img/rkeops_take-home.png" /><!-- --></p>
+</div>
+</div>
+<div id="installation" class="section level2">
+<h2>Installation</h2>
+<p>Reference: <a href="https://www.kernel-operations.io/keops/R/using_rkeops.html">Installation page</a></p>
+<p><em>The package is only available from UNIX-type platforms</em></p>
+<p>Installation requires <a href="https://cmake.org/"><code>cmake</code></a>.</p>
+<p>To install <code>cmake</code> on a Mac one can use:</p>
+<pre><code>brew install cmake</code></pre>
+<p>Then the <code>rkeops</code> package can be installed from CRAN:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="cf">if</span> (<span class="op">!</span><span class="kw">require</span>(<span class="st">&quot;rkeops&quot;</span>)) {</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a>    <span class="kw">install.packages</span>(<span class="st">&quot;rkeops&quot;</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a>}</span></code></pre></div>
+</div>
+<div id="getting-started" class="section level2">
+<h2>Getting started</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="kw">library</span>(<span class="st">&quot;rkeops&quot;</span>)</span></code></pre></div>
+<pre><code>## 
+## You are using rkeops version 1.4.1</code></pre>
+<p>RKeOps allows to define and compile new operators that run computations on GPU.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="co"># implementation of a convolution with a Gaussian kernel</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a>formula =<span class="st"> &quot;Sum_Reduction(Exp(-s * SqNorm2(x - y)) * b, 0)&quot;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a><span class="co"># input arguments</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a>args =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;x = Vi(3)&quot;</span>,      <span class="co"># vector indexed by i (of dim 3)</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true"></a>         <span class="st">&quot;y = Vj(3)&quot;</span>,      <span class="co"># vector indexed by j (of dim 3)</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true"></a>         <span class="st">&quot;b = Vj(6)&quot;</span>,      <span class="co"># vector indexed by j (of dim 6)</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true"></a>         <span class="st">&quot;s = Pm(1)&quot;</span>)      <span class="co"># parameter (scalar)</span></span></code></pre></div>
+<p>Then we compile the formula:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="co"># compilation</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a>op &lt;-<span class="st"> </span><span class="kw">keops_kernel</span>(formula, args)</span></code></pre></div>
+<pre><code>## Compiling headersb72ec1124da8340d0118a99af in /usr/share/miniconda/envs/finistR2020/lib/R/library/rkeops:
+##        formula: Sum_Reduction(Exp(-s * SqNorm2(x - y)) * b, 0)
+##        aliases: decltype(Vi(0,3)) x ;decltype(Vj(1,3)) y ;decltype(Vj(2,6)) b ;decltype(Pm(3,1)) s ;
+##        dtype  : float
+## ...</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a><span class="co"># data and parameter values</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a>nx &lt;-<span class="st"> </span><span class="dv">100</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true"></a>ny &lt;-<span class="st"> </span><span class="dv">150</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true"></a>X &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">runif</span>(nx<span class="op">*</span><span class="dv">3</span>), <span class="dt">nrow=</span>nx)   <span class="co"># matrix 100 x 3</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true"></a>Y &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">runif</span>(ny<span class="op">*</span><span class="dv">3</span>), <span class="dt">nrow=</span>ny)   <span class="co"># matrix 150 x 3</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true"></a>B &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">runif</span>(ny<span class="op">*</span><span class="dv">6</span>), <span class="dt">nrow=</span>ny)   <span class="co"># matrix 150 x 6</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true"></a>s &lt;-<span class="st"> </span><span class="fl">0.2</span></span></code></pre></div>
+<p>If your machine is GPU friendly gpu computation can be turned on, otherwise CPU should be used</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a><span class="co"># use_gpu()</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a><span class="kw">use_cpu</span>()</span></code></pre></div>
+<p>Finally we can perform the desired kernel operation:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a><span class="co"># computation (order of the input arguments should be similar to `args`)</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true"></a>res &lt;-<span class="st"> </span><span class="kw">op</span>(<span class="kw">list</span>(X, Y, B, s))</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true"></a><span class="kw">str</span>(res)</span></code></pre></div>
+<pre><code>##  num [1:100, 1:6] 68.1 69.8 67.1 67.1 68.3 ...</code></pre>
+<p>The author of the package is very responsive: he has fixed a <a href="https://github.com/getkeops/keops/issues/89">Mac-specific compiling issue</a> I had when trying to run this vignette.</p>
+</div>
+<div id="session-information" class="section level2">
+<h2>Session information</h2>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a><span class="kw">sessionInfo</span>()</span></code></pre></div>
+<pre><code>## R version 3.6.3 (2020-02-29)
+## Platform: x86_64-conda_cos6-linux-gnu (64-bit)
+## Running under: Ubuntu 18.04.5 LTS
+## 
+## Matrix products: default
+## BLAS/LAPACK: /usr/share/miniconda/envs/finistR2020/lib/libopenblasp-r0.3.10.so
+## 
+## locale:
+##  [1] LC_CTYPE=C.UTF-8       LC_NUMERIC=C           LC_TIME=C.UTF-8       
+##  [4] LC_COLLATE=C.UTF-8     LC_MONETARY=C.UTF-8    LC_MESSAGES=C.UTF-8   
+##  [7] LC_PAPER=C.UTF-8       LC_NAME=C              LC_ADDRESS=C          
+## [10] LC_TELEPHONE=C         LC_MEASUREMENT=C.UTF-8 LC_IDENTIFICATION=C   
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+##  [1] rkeops_1.4.1         optimLibR_0.1.0      DT_0.15             
+##  [4] MASS_7.3-52          mgcv_1.8-33          nlme_3.1-149        
+##  [7] fda_5.1.5.1          Matrix_1.2-18        deSolve_1.28        
+## [10] GGally_2.0.0         ggdist_2.2.0         distributional_0.2.0
+## [13] forcats_0.5.0        stringr_1.4.0        dplyr_1.0.2         
+## [16] purrr_0.3.4          readr_1.3.1          tidyr_1.1.2         
+## [19] tibble_3.0.3         ggplot2_3.3.2        tidyverse_1.3.0     
+## 
+## loaded via a namespace (and not attached):
+##  [1] fs_1.5.0              lubridate_1.7.9       RColorBrewer_1.1-2   
+##  [4] httr_1.4.2            tools_3.6.3           backports_1.1.9      
+##  [7] utf8_1.1.4            R6_2.4.1              DBI_1.1.0            
+## [10] colorspace_1.4-1      withr_2.2.0           tidyselect_1.1.0     
+## [13] compiler_3.6.3        cli_2.0.2             rvest_0.3.6          
+## [16] xml2_1.3.2            labeling_0.3          scales_1.1.1         
+## [19] askpass_1.1           palmerpenguins_0.1.0  digest_0.6.25        
+## [22] readODS_1.7.0         rmarkdown_2.3         pkgconfig_2.0.3      
+## [25] htmltools_0.5.0.9000  dbplyr_1.4.4          htmlwidgets_1.5.1    
+## [28] rlang_0.4.7           readxl_1.3.1          rstudioapi_0.11      
+## [31] farver_2.0.3          generics_0.0.2        jsonlite_1.7.0       
+## [34] crosstalk_1.1.0.1     magrittr_1.5          Rcpp_1.0.5           
+## [37] munsell_0.5.0         fansi_0.4.1           lifecycle_0.2.0      
+## [40] stringi_1.4.6         yaml_2.2.1            plyr_1.8.6           
+## [43] grid_3.6.3            blob_1.2.1            crayon_1.3.4         
+## [46] lattice_0.20-41       haven_2.3.1           cowplot_1.0.0        
+## [49] splines_3.6.3         hms_0.5.3             knitr_1.29           
+## [52] pillar_1.4.6          JuliaCall_0.17.1.9000 codetools_0.2-16     
+## [55] reprex_0.3.0          glue_1.4.2            evaluate_0.14        
+## [58] modelr_0.1.8          vctrs_0.3.4           cellranger_1.1.0     
+## [61] gtable_0.3.0          openssl_1.4.2         reshape_0.8.8        
+## [64] assertthat_0.2.1      xfun_0.16             broom_0.7.0          
+## [67] RcppEigen_0.3.3.7.0   viridisLite_0.3.0     ellipsis_0.3.1</code></pre>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

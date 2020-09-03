@@ -7,7 +7,9 @@ dependencies:
   - numpy
   - matplotlib
   - pandoc
+  - r-aricode
   - r-base=3.6.3
+  - r-bibtex
   - r-codetools
   - r-cowplot
   - r-desolve
@@ -19,9 +21,13 @@ dependencies:
   - r-ggally
   - r-ggdist
   - r-ggforce
+  - r-learnr
+  - r-igraph
   - r-irkernel
-  - r-rnaturalearth
+  - r-rlang
   - r-plotly
+  - r-purrr
+  - r-rnaturalearth
   - r-rcpp
   - r-rcpparmadillo
   - r-readods
@@ -29,6 +35,7 @@ dependencies:
   - r-rmarkdown
   - r-skimr
   - r-stringi
+  - r-swirl
   - r-tidyverse
   - r-tidymodels
   - r-vip

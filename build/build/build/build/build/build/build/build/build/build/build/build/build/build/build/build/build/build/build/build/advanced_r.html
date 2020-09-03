@@ -365,17 +365,79 @@ $(document).ready(function () {
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li class="dropdown">
+        <li class="dropdown-header">Communication</li>
+<li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa fas fa-r-project"></span>
+    <span class="fas fa fas fa-teacher"></span>
      
-    R avancé
+    Enseignement
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="learnr_gradethis.html">LearnR and gradethis</a>
+    </li>
+    <li>
+      <a href="swirl.html">Swirl</a>
+    </li>
+    <li>
+      <a href="RKeOps.html">Interface avec KeOps</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fas fa fas fa-gear"></span>
+     
+    Intégration continue
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="github_actions.html">GithubActions</a>
+    </li>
+    <li>
+      <a href="binderetal.html">Binder</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="far fa far fa-keyboard"></span>
+     
+    R avancé et interface
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="r_python.html">R et Python</a>
+    </li>
+    <li>
       <a href="advanced_r.html">Progammation avec le tidyverse</a>
+    </li>
+    <li>
+      <a href="citr.html">Bibliographie</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fas fa fas fa-biohazard"></span>
+     
+    Optimisation
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="OptimLib.html">Bibliothèque OptimLib</a>
+    </li>
+    <li class="dropdown-header">Interface avec torch (plante)</li>
+    <li>
+      <a href="RKeOps.html">Interface avec KeOps</a>
     </li>
   </ul>
 </li>
@@ -383,13 +445,13 @@ $(document).ready(function () {
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     <span class="fas fa fas fa-chart-bar"></span>
      
-    Mathématique
+    Outils mathématiques
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="gam.html">Modèles GAM</a>
+      <a href="gam.html">Modèles additifs - GAM</a>
     </li>
     <li>
       <a href="edo.html">Équations différentielles avec R</a>
@@ -398,7 +460,7 @@ $(document).ready(function () {
       <a href="distributions.html">Manipulation des distributions</a>
     </li>
     <li>
-      <a href="tidymodels.html">Tidymodels</a>
+      <a href="tidymodels.html">Tidymodels, séries temporelles</a>
     </li>
   </ul>
 </li>
@@ -617,7 +679,7 @@ $(document).ready(function () {
 <div id="un-exemple-sur-un-jeu-de-données-de-pêche" class="section level2">
 <h2>Un exemple sur un jeu de données de pêche</h2>
 <p>Le jeu de données VMS_data contient les données spatialisées des captures (<code>LE_KG</code>), des efforts (<code>HF</code>) et des indices d’abondance (<code>CPUE</code>) par navire (<code>aggreg_level</code>) des chalutiers ciblant les espèces démersales (<code>OTB_DEF</code>) dans le golfe de Gascogne. La donnée est aggrégée à l’échelle des cellules (<code>layer</code>) d’une grille de résolution 0.05°. Les captures et les indices d’abondance pour chaque espèce sont en colonne.</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true"></a><span class="kw">load</span>(<span class="st">&quot;VMS_data.RData&quot;</span>)</span>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true"></a><span class="kw">load</span>(<span class="st">&quot;data/VMS_data.RData&quot;</span>)</span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true"></a>VMS_data &lt;-<span class="st"> </span><span class="kw">as_tibble</span>(VMS_data)</span></code></pre></div>
 <p>On peut chercher à créer une fonction représentant les captures de deux navires pour 3 espèces (la sole, le merlu, la langoustine). La fonction suivante utilise les différentes commandes vues précédemment (<code>{{}}</code>, <code>.Data</code>, <code>.env$</code>, <code>:=</code>).</p>
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true"></a>plot_VMS_data &lt;-<span class="st"> </span><span class="cf">function</span>(data,species,unit){</span>

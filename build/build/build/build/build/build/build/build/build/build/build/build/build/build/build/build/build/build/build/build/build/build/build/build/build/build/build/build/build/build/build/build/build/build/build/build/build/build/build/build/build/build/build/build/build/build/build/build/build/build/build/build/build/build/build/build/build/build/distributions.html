@@ -365,17 +365,79 @@ $(document).ready(function () {
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li class="dropdown">
+        <li class="dropdown-header">Communication</li>
+<li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa fas fa-r-project"></span>
+    <span class="fas fa fas fa-teacher"></span>
      
-    R avancé
+    Enseignement
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="learnr_gradethis.html">LearnR and gradethis</a>
+    </li>
+    <li>
+      <a href="swirl.html">Swirl</a>
+    </li>
+    <li>
+      <a href="RKeOps.html">Interface avec KeOps</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fas fa fas fa-gear"></span>
+     
+    Intégration continue
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="github_actions.html">GithubActions</a>
+    </li>
+    <li>
+      <a href="binderetal.html">Binder</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="far fa far fa-keyboard"></span>
+     
+    R avancé et interface
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="r_python.html">R et Python</a>
+    </li>
+    <li>
       <a href="advanced_r.html">Progammation avec le tidyverse</a>
+    </li>
+    <li>
+      <a href="citr.html">Bibliographie</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fas fa fas fa-biohazard"></span>
+     
+    Optimisation
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="OptimLib.html">Bibliothèque OptimLib</a>
+    </li>
+    <li class="dropdown-header">Interface avec torch (plante)</li>
+    <li>
+      <a href="RKeOps.html">Interface avec KeOps</a>
     </li>
   </ul>
 </li>
@@ -383,13 +445,13 @@ $(document).ready(function () {
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     <span class="fas fa fas fa-chart-bar"></span>
      
-    Mathématique
+    Outils mathématiques
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="gam.html">Modèles GAM</a>
+      <a href="gam.html">Modèles additifs - GAM</a>
     </li>
     <li>
       <a href="edo.html">Équations différentielles avec R</a>
@@ -398,7 +460,7 @@ $(document).ready(function () {
       <a href="distributions.html">Manipulation des distributions</a>
     </li>
     <li>
-      <a href="tidymodels.html">Tidymodels</a>
+      <a href="tidymodels.html">Tidymodels, séries temporelles</a>
     </li>
   </ul>
 </li>
@@ -463,10 +525,10 @@ $(document).ready(function () {
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a>sample &lt;-<span class="st"> </span><span class="kw">generate</span>(dn, <span class="dt">times =</span> <span class="dv">10</span>)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true"></a>sample</span></code></pre></div>
 <pre><code>## [[1]]
-##  [1] 7.059678 9.061933 2.878845 7.447036 5.240574 6.987742 7.437098 6.644640
-##  [9] 8.415952 5.853360</code></pre>
+##  [1] 2.864528 8.268959 3.445499 3.627324 3.151453 3.466661 7.868811 4.739864
+##  [9] 5.154237 4.334231</code></pre>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true"></a><span class="kw">likelihood</span>(dn, sample)</span></code></pre></div>
-<pre><code>## [1] 8.781891e-11</code></pre>
+<pre><code>## [1] 1.408321e-09</code></pre>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true"></a><span class="kw">cdf</span>(dn, <span class="dv">5</span>)</span></code></pre></div>
 <pre><code>## [1] 0.5</code></pre>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true"></a><span class="kw">quantile</span>(dn, <span class="fl">0.5</span>)</span></code></pre></div>
@@ -539,7 +601,7 @@ $(document).ready(function () {
 <pre><code>## [1] 4</code></pre>
 <div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true"></a><span class="kw">generate</span>(dp, <span class="dv">10</span>)</span></code></pre></div>
 <pre><code>## [[1]]
-##  [1] 4 5 3 3 3 5 9 4 3 6</code></pre>
+##  [1] 1 3 3 6 3 1 1 0 2 5</code></pre>
 <p>Loi inflatée</p>
 <div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true"></a>dpi &lt;-<span class="st"> </span><span class="kw">dist_inflated</span>(dp, <span class="fl">0.5</span>, <span class="dt">x =</span> <span class="dv">0</span>)</span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true"></a>dpi</span></code></pre></div>
@@ -549,7 +611,7 @@ $(document).ready(function () {
 <pre><code>## [1] 2</code></pre>
 <div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true"></a><span class="kw">generate</span>(dpi, <span class="dv">10</span>)</span></code></pre></div>
 <pre><code>## [[1]]
-##  [1] 0 0 3 2 4 2 0 3 8 0</code></pre>
+##  [1] 0 0 4 5 0 5 0 5 0 1</code></pre>
 </div>
 <div id="distribution-disponibles" class="section level1">
 <h1>Distribution disponibles</h1>

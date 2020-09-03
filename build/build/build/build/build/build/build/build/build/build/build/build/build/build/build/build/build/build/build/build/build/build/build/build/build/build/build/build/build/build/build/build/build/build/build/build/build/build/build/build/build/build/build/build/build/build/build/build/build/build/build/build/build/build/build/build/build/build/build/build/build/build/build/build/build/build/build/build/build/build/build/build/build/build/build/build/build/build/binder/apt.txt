@@ -1,2 +1,4 @@
 libicu-dev
 libstdc++6
+cmake
+

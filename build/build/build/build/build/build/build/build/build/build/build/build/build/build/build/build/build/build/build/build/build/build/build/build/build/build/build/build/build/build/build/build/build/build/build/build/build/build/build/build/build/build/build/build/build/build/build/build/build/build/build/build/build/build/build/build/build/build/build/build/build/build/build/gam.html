@@ -10,7 +10,7 @@
 
 
 
-<meta name="date" content="2020-09-02" />
+<meta name="date" content="2020-09-03" />
 
 <title>GAM</title>
 
@@ -365,17 +365,79 @@ $(document).ready(function () {
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li class="dropdown">
+        <li class="dropdown-header">Communication</li>
+<li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa fas fa-r-project"></span>
+    <span class="fas fa fas fa-teacher"></span>
      
-    R avancé
+    Enseignement
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="learnr_gradethis.html">LearnR and gradethis</a>
+    </li>
+    <li>
+      <a href="swirl.html">Swirl</a>
+    </li>
+    <li>
+      <a href="RKeOps.html">Interface avec KeOps</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fas fa fas fa-gear"></span>
+     
+    Intégration continue
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="github_actions.html">GithubActions</a>
+    </li>
+    <li>
+      <a href="binderetal.html">Binder</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="far fa far fa-keyboard"></span>
+     
+    R avancé et interface
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="r_python.html">R et Python</a>
+    </li>
+    <li>
       <a href="advanced_r.html">Progammation avec le tidyverse</a>
+    </li>
+    <li>
+      <a href="citr.html">Bibliographie</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fas fa fas fa-biohazard"></span>
+     
+    Optimisation
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="OptimLib.html">Bibliothèque OptimLib</a>
+    </li>
+    <li class="dropdown-header">Interface avec torch (plante)</li>
+    <li>
+      <a href="RKeOps.html">Interface avec KeOps</a>
     </li>
   </ul>
 </li>
@@ -383,13 +445,13 @@ $(document).ready(function () {
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     <span class="fas fa fas fa-chart-bar"></span>
      
-    Mathématique
+    Outils mathématiques
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="gam.html">Modèles GAM</a>
+      <a href="gam.html">Modèles additifs - GAM</a>
     </li>
     <li>
       <a href="edo.html">Équations différentielles avec R</a>
@@ -398,7 +460,7 @@ $(document).ready(function () {
       <a href="distributions.html">Manipulation des distributions</a>
     </li>
     <li>
-      <a href="tidymodels.html">Tidymodels</a>
+      <a href="tidymodels.html">Tidymodels, séries temporelles</a>
     </li>
   </ul>
 </li>
@@ -412,7 +474,7 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">GAM</h1>
-<h4 class="date">2020-09-02</h4>
+<h4 class="date">2020-09-03</h4>
 
 </div>
 
@@ -464,7 +526,7 @@ $(document).ready(function () {
 ## indicate that k is too low, especially if edf is close to k&#39;.
 ## 
 ##            k&#39;  edf k-index p-value
-## s(times) 9.00 8.39    1.15    0.94</code></pre>
+## s(times) 9.00 8.39    1.15    0.92</code></pre>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true"></a><span class="kw">summary</span>(Mods3)</span></code></pre></div>
 <pre><code>## 
 ## Family: gaussian 

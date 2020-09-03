@@ -365,17 +365,79 @@ $(document).ready(function () {
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li class="dropdown">
+        <li class="dropdown-header">Communication</li>
+<li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa fas fa-r-project"></span>
+    <span class="fas fa fas fa-teacher"></span>
      
-    R avancé
+    Enseignement
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="learnr_gradethis.html">LearnR and gradethis</a>
+    </li>
+    <li>
+      <a href="swirl.html">Swirl</a>
+    </li>
+    <li>
+      <a href="RKeOps.html">Interface avec KeOps</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fas fa fas fa-gear"></span>
+     
+    Intégration continue
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="github_actions.html">GithubActions</a>
+    </li>
+    <li>
+      <a href="binderetal.html">Binder</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="far fa far fa-keyboard"></span>
+     
+    R avancé et interface
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="r_python.html">R et Python</a>
+    </li>
+    <li>
       <a href="advanced_r.html">Progammation avec le tidyverse</a>
+    </li>
+    <li>
+      <a href="citr.html">Bibliographie</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fas fa fas fa-biohazard"></span>
+     
+    Optimisation
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="OptimLib.html">Bibliothèque OptimLib</a>
+    </li>
+    <li class="dropdown-header">Interface avec torch (plante)</li>
+    <li>
+      <a href="RKeOps.html">Interface avec KeOps</a>
     </li>
   </ul>
 </li>
@@ -383,13 +445,13 @@ $(document).ready(function () {
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     <span class="fas fa fas fa-chart-bar"></span>
      
-    Mathématique
+    Outils mathématiques
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="gam.html">Modèles GAM</a>
+      <a href="gam.html">Modèles additifs - GAM</a>
     </li>
     <li>
       <a href="edo.html">Équations différentielles avec R</a>
@@ -398,7 +460,7 @@ $(document).ready(function () {
       <a href="distributions.html">Manipulation des distributions</a>
     </li>
     <li>
-      <a href="tidymodels.html">Tidymodels</a>
+      <a href="tidymodels.html">Tidymodels, séries temporelles</a>
     </li>
   </ul>
 </li>
@@ -429,20 +491,18 @@ $(document).ready(function () {
 ## ✔ modeldata 0.0.2      ✔ workflows 0.1.3 
 ## ✔ parsnip   0.1.3      ✔ yardstick 0.0.7</code></pre>
 <pre><code>## ── Conflicts ───────────────────────────────────────── tidymodels_conflicts() ──
-## ✖ nlme::collapse()      masks dplyr::collapse()
-## ✖ scales::discard()     masks purrr::discard()
-## ✖ Matrix::expand()      masks tidyr::expand()
-## ✖ magrittr::extract()   masks tidyr::extract()
-## ✖ dplyr::filter()       masks stats::filter()
-## ✖ recipes::fixed()      masks stringr::fixed()
-## ✖ infer::generate()     masks distributional::generate()
-## ✖ dplyr::lag()          masks stats::lag()
-## ✖ Matrix::pack()        masks tidyr::pack()
-## ✖ MASS::select()        masks dplyr::select()
-## ✖ magrittr::set_names() masks purrr::set_names()
-## ✖ yardstick::spec()     masks readr::spec()
-## ✖ recipes::step()       masks stats::step()
-## ✖ Matrix::unpack()      masks tidyr::unpack()</code></pre>
+## ✖ nlme::collapse()  masks dplyr::collapse()
+## ✖ scales::discard() masks purrr::discard()
+## ✖ Matrix::expand()  masks tidyr::expand()
+## ✖ dplyr::filter()   masks stats::filter()
+## ✖ recipes::fixed()  masks stringr::fixed()
+## ✖ infer::generate() masks distributional::generate()
+## ✖ dplyr::lag()      masks stats::lag()
+## ✖ Matrix::pack()    masks tidyr::pack()
+## ✖ MASS::select()    masks dplyr::select()
+## ✖ yardstick::spec() masks readr::spec()
+## ✖ recipes::step()   masks stats::step()
+## ✖ Matrix::unpack()  masks tidyr::unpack()</code></pre>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="kw">library</span>(modeldata)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a><span class="kw">library</span>(forcats)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a><span class="kw">library</span>(skimr)</span>
@@ -908,13 +968,32 @@ $(document).ready(function () {
 ## 
 ## Dummy variables from Country, Remote [trained]
 ## Centering and scaling for YearsCodedJob, OpenSource, ... [trained]</code></pre>
+<p>On a accès aux paramètres de préparation des données via la fonction <code>tidy</code> sur la recette entrainée. On regarde ici les quantités pour centrer et réduire chaque variable, soit la deuxième étape de la recette.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true"></a>rec <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">prep</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">tidy</span>(<span class="dv">2</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">arrange</span>(terms)</span></code></pre></div>
+<pre><code>## # A tibble: 46 x 4
+##    terms                  statistic     value id             
+##    &lt;chr&gt;                  &lt;chr&gt;         &lt;dbl&gt; &lt;chr&gt;          
+##  1 CareerSatisfaction     mean         7.59   normalize_YORAj
+##  2 CareerSatisfaction     sd           1.68   normalize_YORAj
+##  3 CompanySizeNumber      mean      2123.     normalize_YORAj
+##  4 CompanySizeNumber      sd        3744.     normalize_YORAj
+##  5 Country_Germany        mean         0.133  normalize_YORAj
+##  6 Country_Germany        sd           0.340  normalize_YORAj
+##  7 Country_India          mean         0.0963 normalize_YORAj
+##  8 Country_India          sd           0.295  normalize_YORAj
+##  9 Country_United.Kingdom mean         0.184  normalize_YORAj
+## 10 Country_United.Kingdom sd           0.387  normalize_YORAj
+## # … with 36 more rows</code></pre>
 <p>Pour appliquer la recette au jeu de donnée qui a servi à l’entraîner, on utilise <code>juice</code>.</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true"></a>juiced &lt;-</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true"></a><span class="st">  </span>rec <span class="op">%&gt;%</span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">prep</span>() <span class="op">%&gt;%</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">juice</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true"></a>juiced &lt;-</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true"></a><span class="st">  </span>rec <span class="op">%&gt;%</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">prep</span>() <span class="op">%&gt;%</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">juice</span>()</span></code></pre></div>
 <p>On a bien binarisé et centré les variables.</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true"></a><span class="kw">colnames</span>(juiced)</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true"></a><span class="kw">colnames</span>(juiced)</span></code></pre></div>
 <pre><code>##  [1] &quot;YearsCodedJob&quot;                       
 ##  [2] &quot;OpenSource&quot;                          
 ##  [3] &quot;Hobby&quot;                               
@@ -939,36 +1018,36 @@ $(document).ready(function () {
 ## [22] &quot;Country_United.Kingdom&quot;              
 ## [23] &quot;Country_United.States&quot;               
 ## [24] &quot;Remote_Not.remote&quot;</code></pre>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true"></a><span class="kw">mean</span>(juiced<span class="op">$</span>YearsCodedJob)</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true"></a><span class="kw">mean</span>(juiced<span class="op">$</span>YearsCodedJob)</span></code></pre></div>
 <pre><code>## [1] -3.929356e-17</code></pre>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true"></a><span class="kw">var</span>(juiced<span class="op">$</span>YearsCodedJob)</span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true"></a><span class="kw">var</span>(juiced<span class="op">$</span>YearsCodedJob)</span></code></pre></div>
 <pre><code>## [1] 1</code></pre>
 <p>Pour appliquer la recette à un autre jeu de données, il faut utilise <code>bake</code>.</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true"></a>rec <span class="op">%&gt;%</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">prep</span>() <span class="op">%&gt;%</span></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">bake</span>(df_test) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">pull</span>(YearsCodedJob) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true"></a><span class="st">  </span><span class="kw">mean</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true"></a>rec <span class="op">%&gt;%</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">prep</span>() <span class="op">%&gt;%</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">bake</span>(df_test) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">pull</span>(YearsCodedJob) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true"></a><span class="st">  </span><span class="kw">mean</span>()</span></code></pre></div>
 <pre><code>## [1] -0.006506893</code></pre>
-<p>On remarque que ça n’est pas centré : on a normalisé avec la moyenne et la variance du jeu de donnée d’entraînement.</p>
+<p>On remarque que ça n’est pas centré : on a normalisé le jeu de données de test avec la moyenne et la variance du jeu de données d’entraînement.</p>
 </div>
 <div id="spécification-dun-modèle-de-regression-linéaire" class="section level1">
 <h1>Spécification d’un modèle de regression linéaire</h1>
 <p>On crée un modèle de régression avec <code>parsnip::linear_reg</code>.</p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true"></a>spec_lr &lt;-</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">linear_reg</span>() <span class="op">%&gt;%</span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">set_engine</span>(<span class="st">&quot;lm&quot;</span>)</span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true"></a></span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true"></a>spec_lr</span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true"></a>spec_lr &lt;-</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">linear_reg</span>() <span class="op">%&gt;%</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">set_engine</span>(<span class="st">&quot;lm&quot;</span>)</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true"></a></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true"></a>spec_lr</span></code></pre></div>
 <pre><code>## Linear Regression Model Specification (regression)
 ## 
 ## Computational engine: lm</code></pre>
 <p>Le workflow est l’objet central de l’anaylse : il combine une recette (ou une formule) et une spécification de modèle.</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true"></a>wkf_lr &lt;-</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">workflow</span>() <span class="op">%&gt;%</span></span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">add_recipe</span>(rec) <span class="op">%&gt;%</span></span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">add_model</span>(spec_lr)</span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true"></a>wkf_lr</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true"></a>wkf_lr &lt;-</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">workflow</span>() <span class="op">%&gt;%</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">add_recipe</span>(rec) <span class="op">%&gt;%</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">add_model</span>(spec_lr)</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true"></a>wkf_lr</span></code></pre></div>
 <pre><code>## ══ Workflow ════════════════════════════════════════════════════════════════════
 ## Preprocessor: Recipe
 ## Model: linear_reg()
@@ -987,10 +1066,10 @@ $(document).ready(function () {
 <div id="ajustement-de-la-regression-linéaire-et-prédictions" class="section level1">
 <h1>Ajustement de la regression linéaire et prédictions</h1>
 <p>On ajuste le workflow sur le jeu de données d’apprentissage.</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true"></a>wkf_lr_fit &lt;-</span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true"></a><span class="st">  </span>wkf_lr <span class="op">%&gt;%</span></span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">fit</span>(df_train)</span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true"></a>wkf_lr_fit</span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true"></a>wkf_lr_fit &lt;-</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true"></a><span class="st">  </span>wkf_lr <span class="op">%&gt;%</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">fit</span>(df_train)</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true"></a>wkf_lr_fit</span></code></pre></div>
 <pre><code>## ══ Workflow [trained] ══════════════════════════════════════════════════════════
 ## Preprocessor: Recipe
 ## Model: linear_reg()
@@ -1032,13 +1111,13 @@ $(document).ready(function () {
 ##                Country_United.States                     Remote_Not.remote  
 ##                              17885.6                                -836.5</code></pre>
 <p>On peut extraire le modèle ajusté avec <code>pull_workflow_fit</code>.</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true"></a>fit_lr &lt;-</span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true"></a><span class="st">  </span>wkf_lr_fit <span class="op">%&gt;%</span></span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">pull_workflow_fit</span>()</span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true"></a>fit_lr </span></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true"></a>fit_lr &lt;-</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true"></a><span class="st">  </span>wkf_lr_fit <span class="op">%&gt;%</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">pull_workflow_fit</span>()</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true"></a>fit_lr </span></code></pre></div>
 <pre><code>## parsnip model object
 ## 
-## Fit time:  7ms 
+## Fit time:  10ms 
 ## 
 ## Call:
 ## stats::lm(formula = ..y ~ ., data = data)
@@ -1068,7 +1147,7 @@ $(document).ready(function () {
 ##                             -11466.7                               -1311.1  
 ##                Country_United.States                     Remote_Not.remote  
 ##                              17885.6                                -836.5</code></pre>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true"></a><span class="kw">tidy</span>(fit_lr)</span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true"></a><span class="kw">tidy</span>(fit_lr)</span></code></pre></div>
 <pre><code>## # A tibble: 24 x 5
 ##    term                                 estimate std.error statistic   p.value
 ##    &lt;chr&gt;                                   &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
@@ -1084,8 +1163,8 @@ $(document).ready(function () {
 ## 10 Developer_with_stats_math_background     789.      359.     2.20  2.80e-  2
 ## # … with 14 more rows</code></pre>
 <p>On peut prédire avec la fonction <code>predict</code>.</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true"></a>wkf_lr_fit <span class="op">%&gt;%</span></span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">predict</span>(df_train)</span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true"></a>wkf_lr_fit <span class="op">%&gt;%</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">predict</span>(df_train)</span></code></pre></div>
 <pre><code>## # A tibble: 4,476 x 1
 ##      .pred
 ##      &lt;dbl&gt;
@@ -1101,11 +1180,11 @@ $(document).ready(function () {
 ## 10 101619.
 ## # … with 4,466 more rows</code></pre>
 <p>On fait de même sur l’ensemble de test.</p>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true"></a>df_test_lr &lt;-</span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true"></a><span class="st">  </span>wkf_lr_fit <span class="op">%&gt;%</span></span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">predict</span>(df_test) <span class="op">%&gt;%</span></span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">bind_cols</span>(df_test)</span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true"></a>df_test_lr</span></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true"></a>df_test_lr &lt;-</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true"></a><span class="st">  </span>wkf_lr_fit <span class="op">%&gt;%</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">predict</span>(df_test) <span class="op">%&gt;%</span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">bind_cols</span>(df_test)</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true"></a>df_test_lr</span></code></pre></div>
 <pre><code>## # A tibble: 1,118 x 22
 ##     .pred Country Salary YearsCodedJob OpenSource Hobby CompanySizeNumb… Remote
 ##     &lt;dbl&gt; &lt;fct&gt;    &lt;dbl&gt;         &lt;int&gt;      &lt;dbl&gt; &lt;dbl&gt;            &lt;dbl&gt; &lt;fct&gt; 
@@ -1128,9 +1207,9 @@ $(document).ready(function () {
 ## #   Mobile_developer &lt;dbl&gt;, Quality_assurance_engineer &lt;dbl&gt;,
 ## #   Systems_administrator &lt;dbl&gt;, Web_developer &lt;dbl&gt;</code></pre>
 <p>On calcule le RMSE et le R² sur l’ensemble de test avec des fonctions du package <code>yardstick</code>.</p>
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true"></a>my_metrics &lt;-<span class="st"> </span><span class="kw">metric_set</span>(rmse, rsq)</span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true"></a></span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true"></a><span class="kw">my_metrics</span>(df_test_lr, <span class="dt">truth =</span> Salary, <span class="dt">estimate =</span> .pred)</span></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true"></a>my_metrics &lt;-<span class="st"> </span><span class="kw">metric_set</span>(rmse, rsq)</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true"></a></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true"></a><span class="kw">my_metrics</span>(df_test_lr, <span class="dt">truth =</span> Salary, <span class="dt">estimate =</span> .pred)</span></code></pre></div>
 <pre><code>## # A tibble: 2 x 3
 ##   .metric .estimator .estimate
 ##   &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
@@ -1140,68 +1219,119 @@ $(document).ready(function () {
 <div id="forêts-aléatoires-et-hyperparamètres" class="section level1">
 <h1>Forêts aléatoires et hyperparamètres</h1>
 <p>Spécification du modèle et du workflow associé.</p>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true"></a>spec_rf &lt;-</span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">rand_forest</span>(<span class="dt">trees =</span> <span class="dv">1000</span>, <span class="dt">min_n =</span> <span class="kw">tune</span>(), <span class="dt">mtry =</span> <span class="kw">tune</span>()) <span class="op">%&gt;%</span></span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">set_mode</span>(<span class="st">&quot;regression&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb47-4"><a href="#cb47-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">set_engine</span>(<span class="st">&quot;ranger&quot;</span>, <span class="dt">importance =</span> <span class="st">&quot;impurity&quot;</span>) <span class="co"># importance pour vip</span></span>
-<span id="cb47-5"><a href="#cb47-5" aria-hidden="true"></a>spec_rf</span>
-<span id="cb47-6"><a href="#cb47-6" aria-hidden="true"></a></span>
-<span id="cb47-7"><a href="#cb47-7" aria-hidden="true"></a>wkf_rf &lt;-</span>
-<span id="cb47-8"><a href="#cb47-8" aria-hidden="true"></a><span class="st">  </span><span class="kw">workflow</span>() <span class="op">%&gt;%</span></span>
-<span id="cb47-9"><a href="#cb47-9" aria-hidden="true"></a><span class="st">  </span><span class="kw">add_recipe</span>(rec) <span class="op">%&gt;%</span></span>
-<span id="cb47-10"><a href="#cb47-10" aria-hidden="true"></a><span class="st">  </span><span class="kw">add_model</span>(spec_rf)</span></code></pre></div>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true"></a>spec_rf &lt;-</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">rand_forest</span>(<span class="dt">trees =</span> <span class="dv">1000</span>, <span class="dt">min_n =</span> <span class="kw">tune</span>(), <span class="dt">mtry =</span> <span class="kw">tune</span>()) <span class="op">%&gt;%</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">set_mode</span>(<span class="st">&quot;regression&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">set_engine</span>(<span class="st">&quot;ranger&quot;</span>, <span class="dt">importance =</span> <span class="st">&quot;impurity&quot;</span>) <span class="co"># importance pour vip</span></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true"></a>spec_rf</span></code></pre></div>
+<pre><code>## Random Forest Model Specification (regression)
+## 
+## Main Arguments:
+##   mtry = tune()
+##   trees = 1000
+##   min_n = tune()
+## 
+## Engine-Specific Arguments:
+##   importance = impurity
+## 
+## Computational engine: ranger</code></pre>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true"></a>wkf_rf &lt;-</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">workflow</span>() <span class="op">%&gt;%</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">add_recipe</span>(rec) <span class="op">%&gt;%</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">add_model</span>(spec_rf)</span></code></pre></div>
 <p>On va déterminer la région dans laquelle on va optimiser les paramètres grâce au package <code>dials</code>. <code>min_n</code> a des valeurs limite par défaut mais il faut ajuster <code>mtry</code> par rapport au jeu de données. On crée ensuite un grille non régulière qui maximise l’entropie.</p>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true"></a>grid &lt;-</span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true"></a><span class="st">  </span>spec_rf <span class="op">%&gt;%</span></span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">parameters</span>() <span class="op">%&gt;%</span></span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">update</span>(<span class="dt">mtry =</span> <span class="kw">finalize</span>(<span class="kw">mtry</span>(), <span class="kw">select</span>(juiced, <span class="op">-</span>Salary))) <span class="op">%&gt;%</span></span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true"></a><span class="st">  </span><span class="kw">grid_max_entropy</span>(<span class="dt">size =</span> <span class="dv">20</span>)</span>
-<span id="cb48-6"><a href="#cb48-6" aria-hidden="true"></a>grid</span>
-<span id="cb48-7"><a href="#cb48-7" aria-hidden="true"></a><span class="kw">ggplot</span>(grid) <span class="op">+</span></span>
-<span id="cb48-8"><a href="#cb48-8" aria-hidden="true"></a><span class="st">  </span><span class="kw">aes</span>(mtry, min_n) <span class="op">+</span></span>
-<span id="cb48-9"><a href="#cb48-9" aria-hidden="true"></a><span class="st">  </span><span class="kw">geom_point</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true"></a>grid &lt;-<span class="st"> </span><span class="kw">grid_max_entropy</span>(<span class="kw">min_n</span>(), </span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true"></a>                         <span class="kw">finalize</span>(<span class="kw">mtry</span>(), dplyr<span class="op">::</span><span class="kw">select</span>(juiced, <span class="op">-</span>Salary)), </span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true"></a>                         <span class="dt">size =</span> <span class="dv">20</span>)</span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true"></a>grid</span></code></pre></div>
+<pre><code>## # A tibble: 20 x 2
+##    min_n  mtry
+##    &lt;int&gt; &lt;int&gt;
+##  1     6     5
+##  2    12    13
+##  3    22     2
+##  4     7    22
+##  5    20    12
+##  6    22     8
+##  7     4     2
+##  8    40    10
+##  9    28    15
+## 10     2    19
+## 11    10     1
+## 12    29    22
+## 13    13     4
+## 14    14    17
+## 15    21    20
+## 16    38    21
+## 17    40     4
+## 18     2    11
+## 19    36    12
+## 20    30     8</code></pre>
+<p>On a finalisé <code>mtry</code> car la plage de valeur que cet hyperparamètre peut prendre dépend du jeu de données (le nombre de prédicteurs en l’occurence).</p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true"></a><span class="kw">ggplot</span>(grid) <span class="op">+</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">aes</span>(mtry, min_n) <span class="op">+</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">geom_point</span>()</span></code></pre></div>
+<p><img src="tidymodels_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
 <p>k-folds pour la cross-validation, avec <code>rsample</code>.</p>
-<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true"></a>kfolds &lt;-<span class="st"> </span><span class="kw">vfold_cv</span>(df_train)</span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true"></a>kfolds</span></code></pre></div>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true"></a>kfolds &lt;-<span class="st"> </span><span class="kw">vfold_cv</span>(df_train)</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true"></a>kfolds</span></code></pre></div>
+<pre><code>## #  10-fold cross-validation 
+## # A tibble: 10 x 2
+##    splits           id    
+##    &lt;list&gt;           &lt;chr&gt; 
+##  1 &lt;split [4K/448]&gt; Fold01
+##  2 &lt;split [4K/448]&gt; Fold02
+##  3 &lt;split [4K/448]&gt; Fold03
+##  4 &lt;split [4K/448]&gt; Fold04
+##  5 &lt;split [4K/448]&gt; Fold05
+##  6 &lt;split [4K/448]&gt; Fold06
+##  7 &lt;split [4K/447]&gt; Fold07
+##  8 &lt;split [4K/447]&gt; Fold08
+##  9 &lt;split [4K/447]&gt; Fold09
+## 10 &lt;split [4K/447]&gt; Fold10</code></pre>
 <p>On optimise avec <code>tune</code>.</p>
-<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true"></a>tuned &lt;-<span class="st"> </span><span class="kw">tune_grid</span>(wkf_rf, <span class="dt">resamples =</span> kfolds, <span class="dt">grid =</span> grid,</span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true"></a>                   <span class="dt">control =</span> <span class="kw">control_grid</span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>),</span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true"></a>                   <span class="dt">metrics =</span> my_metrics)</span>
-<span id="cb50-4"><a href="#cb50-4" aria-hidden="true"></a>tuned</span></code></pre></div>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true"></a>tuned &lt;-<span class="st"> </span><span class="kw">tune_grid</span>(wkf_rf, <span class="dt">resamples =</span> kfolds, <span class="dt">grid =</span> grid,</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true"></a>                   <span class="dt">control =</span> <span class="kw">control_grid</span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>),</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true"></a>                   <span class="dt">metrics =</span> my_metrics)</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true"></a>tuned</span></code></pre></div>
 <p>On inspecte les modèles.</p>
-<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true"></a><span class="kw">autoplot</span>(tuned)</span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true"></a><span class="kw">collect_metrics</span>(tuned)</span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true"></a><span class="kw">show_best</span>(tuned, <span class="dt">metric =</span> <span class="st">&quot;rmse&quot;</span>)</span>
-<span id="cb51-4"><a href="#cb51-4" aria-hidden="true"></a><span class="kw">select_best</span>(tuned, <span class="dt">metric =</span> <span class="st">&quot;rmse&quot;</span>)</span></code></pre></div>
-<p>On ajuste un modèle avec les meilleurs paramètres.</p>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true"></a>wkf_rf_fit &lt;-</span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true"></a><span class="st">  </span>tuned <span class="op">%&gt;%</span></span>
-<span id="cb52-3"><a href="#cb52-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">select_best</span>(<span class="dt">metric =</span> <span class="st">&quot;rmse&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb52-4"><a href="#cb52-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">finalize_workflow</span>(wkf_rf, .) <span class="op">%&gt;%</span></span>
-<span id="cb52-5"><a href="#cb52-5" aria-hidden="true"></a><span class="st">  </span><span class="kw">last_fit</span>(split, <span class="dt">metrics =</span> my_metrics)</span></code></pre></div>
-<p>Calcule des métriques ce dernier modèle.</p>
-<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true"></a><span class="kw">collect_metrics</span>(wkf_rf_fit)</span></code></pre></div>
-<p>On rapelle que le RMSE pour la regression linéaire vaut 2.3774464^{4}.</p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true"></a><span class="kw">autoplot</span>(tuned)</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true"></a><span class="kw">collect_metrics</span>(tuned)</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true"></a><span class="kw">show_best</span>(tuned, <span class="dt">metric =</span> <span class="st">&quot;rmse&quot;</span>)</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true"></a><span class="kw">select_best</span>(tuned, <span class="dt">metric =</span> <span class="st">&quot;rmse&quot;</span>)</span></code></pre></div>
+<p>On ajuste un modèle avec les meilleurs paramètres. Après avoir défini les hyperparamètres du modèle via <code>finalize_workflow</code>, la fonction <code>last_fit</code> apprend les paramètres du modèle sur le jeu de d’entrainement et prédit sur le jeu de données test.</p>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true"></a>wkf_rf_fit &lt;-</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true"></a><span class="st">  </span>tuned <span class="op">%&gt;%</span></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">select_best</span>(<span class="dt">metric =</span> <span class="st">&quot;rmse&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">finalize_workflow</span>(wkf_rf, .) <span class="op">%&gt;%</span></span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true"></a><span class="st">  </span><span class="kw">last_fit</span>(split, <span class="dt">metrics =</span> my_metrics)</span></code></pre></div>
+<p>Calcul des métriques de ce dernier modèle.</p>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true"></a><span class="kw">collect_metrics</span>(wkf_rf_fit)</span></code></pre></div>
+<p>On rapelle que le RMSE pour la regression linéaire vaut 2.3774^{4}.</p>
 </div>
 <div id="importance-des-variables" class="section level1">
 <h1>Importance des variables</h1>
 <p>On va utiliser le package <code>vip</code> pour calculer le poids des différentes variables dans chaque modèle.</p>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true"></a><span class="kw">vi</span>(fit_lr)</span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true"></a></span>
-<span id="cb54-3"><a href="#cb54-3" aria-hidden="true"></a>fit_lr <span class="op">%&gt;%</span></span>
-<span id="cb54-4"><a href="#cb54-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">vi</span>() <span class="op">%&gt;%</span></span>
-<span id="cb54-5"><a href="#cb54-5" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Variable =</span> <span class="kw">fct_rev</span>(<span class="kw">as_factor</span>(Variable))) <span class="op">%&gt;%</span></span>
-<span id="cb54-6"><a href="#cb54-6" aria-hidden="true"></a><span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span></span>
-<span id="cb54-7"><a href="#cb54-7" aria-hidden="true"></a><span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Importance, <span class="dt">y =</span> Variable, <span class="dt">fill =</span> Sign) <span class="op">+</span></span>
-<span id="cb54-8"><a href="#cb54-8" aria-hidden="true"></a><span class="st">  </span><span class="kw">geom_col</span>() <span class="op">+</span></span>
-<span id="cb54-9"><a href="#cb54-9" aria-hidden="true"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="ot">NULL</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true"></a>fit_rf &lt;-</span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true"></a><span class="st">  </span>wkf_rf_fit <span class="op">%&gt;%</span></span>
-<span id="cb55-3"><a href="#cb55-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">pull</span>(.workflow) <span class="op">%&gt;%</span></span>
-<span id="cb55-4"><a href="#cb55-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">first</span>() <span class="op">%&gt;%</span></span>
-<span id="cb55-5"><a href="#cb55-5" aria-hidden="true"></a><span class="st">  </span><span class="kw">pull_workflow_fit</span>()</span>
-<span id="cb55-6"><a href="#cb55-6" aria-hidden="true"></a><span class="kw">vi</span>(fit_rf)</span>
-<span id="cb55-7"><a href="#cb55-7" aria-hidden="true"></a><span class="kw">vip</span>(fit_rf)</span></code></pre></div>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true"></a><span class="kw">vi</span>(fit_lr)</span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true"></a></span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true"></a>fit_lr <span class="op">%&gt;%</span></span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">vi</span>() <span class="op">%&gt;%</span></span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Variable =</span> <span class="kw">fct_rev</span>(<span class="kw">as_factor</span>(Variable))) <span class="op">%&gt;%</span></span>
+<span id="cb61-6"><a href="#cb61-6" aria-hidden="true"></a><span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span></span>
+<span id="cb61-7"><a href="#cb61-7" aria-hidden="true"></a><span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> Importance, <span class="dt">y =</span> Variable, <span class="dt">fill =</span> Sign) <span class="op">+</span></span>
+<span id="cb61-8"><a href="#cb61-8" aria-hidden="true"></a><span class="st">  </span><span class="kw">geom_col</span>() <span class="op">+</span></span>
+<span id="cb61-9"><a href="#cb61-9" aria-hidden="true"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="ot">NULL</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true"></a>fit_rf &lt;-</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true"></a><span class="st">  </span>wkf_rf_fit <span class="op">%&gt;%</span></span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">pull</span>(.workflow) <span class="op">%&gt;%</span></span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">first</span>() <span class="op">%&gt;%</span></span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true"></a><span class="st">  </span><span class="kw">pull_workflow_fit</span>()</span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true"></a><span class="kw">vi</span>(fit_rf)</span>
+<span id="cb62-7"><a href="#cb62-7" aria-hidden="true"></a><span class="kw">vip</span>(fit_rf)</span></code></pre></div>
+</div>
+<div id="jeton-de-reproductilité" class="section level1">
+<h1>Jeton de reproductilité</h1>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true"></a><span class="kw">sessionInfo</span>()</span></code></pre></div>
 </div>
 
 
