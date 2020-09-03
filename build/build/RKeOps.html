@@ -9,7 +9,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="P. Neuvial for finistR2020" />
+<meta name="author" content="State of the R" />
 
 
 <title>RKeOps</title>
@@ -350,25 +350,17 @@ $(document).ready(function () {
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="index.html">
-    <span class="fa fa-home"></span>
-     
-    Accueil
-  </a>
-</li>
-<li>
   <a href="https://github.com/StateOfTheR/finistR2020">
     <span class="fa fa-github"></span>
      
-    Dépôt GitHub
+    
   </a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li class="dropdown-header">Communication</li>
-<li class="dropdown">
+        <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa fas fa-teacher"></span>
+    <span class="fas fa fas fa-chalkboard-teacher"></span>
      
     Enseignement
      
@@ -381,16 +373,13 @@ $(document).ready(function () {
     <li>
       <a href="swirl.html">Swirl</a>
     </li>
-    <li>
-      <a href="RKeOps.html">Interface avec KeOps</a>
-    </li>
   </ul>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     <span class="fas fa fas fa-gear"></span>
      
-    Intégration continue
+    Intégration Continue
      
     <span class="caret"></span>
   </a>
@@ -407,14 +396,12 @@ $(document).ready(function () {
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     <span class="far fa far fa-keyboard"></span>
      
-    R avancé et interface
+    R avancé
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="r_python.html">R et Python</a>
-    </li>
+    <li class="dropdown-header">R et Python</li>
     <li>
       <a href="advanced_r.html">Progammation avec le tidyverse</a>
     </li>
@@ -433,7 +420,7 @@ $(document).ready(function () {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="OptimLib.html">Bibliothèque OptimLib</a>
+      <a href="optimLib.html">Bibliothèque OptimLib</a>
     </li>
     <li class="dropdown-header">Interface avec torch (plante)</li>
     <li>
@@ -445,7 +432,7 @@ $(document).ready(function () {
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     <span class="fas fa fas fa-chart-bar"></span>
      
-    Outils mathématiques
+    Modélisation
      
     <span class="caret"></span>
   </a>
@@ -460,7 +447,7 @@ $(document).ready(function () {
       <a href="distributions.html">Manipulation des distributions</a>
     </li>
     <li>
-      <a href="tidymodels.html">Tidymodels, séries temporelles</a>
+      <a href="tidymodels.html">Introduction à Tidymodels</a>
     </li>
   </ul>
 </li>
@@ -474,8 +461,8 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">RKeOps</h1>
-<h4 class="author">P. Neuvial for finistR2020</h4>
-<h4 class="date">24/08/2020</h4>
+<h4 class="author">State of the R</h4>
+<h4 class="date">24-28/08/2020</h4>
 
 </div>
 
@@ -564,7 +551,7 @@ $(document).ready(function () {
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a><span class="co"># computation (order of the input arguments should be similar to `args`)</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true"></a>res &lt;-<span class="st"> </span><span class="kw">op</span>(<span class="kw">list</span>(X, Y, B, s))</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true"></a><span class="kw">str</span>(res)</span></code></pre></div>
-<pre><code>##  num [1:100, 1:6] 68.1 69.8 67.1 67.1 68.3 ...</code></pre>
+<pre><code>##  num [1:100, 1:6] 67.6 66.7 66 69.8 69.6 ...</code></pre>
 <p>The author of the package is very responsive: he has fixed a <a href="https://github.com/getkeops/keops/issues/89">Mac-specific compiling issue</a> I had when trying to run this vignette.</p>
 </div>
 <div id="session-information" class="section level2">
