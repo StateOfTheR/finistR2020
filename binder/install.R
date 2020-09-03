@@ -4,6 +4,9 @@ local({
   options(repos = r)
 })
 
+install.packages("reticulate")
+
+install.packages("igraph")
 install.packages("sbm")
 install.packages("palmerpenguins")
 
@@ -18,6 +21,9 @@ install.packages("tidymodels")
 install.packages("modeldata")
 install.packages("skimr")
 install.packages("vip")
+
+## Rmarkdown
+install.packages("bibtex")
 
 ## rlang
 install.packages("rlang")

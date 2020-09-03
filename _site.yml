@@ -11,12 +11,17 @@ navbar:
     href: https://github.com/StateOfTheR/finistR2020
  right:
   - text: "Intégration continue"
-    icon: fas fa-chart-bar
+    icon: fas fa-gear
     menu:
         - text: "GithubActions"
           href: github_actions.html     
+  - text: "Communication"
+    icon: fas fa-at
+    menu:
+        - text: "Bibliographie"
+          href: citr.html     
   - text: "Optimisation"
-    icon: fas fa-chart-bar
+    icon: fas fa-biohazard
     menu:
         - text: "Bibliothèque OptimLib"
           href: OptimLib.html     
@@ -25,7 +30,7 @@ navbar:
         - text: "Interface avec KeOps"
           href: RKeOps.html     
   - text: "Programmation R avancé"
-    icon: fas fa-r-project
+    icon: far fa-keyboard
     menu:
         - text: "Progammation avec le tidyverse"
           href: advanced_r.html
