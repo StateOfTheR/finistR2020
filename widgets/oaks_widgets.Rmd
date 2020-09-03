@@ -1,11 +1,8 @@
 ---
 title: "Revisiting PLNmodels output with htmlwidgets"
-subtitle: "The Oaks Powdery Mildew Data Set"
-author: "Julien Chiquet"
-date: "`r Sys.Date()`"
-output: 
-  html_document:
-    self_contained: true
+author: "State of the R"
+date: "24-28/08/2020"
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
@@ -27,7 +24,6 @@ The packages required for the analysis are **PLNmodels** plus some others for da
 library(PLNmodels)
 library(tidyverse)
 library(ggplot2)
-nb_cores <- 4
 ```
 
 Here are a collection of packages implementing various JS widgets:
@@ -53,7 +49,7 @@ datatable(oaks$Abundance[, 1:5] )
 ### PCA analysis
 
 ```{r principal component analysis, cache = TRUE, warning = FALSE, results='hide'}
-my_PCAs <- PLNPCA(Abundance ~ 1 + offset(log(Offset)), data = oaks, ranks = 25:30, control_main = list(cores = nb_cores))
+my_PCAs <- PLNPCA(Abundance ~ 1 + offset(log(Offset)), data = oaks, ranks = 27)
 ```
 
 ### Sparse precision matrix (Network)

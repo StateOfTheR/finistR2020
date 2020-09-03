@@ -394,6 +394,24 @@ $(document).ready(function () {
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class=" far fa-"></span>
+     
+    Widgets
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Cartogrammes</li>
+    <li>
+      <a href="timevis.html">Timevis</a>
+    </li>
+    <li>
+      <a href="ggiraph.html">ggiraph, plotly</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     <span class="far fa far fa-keyboard"></span>
      
     R avancé
@@ -514,11 +532,11 @@ $(document).ready(function () {
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="kw">ackley_function</span>()</span></code></pre></div>
 <pre><code>## 
 ## de: solution to Ackley test:
-##   -1.9189e-16
-##    3.3890e-16</code></pre>
+##   -9.0208e-17
+##    2.5378e-16</code></pre>
 <pre><code>##               [,1]
-## [1,] -1.918948e-16
-## [2,]  3.389047e-16</code></pre>
+## [1,] -9.020779e-17
+## [2,]  2.537773e-16</code></pre>
 <p>Avec les méthodes intégrées dans la fonction <code>optim</code>, la qualité de la minimisation est variable, selon la recherche d’un optimum local ou global et du point de départ:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a>ackley &lt;-<span class="st"> </span><span class="cf">function</span>(x0) {</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a>    x &lt;-<span class="st"> </span>x0[<span class="dv">1</span>]</span>
@@ -531,9 +549,9 @@ $(document).ready(function () {
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true"></a><span class="kw">optim</span>(x0, ackley, <span class="dt">method =</span> <span class="st">&quot;Nelder-Mead&quot;</span>)<span class="op">$</span>par</span></code></pre></div>
 <pre><code>## [1] -0.9685125  0.9685059</code></pre>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a><span class="kw">optim</span>(x0, ackley, <span class="dt">method =</span> <span class="st">&quot;SANN&quot;</span>)<span class="op">$</span>par</span></code></pre></div>
-<pre><code>## [1] -0.002662930 -0.005536201</code></pre>
+<pre><code>## [1] 0.0054352205 0.0001639087</code></pre>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a><span class="kw">optim</span>(x0, ackley, <span class="dt">method =</span> <span class="st">&quot;L-BFGS-B&quot;</span>)<span class="op">$</span>par</span></code></pre></div>
-<pre><code>## [1] -1.104193e-16  1.104193e-16</code></pre>
+<pre><code>## [1] -1.104201e-16  1.104201e-16</code></pre>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true"></a><span class="kw">optim</span>(x0, ackley, <span class="dt">method =</span> <span class="st">&quot;BFGS&quot;</span>)<span class="op">$</span>par</span></code></pre></div>
 <pre><code>## [1] -0.9684772  0.9684772</code></pre>
 </div>
@@ -543,25 +561,25 @@ $(document).ready(function () {
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true"></a><span class="kw">logit_optimLib</span>()</span></code></pre></div>
 <pre><code>## 
 ## Adam: true values vs estimates:
-##    1.1586   1.1358
-##    1.0137   0.9205
-##    1.7955   1.8952
-##    3.2598   3.2817
-##    2.5031   2.5647
+##    2.7303   2.7664
+##    2.0813   2.1071
+##    3.9042   3.7981
+##    3.1542   3.0928
+##    2.1037   2.1277
 ## 
 ## 
 ## newton: true values vs estimates:
-##    1.1586e+00   5.0862e+11
-##    1.0137e+00   5.9104e+11
-##    1.7955e+00   3.1005e+11
-##    3.2598e+00  -7.3811e+10
-##    2.5031e+00   1.4350e+11</code></pre>
-<pre><code>##              [,1]
-## [1,] 508618568326
-## [2,] 591041494988
-## [3,] 310049722423
-## [4,] -73811344465
-## [5,] 143499036075</code></pre>
+##    2.7303   2.7664
+##    2.0813   2.1071
+##    3.9042   3.7981
+##    3.1542   3.0928
+##    2.1037   2.1277</code></pre>
+<pre><code>##          [,1]
+## [1,] 2.766439
+## [2,] 2.107112
+## [3,] 3.798066
+## [4,] 3.092844
+## [5,] 2.127685</code></pre>
 </div>
 </div>
 <div id="todo-à-faire" class="section level2">
