@@ -15,16 +15,17 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 
 Les éléments de l'introduction proviennent du site d'aide de [dplyr](https://cran.r-project.org/web/packages/dplyr/vignettes/programming.html). 
 
-L'évaluation tidy est un type d'évaluation utilisée dans tout le tidyverse. Les verbes dplyr utilise d'une manière ou d'une autre l'évaluation tidy. Il en existe essentiellement 2 formes :
+L'évaluation tidy est un type d'évaluation utilisée dans tout le tidyverse et les verbes `dplyr` utilise d'une manière ou d'une autre l'évaluation tidy. Il en existe essentiellement  de 2 formes :
 
-- `arrange()`, `count()`, `filter()`, `group_by()`, `mutate()`, et `summarise()` : ces verbes utilisent le masquage de données (data masking). De cette façon, les variables dans des données peuvent être utilisées comme si elles étaient dans l'environnement. Plus besoin d'écrire `df$var` mais simplement `var` dans le verbe dplyr.
+- `arrange()`, `count()`, `filter()`, `group_by()`, `mutate()`, et `summarise()` : ces verbes utilisent le masquage de données (data masking). De cette façon, les variables des données peuvent être utilisées sans avoir recours au `$`. Plus besoin d'écrire `df$var` mais simplement `var` dans le verbe dplyr.
 
 - `across()`, `relocate()`, `rename()`, `select()`, et `pull()` : ces verbes utilisent la sélection tidy (tidy selection) et permettent de choisir facilement des variables en se basant sur leur position, leur nom ou leur type  (e.g. `starts_with("x")` or `is.numeric()`).
 
-Ces verbes rendent l'exploration de données rapide et fluide mais ils peuvent poser des problèmes dans le cas où ils sont utilisés dans des boucles ou des fonctions.
+Ces verbes rendent l'exploration de données rapide et fluide, mais ils peuvent poser des problèmes dans le cas où ils sont utilisés dans des boucles ou des fonctions.
 
-Par exemple, une fonction qui utilise le data masking peut notamment poser problème lorsqu'elle appelle le nom d'une variable dans un tableau à partir d'une variable de l'environnement sans taper explicitement la variable du tableau (des exemples précis sont donnés par la suite). [rlang](https://cran.r-project.org/web/packages/rlang/index.html) fournit des outils pour écrire des codes génériques tout en utilisant dplyr.
-La sélection tidy est un outil complémentaire qui facilite le travaille sur les colonnes d'un jeu de données.
+Par exemple, une fonction qui utilise le data masking peut notamment poser problème lorsqu'elle appelle le nom d'une variable dans un tableau à partir d'une variable de l'environnement sans taper explicitement la variable du tableau (des exemples précis sont donnés par la suite). Ces problèmes peuvent limiter la généricité des codes utilisant le langage dplyr. [rlang](https://cran.r-project.org/web/packages/rlang/index.html) fournit justement des outils pour pallier aux limitations introduites par le data masking.
+
+Par ailleurs, la sélection tidy est un outil complémentaire qui facilite le travail sur les colonnes d'un jeu de données.
 
 La suite du document donnent quelques exemple d'utilisation de rlang.
 
@@ -287,33 +288,32 @@ summarize_penguins(species == "Adelie", island, bill_depth_mm, mean, na.rm = TRU
 
 ## Un exemple sur un jeu de données de pêche
 
-Le jeu de données VMS_data contient les données spatialisées des captures (`LE_KG`), des efforts (`HF`) et des indices d'abondance (`CPUE`) par navire (`aggreg_level`) des chalutiers ciblant les espèces démersales (`OTB_DEF`) dans le golfe de Gascogne. La donnée est aggrégée à l'échelle des cellules (`layer`) d'une grille de résolution 0.05°. Les captures et les indices d'abondance pour chaque espèce sont en colonne.
+Le jeu de données VMS_data contient les données spatialisées des captures (`LE_KG`), des efforts (`HF`) et des indices d'abondance (`CPUE`) par navire (`aggreg_level`) des chalutiers ciblant les espèces démersales (`OTB_DEF`) dans le golfe de Gascogne. La donnée est agrégée à l'échelle des cellules (`layer`) d'une grille de résolution 0.05°. Les captures et les indices d'abondance pour chaque espèce sont en colonne.
 
 ```{r}
 load("data/VMS_data.RData")
 VMS_data <- as_tibble(VMS_data)
 ```
 
-On peut chercher à créer une fonction représentant les captures de deux navires pour 3 espèces (la sole, le merlu, la langoustine). La fonction suivante utilise les différentes commandes vues précédemment (`{{}}`, `.Data`, `.env$`, `:=`). 
+On peut chercher à créer une fonction représentant les captures de deux navires pour 3 espèces (ici la sole, le merlu, la langoustine). La fonction suivante utilise les différentes commandes vues précédemment (`{{}}`, `.Data`, `.env$`, `:=`). 
 
 ```{r fig.width = 9, fig.height=3}
 plot_VMS_data <- function(data,species,unit){
   data %>% 
     dplyr::select(aggreg_level:lati,contains(paste0(.env$unit,"_",.env$species))) %>% # aller chercher l'unité et les espèces dans l'environnement 
-    pivot_longer(contains(paste0(.env$unit,"_",.env$species)),names_to = "species",values_to = {{unit}}) %>% # passer les colonnes valeurs en une seule colonne
+    pivot_longer(contains(paste0(.env$unit,"_",.env$species)),names_to = "species",values_to = {{unit}}) %>% # passer les colonnes de valeurs en une seule colonne
     mutate(species = str_remove(species, paste0(.env$unit,"_"))) %>% # modifier le nom de la colonne species
     group_by(layer,long,lati,species) %>% # moyenner les valeurs par espèce par cellule
     summarise("{unit}" := mean(.data[[unit]])) %>%
-    ggplot() + #  afficher les données
+    ggplot() + #  ploter les données
     geom_point(aes(x=long,y=lati,col = log(.data[[unit]]+1)),size = 0.5,shape=15) +
     scale_color_gradient(low = "white", high = "red")+xlab("")+ylab("")+
-    coord_equal() + 
     theme(panel.border = element_blank(),
           panel.grid.major = element_blank(),
           panel.grid.minor = element_blank(),
           panel.background = element_rect(fill = "skyblue"),
           panel.spacing.x = unit(6, "mm"))+
-    facet_wrap(.~species)
+    facet_wrap(.~species) # pour représenter la côte regarder le package `rnaturalearth`
 }
 
 data_2 <- VMS_data
