@@ -19,6 +19,7 @@ dependencies:
   - r-edgebundler
   - r-fda
   - r-forcats
+  - r-gplots
   - r-ggally
   - r-ggdist
   - r-ggforce
@@ -27,6 +28,7 @@ dependencies:
   - r-irkernel
   - r-networkd3
   - r-oaqc
+  - r-reshape2
   - r-rlang
   - r-plotly
   - r-purrr

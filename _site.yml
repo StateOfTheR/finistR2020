@@ -30,6 +30,8 @@ navbar:
           href: widget_graph_visualization.html
         - text: "ggiraph, plotly"
           href: widget_ggiraph.html
+        - text: "Heatmaps"
+          href: widget_heatmaps.html
         - text: "(3D) Scatterplots"
           href: widget_scatterplots.html
         - text: "Cartogrammes"
