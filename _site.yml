@@ -46,7 +46,7 @@ navbar:
         - text: "Bibliographie"
           href: r_citr.html     
   - text: "Optimisation"
-    icon: fas fa-biohazard
+    icon: fas fa-temperature-high
     menu:
         - text: "Bibliothèque OptimLib"
           href: optim_optimLib.html     
