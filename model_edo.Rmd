@@ -13,12 +13,16 @@ output: html_document
 
 Le CRAN propose une [Task View](https://cran.r-project.org/web/views/DifferentialEquations.html) sur les équations différentielles.
 
-Une équation différentielle est une équation entre une ou plusieurs fonctions inconnues et leurs dérivées. Cette équation décrit comment une fonction varie en fonction d'une ou de plusieurs variables (souvent le temps ou l'espace) et en fonction des dérivées de cette fonction.
-Il y différentes facon de classifier les équations différentielles :
-- les équations peuvent être stochastique (la quantité inconue est aléatoire) ou déterministe (la quantité inconnue est déterministe).
+Une équation différentielle est une équation entre une ou plusieurs fonctions inconnues et leurs dérivées. Elle décrit comment une fonction varie par rapport à une ou plusieurs variables (souvent le temps et/ou l'espace) et par rapport à ses dérivées.
+
+Il y a différentes facon de classifier les équations différentielles :
+
+- les équations peuvent être stochastique (la quantité inconnue est aléatoire) ou déterministe (la quantité inconnue est déterministe).
+
 - les équations peuvent porter sur des fonctions à une seule variable (équation différentielle ordinaire) ou à plusieurs variables (équation aux dérivées partielles).
-- les équations peuvent inclure des fonctions dont la dérivée a un certain pas de temps dépend de la dérivée à un pas de temps précédent (équation différentielle à retard ou differential equations delay), ou alors des fonctions algébriques (i.e. il existe une ou plusieurs relations algébriques entre les variables du système - équation différentielle algébrique).
-- les contraintes peuvent être posées sur tout ou partie du domaine ou sur tout ou partie de la frontière. Ces contraintes peuvent être de plusieurs types : on peut spécifier les valeurs que la fonction doit prendre sur tout ou partie de la frontière du modèle (condition de Dirichlet), les valeurs que la dérivée de la fonction doit prendre sur tout ou partie du domaine (condition de Neumann), etc.
+
+- les équations peuvent inclure des fonctions dont la dérivée a un certain pas de temps dépend de la dérivée à un pas de temps précédent (équation différentielle à retard ou differential equations delay). Elles peuvent aussi inclure des relations algébriques entre les variables (équation différentielle algébrique).
+
 
 Il existe plusieurs packages R permettant de résoudre ces équations et d'ajuster ces modèles à de la donnée. Ici, seuls les package deSolve et diffeqr sont utilisés pour résoudre des ED.
 
@@ -349,11 +353,11 @@ out_aphide %>%
 
 Cet exemple est tiré du document : https://cran.r-project.org/web/packages/deSolve/vignettes/deSolve.pdf .
 
-Le modèle logistique est un modèle de dynamique de population simple dans lequel une population évolue jusqu'à atteindre un plateau suivant la fonction $x'(t)=r.x(t).[\frac{1-x(t)}{M}]$ (M est le nombre d'individus que peut suporter l'écosystème à l'équilibre). Le terme densité-dépendant $\frac{1-x(t)}{M}$ peut jouer sur l'écosystème avec un retard ce qui amène à écrire la EDR suivante : $x'(t)=r.x(t).[\frac{1-x(t - \tau)}{M}]$.
+Le modèle logistique est un modèle de dynamique de population simple dans lequel une population donnée évolue jusqu'à atteindre un plateau (la capacité biotique du milieu noté M). La dynamique de la population peut être représentée par l'ED suivante :  $x'(t)=r.x(t).[\frac{1-x(t)}{M}]$. Le terme densité-dépendant $\frac{1-x(t)}{M}$ peut avoir un effet sur la population avec un temps de retard. L'ED peut alors être réécrite : $x'(t)=r.x(t).[\frac{1-x(t - \tau)}{M}]$. Sous cette forme l'ED est une équation différentielle à retard (EDR).
 
-Dans le cas d'une population de lemming, le lag est fixé à 9 mois (0.74 année), le temps de croissance d'un lemming jusqu'au stade adulte. Le paramètre r est fixé sur la base données expérimentales. Le paramètre M contrôlant la capacité biotique du milieu est fixé à 19.
+Dans le cas d'une population de lemming, le lag est fixé à 9 mois (0.74 année), soit le temps de croissance d'un lemming jusqu'au stade adulte. Le paramètre r est fixé sur la base de données expérimentales et la capacité biotique du milieu (M) est fixée arbitrairement à 19.
 
-Les lignes de codes qui suivent permettent de simuler et de visualiser l'évolution d'une population de lemming. Le dernier plot représente l'évolution de $x(t)$ en fonction de $x(t-\tau)$.
+Les lignes de codes qui suivent permettent de simuler et de visualiser l'évolution d'une population de lemming ($1^{ère}$ figure). La deuxième figure représente l'évolution de $x(t)$ en fonction de $x(t-\tau)$.
 
 ```{r}
 # DDE function
