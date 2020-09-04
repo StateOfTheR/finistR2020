@@ -11,6 +11,8 @@ remotes::install_github("mlverse/torch")
 remotes::install_github("Chabert-Liddell/MLVSBM")
 remotes::install_github("Demiperimetre/GREMLIN")
 remotes::install_github("rstudio/d3heatmap")
+remotes::install_github("jchiquet/PLNmodels")
+
 ## remotes::install_github("RamiKrispin/coronavirus")
 ## remotes::install_github("dreamRs/topogram")
 ## remotes::install_github("ropensci/rnaturalearthhires")
@@ -23,7 +25,6 @@ install.packages("palmerpenguins")
 install.packages("ggiraph")
 install.packages("timevis")
 install.packages("ggraph")
-install.packages("PLNmodels")
 install.packages("fields")
 
 ## Julia and co
