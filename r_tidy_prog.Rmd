@@ -231,7 +231,7 @@ Et itérer sur des tableaux
 
 ```{r}
 cont_vars <- c("bill_length_mm", "bill_depth_mm", "flipper_length_mm", "body_mass_g")
-df <- crossing(x = cont_vars, y = cont_vars) 
+df <- tidyr::crossing(x = cont_vars, y = cont_vars) 
 plot_list <- map2(.x = df$x, .y = df$y, ~ my_plot_expr(.data[[.x]], .data[[.y]]) + theme(legend.position = "none"))
 cowplot::plot_grid(plotlist = plot_list)
 ```
