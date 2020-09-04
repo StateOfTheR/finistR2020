@@ -345,7 +345,7 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">FinistR 2020</a>
+      <a class="navbar-brand" href="index.html">Finist'R 2020</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -410,6 +410,12 @@ $(document).ready(function () {
     <li>
       <a href="widget_ggiraph.html">ggiraph, plotly</a>
     </li>
+    <li>
+      <a href="widget_heatmaps.html">Heatmaps</a>
+    </li>
+    <li>
+      <a href="widget_scatterplots.html">(3D) Scatterplots</a>
+    </li>
     <li class="dropdown-header">Cartogrammes</li>
   </ul>
 </li>
@@ -422,7 +428,9 @@ $(document).ready(function () {
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-header">R et Python</li>
+    <li>
+      <a href="r_python.html">R et Python</a>
+    </li>
     <li>
       <a href="r_tidy_prog.html">Progammation avec le tidyverse</a>
     </li>
@@ -433,7 +441,7 @@ $(document).ready(function () {
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa fas fa-biohazard"></span>
+    <span class="fas fa fas fa-angle-double-right"></span>
      
     Optimisation
      
@@ -555,7 +563,7 @@ $(document).ready(function () {
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a><span class="kw">optim</span>(x0, ackley, <span class="dt">method =</span> <span class="st">&quot;SANN&quot;</span>)<span class="op">$</span>par</span></code></pre></div>
 <pre><code>## [1] -0.002547420  0.002509593</code></pre>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a><span class="kw">optim</span>(x0, ackley, <span class="dt">method =</span> <span class="st">&quot;L-BFGS-B&quot;</span>)<span class="op">$</span>par</span></code></pre></div>
-<pre><code>## [1] -1.104201e-16  1.104201e-16</code></pre>
+<pre><code>## [1] -1.104193e-16  1.104193e-16</code></pre>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true"></a><span class="kw">optim</span>(x0, ackley, <span class="dt">method =</span> <span class="st">&quot;BFGS&quot;</span>)<span class="op">$</span>par</span></code></pre></div>
 <pre><code>## [1] -0.9684772  0.9684772</code></pre>
 </div>

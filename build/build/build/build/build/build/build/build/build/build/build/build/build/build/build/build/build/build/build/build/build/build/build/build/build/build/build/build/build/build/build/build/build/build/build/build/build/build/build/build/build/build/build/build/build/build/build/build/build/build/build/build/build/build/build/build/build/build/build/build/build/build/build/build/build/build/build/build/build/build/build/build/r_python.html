@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="State of the R" />
+
+
+<title>Représentation et inférence de réseaux avec R et Python</title>
+
+<script src="site_libs/header-attrs-2.3/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #c4a000; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #000000; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #000000; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #000000; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Finist'R 2020</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="https://github.com/StateOfTheR/finistR2020">
+    <span class="fa fa-github"></span>
+     
+    
+  </a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fas fa fas fa-chalkboard-teacher"></span>
+     
+    Enseignement
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="teach_learnr_gradethis.html">LearnR and gradethis</a>
+    </li>
+    <li>
+      <a href="teach_swirl.html">Swirl</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fas fa fas fa-gear"></span>
+     
+    Intégration Continue
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="ci_github_actions.html">GithubActions</a>
+    </li>
+    <li>
+      <a href="ci_binderetal.html">Binder</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fas fa fas fa-mouse-pointer"></span>
+     
+    Widgets
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="widget_timevis.html">Timevis</a>
+    </li>
+    <li>
+      <a href="widget_graph_visualization.html">Network viz</a>
+    </li>
+    <li>
+      <a href="widget_ggiraph.html">ggiraph, plotly</a>
+    </li>
+    <li>
+      <a href="widget_heatmaps.html">Heatmaps</a>
+    </li>
+    <li>
+      <a href="widget_scatterplots.html">(3D) Scatterplots</a>
+    </li>
+    <li class="dropdown-header">Cartogrammes</li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="far fa far fa-keyboard"></span>
+     
+    R avancé
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="r_python.html">R et Python</a>
+    </li>
+    <li>
+      <a href="r_tidy_prog.html">Progammation avec le tidyverse</a>
+    </li>
+    <li>
+      <a href="r_citr.html">Bibliographie</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fas fa fas fa-angle-double-right"></span>
+     
+    Optimisation
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="optim_optimLib.html">Bibliothèque OptimLib</a>
+    </li>
+    <li class="dropdown-header">Interface avec torch (plante)</li>
+    <li>
+      <a href="optim_RKeOps.html">Interface avec KeOps</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fas fa fas fa-chart-bar"></span>
+     
+    Modélisation
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="model_gam.html">Modèles additifs - GAM</a>
+    </li>
+    <li>
+      <a href="model_edo.html">Équations différentielles avec R</a>
+    </li>
+    <li>
+      <a href="model_distributions.html">Manipulation des distributions</a>
+    </li>
+    <li>
+      <a href="model_tidymodels.html">Introduction à Tidymodels</a>
+    </li>
+    <li class="dropdown-header">Introduction à Tidyverts</li>
+  </ul>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Représentation et inférence de réseaux avec R et Python</h1>
+<h4 class="author">State of the R</h4>
+<h4 class="date">24-28/08/2020</h4>
+
+</div>
+
+
+<div id="utilisation-de-python-dans-rmarkdown" class="section level2">
+<h2>Utilisation de Python dans rmarkdown</h2>
+<p>Pour pouvoir utiliser <code>Python</code> dans <code>Rmarkdown</code> il faut utiliser le package <code>reticulate</code>. On peut lui préciser le chemin de la version que l’on veut utiliser une certaine version plutôt que celle par défaut. Si une version de <code>Python</code> est déjà chargée, il faut relancer la session <code>R</code> pour que la modification soit appliqué.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="kw">library</span>(reticulate)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="kw">use_virtualenv</span>(<span class="st">&quot;r-reticulate&quot;</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a>reticulate<span class="op">::</span><span class="kw">py_config</span>()</span></code></pre></div>
+<pre><code>## python:         /usr/share/miniconda/envs/finistR2020/bin/python3
+## libpython:      /usr/share/miniconda/envs/finistR2020/lib/libpython3.8.so
+## pythonhome:     /usr/share/miniconda/envs/finistR2020:/usr/share/miniconda/envs/finistR2020
+## version:        3.8.5 | packaged by conda-forge | (default, Aug 29 2020, 01:22:49)  [GCC 7.5.0]
+## numpy:          /usr/share/miniconda/envs/finistR2020/lib/python3.8/site-packages/numpy
+## numpy_version:  1.19.1
+## 
+## python versions found: 
+##  /usr/share/miniconda/envs/finistR2020/bin/python3
+##  /usr/bin/python3
+##  /usr/bin/python</code></pre>
+<p>Il suffit alors de créer un chunk avec <code>python</code> comme langage. Tous les objets <code>R</code> de l’environnement sont accessible via la commande <code>r.</code>.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a>x <span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="bu">print</span>(x)</span></code></pre></div>
+<pre><code>## 2</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a>r.x <span class="op">=</span> x</span></code></pre></div>
+<p>Dans un chunk <code>R</code>, les objets <code>python</code> sont accessible avec la commande <code>py$</code>.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a>x &lt;-<span class="st"> </span>py<span class="op">$</span>x</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a>y &lt;-<span class="st"> </span>x<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a><span class="kw">print</span>(y)</span></code></pre></div>
+<pre><code>## [1] 4</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a><span class="kw">typeof</span>(y)</span></code></pre></div>
+<pre><code>## [1] &quot;double&quot;</code></pre>
+<p>Il faut faire attention à la transformation automatique des types de <code>R</code> vers <code>python</code>, ce dernier étant plus pointilleux que <code>R</code> la dessus.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a>z <span class="op">=</span> [i<span class="op">**</span><span class="dv">2</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">int</span>(r.y))]</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true"></a><span class="bu">print</span>(z)</span></code></pre></div>
+<pre><code>## [0, 1, 4, 9]</code></pre>
+</div>
+<div id="utilisation-de-la-librarie-graph_tool" class="section level2">
+<h2>Utilisation de la librarie graph_tool</h2>
+<p><code>graph_tool</code> est une librairie <code>python</code> pour analyser des réseaux développer par T. Peixoto. Elle permet entre autre de faire des visualisations interactive de graphes et est également très réputée pour ces implémentations du SBM et du degree corrected SBM.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a><span class="kw">library</span>(sbm)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true"></a><span class="kw">library</span>(igraph)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true"></a><span class="kw">library</span>(tidyverse)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a><span class="im">import</span> graph_tool.<span class="bu">all</span> <span class="im">as</span> gt</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true"></a><span class="im">import</span> math</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true"></a><span class="im">import</span> time</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true"></a>g <span class="op">=</span> gt.collection.data[<span class="st">&quot;football&quot;</span>]</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true"></a><span class="bu">print</span>(g)</span></code></pre></div>
+<pre><code>## &lt;Graph object, undirected, with 115 vertices and 613 edges, 4 internal vertex properties, 2 internal graph properties, at 0x7f3d8c0698e0&gt;</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true"></a>state <span class="op">=</span> gt.minimize_blockmodel_dl(g)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true"></a>m <span class="op">=</span> state.get_matrix()</span></code></pre></div>
+<p>Les plots <code>matplotlib</code> sortent très bien dans le notebook, mais ce n’est pas le cas des plots interactifs. Ceux-ci ouvrent une fenêtre <code>python</code> interactive et bloquent la compilation du document.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true"></a>plt.matshow(m.todense())</span></code></pre></div>
+<p>Si l’on décide de sortir un plot <em>inline</em>, la fenêtre virtuelle ne s’ouvre pas et l’on récupère juste l’adresse mémoire du graph stocker. Il faut sauver dans un fichier et insérer “à la main”</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true"></a>pv <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1000</span>):</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true"></a>     ret <span class="op">=</span> state.mcmc_sweep(niter<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true"></a>     pv <span class="op">=</span> state.collect_vertex_marginals(pv)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true"></a>gt.mf_entropy(g, pv)</span></code></pre></div>
+<pre><code>## 2.5920330350911076</code></pre>
+<div class="sourceCode" id="cb20"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true"></a>p <span class="op">=</span> gt.graph_draw(g, pos<span class="op">=</span>g.vp[<span class="st">&quot;pos&quot;</span>], vertex_shape<span class="op">=</span><span class="st">&quot;pie&quot;</span>,</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true"></a>                  vertex_pie_fractions<span class="op">=</span>pv, inline<span class="op">=</span> <span class="va">True</span>, output <span class="op">=</span> <span class="st">&quot;img/hier.png&quot;</span>)</span></code></pre></div>
+<div class="figure">
+<img src="img/hier.png" alt="" />
+<p class="caption">plot hierarchique</p>
+</div>
+<p>On obtient des représentations graphiques sur des graph assez gros (1500 noeuds) rapidement.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true"></a>g <span class="op">=</span> gt.price_network(<span class="dv">1500</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true"></a>deg <span class="op">=</span> g.degree_property_map(<span class="st">&quot;in&quot;</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true"></a>deg.a <span class="op">=</span> <span class="dv">4</span> <span class="op">*</span> (np.sqrt(deg.a) <span class="op">*</span> <span class="fl">0.5</span> <span class="op">+</span> <span class="fl">0.4</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true"></a></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true"></a>ebet <span class="op">=</span> gt.betweenness(g)[<span class="dv">1</span>]</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true"></a>ebet.a <span class="op">/=</span> ebet.a.<span class="bu">max</span>() <span class="op">/</span> <span class="fl">10.</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true"></a>eorder <span class="op">=</span> ebet.copy()</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true"></a>eorder.a <span class="op">*=</span> <span class="op">-</span><span class="dv">1</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true"></a>pos <span class="op">=</span> gt.sfdp_layout(g)</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true"></a>control <span class="op">=</span> g.new_edge_property(<span class="st">&quot;vector&lt;double&gt;&quot;</span>)</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true"></a><span class="cf">for</span> e <span class="kw">in</span> g.edges():</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true"></a>    d <span class="op">=</span> np.sqrt(<span class="bu">sum</span>((pos[e.source()].a <span class="op">-</span> pos[e.target()].a) <span class="op">**</span> <span class="dv">2</span>)) <span class="op">/</span> <span class="dv">5</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true"></a>    control[e] <span class="op">=</span> [<span class="fl">0.3</span>, d, <span class="fl">0.7</span>, d]</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true"></a>gt.graph_draw(g, pos<span class="op">=</span>pos, vertex_size<span class="op">=</span>deg, vertex_fill_color<span class="op">=</span>deg, vorder<span class="op">=</span>deg,</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true"></a>              edge_color<span class="op">=</span>ebet, eorder<span class="op">=</span>eorder, edge_pen_width<span class="op">=</span>ebet,</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true"></a>              edge_control_points<span class="op">=</span>control, <span class="co"># some curvy edges</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true"></a>              output<span class="op">=</span><span class="st">&quot;img/graph-draw.png&quot;</span>)</span></code></pre></div>
+<pre><code>## &lt;VertexPropertyMap object with value type &#39;vector&lt;double&gt;&#39;, for Graph 0x7f3d6dee7c70, at 0x7f3d6def2fd0&gt;</code></pre>
+<div class="figure">
+<img src="img/graph-draw.png" alt="" />
+<p class="caption">graph1500</p>
+</div>
+<p>Et l’on peut également sortir des plots interactifs avec graphviz.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true"></a>g <span class="op">=</span> gt.price_network(<span class="dv">1500</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true"></a>deg <span class="op">=</span> g.degree_property_map(<span class="st">&quot;in&quot;</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true"></a>deg.a <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> (np.sqrt(deg.a) <span class="op">*</span> <span class="fl">0.5</span> <span class="op">+</span> <span class="fl">0.4</span>)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true"></a>ebet <span class="op">=</span> gt.betweenness(g)[<span class="dv">1</span>]</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true"></a><span class="co">#gt.graphviz_draw(g, vcolor=deg, vorder=deg, elen=10,</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true"></a><span class="co">#                 ecolor=ebet, eorder=ebet, )#, output=&quot;graphviz-draw.pdf&quot;)</span></span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true"></a>g <span class="op">=</span> gt.price_network(<span class="dv">3000</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true"></a>pos <span class="op">=</span> gt.sfdp_layout(g)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true"></a>gt.graph_draw(g, pos<span class="op">=</span>pos)<span class="co">#, output=&quot;graph-draw-sfdp.pdf&quot;)</span></span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true"></a>g <span class="op">=</span> gt.collection.data[<span class="st">&quot;netscience&quot;</span>]</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true"></a>g <span class="op">=</span> gt.GraphView(g, vfilt<span class="op">=</span>gt.label_largest_component(g))</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true"></a>g.purge_vertices()</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true"></a>state <span class="op">=</span> gt.minimize_nested_blockmodel_dl(g, deg_corr<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true"></a>t <span class="op">=</span> gt.get_hierarchy_tree(state)[<span class="dv">0</span>]</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true"></a>tpos <span class="op">=</span> pos <span class="op">=</span> gt.radial_tree_layout(t, t.vertex(t.num_vertices() <span class="op">-</span> <span class="dv">1</span>), weighted<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true"></a>cts <span class="op">=</span> gt.get_hierarchy_control_points(g, t, tpos)</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true"></a>pos <span class="op">=</span> g.own_property(tpos)</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true"></a>b <span class="op">=</span> state.levels[<span class="dv">0</span>].b</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true"></a>shape <span class="op">=</span> b.copy()</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true"></a>shape.a <span class="op">%=</span> <span class="dv">14</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true"></a>gt.graph_draw(g, pos<span class="op">=</span>pos, vertex_fill_color<span class="op">=</span>b, vertex_shape<span class="op">=</span>shape,</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true"></a>              edge_control_points<span class="op">=</span>cts,</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true"></a>              edge_color<span class="op">=</span>[<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="fl">0.3</span>], vertex_anchor<span class="op">=</span><span class="dv">0</span>)<span class="co">#, output=&quot;netscience_nested_mdl.pdf&quot;)</span></span></code></pre></div>
+<p>Un essaie de plot hiérarchique:</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true"></a>g <span class="op">=</span> gt.collection.data[<span class="st">&quot;celegansneural&quot;</span>]</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true"></a>state <span class="op">=</span> gt.minimize_nested_blockmodel_dl(g, deg_corr<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true"></a>gt.draw_hierarchy(state, output<span class="op">=</span><span class="st">&quot;img/celegansneural_hier.png&quot;</span>)</span></code></pre></div>
+<pre><code>## (&lt;VertexPropertyMap object with value type &#39;vector&lt;double&gt;&#39;, for Graph 0x7f3d6dee71c0, at 0x7f3d6df15a60&gt;, &lt;Graph object, directed, with 316 vertices and 315 edges, at 0x7f3d8dd359d0&gt;, &lt;VertexPropertyMap object with value type &#39;vector&lt;double&gt;&#39;, for Graph 0x7f3d8dd359d0, at 0x7f3d6df0d6d0&gt;)</code></pre>
+<div class="figure">
+<img src="img/celegansneural_hier.png" alt="" />
+<p class="caption">plot hierarchique</p>
+</div>
+<p>Si l’on fit un sbm sur un graph, l’autoplot sur l’état des blocks du graphe se fait automatiquement.</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true"></a>t0 <span class="op">=</span> time.time()</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true"></a>g <span class="op">=</span> gt.collection.data[<span class="st">&quot;polbooks&quot;</span>]</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true"></a></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true"></a>state <span class="op">=</span> gt.minimize_blockmodel_dl(g , deg_corr<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>):</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true"></a>    s <span class="op">=</span> gt.minimize_blockmodel_dl(g , deg_corr<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true"></a>    <span class="cf">if</span> s.entropy() <span class="op">&lt;</span> state.entropy():</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true"></a>        state <span class="op">=</span> s</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true"></a></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true"></a>t <span class="op">=</span> t0 <span class="op">-</span> time.time()</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true"></a><span class="bu">print</span>(t)</span></code></pre></div>
+<pre><code>## -2.332160472869873</code></pre>
+<div class="sourceCode" id="cb31"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true"></a>state.entropy()</span></code></pre></div>
+<pre><code>## 1323.213352172967</code></pre>
+<div class="sourceCode" id="cb33"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true"></a>state.draw(pos<span class="op">=</span>g.vp[<span class="st">&quot;pos&quot;</span>], vertex_shape<span class="op">=</span>state.get_blocks(), output<span class="op">=</span><span class="st">&quot;img/polbooks_blocks_mdl.svg&quot;</span>)</span></code></pre></div>
+<pre><code>## &lt;VertexPropertyMap object with value type &#39;vector&lt;double&gt;&#39;, for Graph 0x7f3d6df0a640, at 0x7f3d6df15cd0&gt;</code></pre>
+<div class="figure">
+<img src="img/polbooks_blocks_mdl.svg" alt="" />
+<p class="caption">Image graph tools</p>
+</div>
+</div>
+<div id="passe-de-python-à-r" class="section level2">
+<h2>Passe de <code>python</code> à <code>R</code></h2>
+<p>On peut passer le réseau via la matrice d’adjacence de <code>python</code> à <code>R</code>, mais on aimerait mieux sortir un objet <code>graphml</code> qui est bien lu par <code>igraph</code>.</p>
+<p>Malheureusement, cela ne fonctionne pas. Toutes les méthodes de <code>graph_tool</code> sur les noeuds et les arêtes renvoient des itérateurs. Il est nécessaire de les transformer en vecteur avec de les utiliser en <code>R</code>.</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true"></a>blocks <span class="op">=</span> [b <span class="cf">for</span> b <span class="kw">in</span> state.get_blocks()]</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true"></a>A <span class="op">=</span> gt.adjacency(g)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true"></a><span class="co">## g.save(file_name= &quot;/home/stc/Documents/StateOfTheR/FinistR2020/graph_gt.graphml&quot;, fmt=&quot;graphml&quot;)</span></span></code></pre></div>
+<!-- ```{r, eval = FALSE} -->
+<!-- g <- igraph::read.graph("/home/stc/Documents/StateOfTheR/FinistR2020/graph_gt.graphml",                         format = "graphml") -->
+<!-- ``` -->
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true"></a>py<span class="op">$</span>blocks <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span></code></pre></div>
+<pre><code>##   [1] 1 1 1 2 1 1 1 1 2 2 2 2 2 2 1 3 3 3 1 3 1 3 1 3 1 1 1 3 4 1 5 5 3 3 3 3 3
+##  [38] 3 3 3 2 3 3 3 3 1 3 2 1 1 1 6 6 1 3 3 3 1 6 4 4 4 4 4 6 6 5 6 6 6 4 5 5 5
+##  [75] 5 5 5 4 4 4 4 4 4 4 5 6 5 4 4 4 4 4 4 4 4 4 4 4 4 5 5 4 4 6 6</code></pre>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true"></a>A &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(py<span class="op">$</span>A)</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true"></a><span class="kw">isSymmetric</span>(A)</span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true"></a>my_sbm &lt;-<span class="st"> </span>blockmodels<span class="op">::</span><span class="kw">BM_bernoulli</span>(<span class="st">&quot;SBM_sym&quot;</span>, A, <span class="dt">verbosity =</span> <span class="dv">0</span>, <span class="dt">plotting =</span> <span class="st">&quot;&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true"></a>t0 &lt;-<span class="st"> </span><span class="kw">Sys.time</span>()</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true"></a>my_sbm<span class="op">$</span><span class="kw">estimate</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true"></a>t &lt;-<span class="st"> </span>t0 <span class="op">-</span><span class="st"> </span><span class="kw">Sys.time</span>()</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true"></a>t</span></code></pre></div>
+<pre><code>## Time difference of -3.14648 secs</code></pre>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true"></a>aricode<span class="op">::</span><span class="kw">ARI</span>(<span class="dt">c1 =</span> py<span class="op">$</span>blocks <span class="op">+</span><span class="dv">1</span>, <span class="dt">c2 =</span> my_sbm<span class="op">$</span>memberships[[<span class="dv">5</span>]]<span class="op">$</span><span class="kw">map</span>()<span class="op">$</span>C)</span></code></pre></div>
+<pre><code>## [1] 0.7338193</code></pre>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true"></a>my_sbm<span class="op">$</span>memberships[[<span class="dv">5</span>]]<span class="op">$</span><span class="kw">map</span>()<span class="op">$</span>C</span></code></pre></div>
+<pre><code>##   [1] 3 3 3 2 3 3 3 3 2 2 2 2 2 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 4 3 5 5 1 1 1 1 1
+##  [38] 1 1 1 2 1 1 1 1 1 1 2 1 3 1 3 3 1 1 1 1 1 3 4 4 4 4 4 3 3 5 3 3 3 4 5 5 5
+##  [75] 5 5 5 4 4 4 4 4 4 4 5 3 5 4 4 4 4 4 4 4 4 4 4 4 4 5 5 4 4 3 3</code></pre>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true"></a>py<span class="op">$</span>blocks <span class="op">+</span><span class="dv">1</span></span></code></pre></div>
+<pre><code>##   [1] 1 1 1 2 1 1 1 1 2 2 2 2 2 2 1 3 3 3 1 3 1 3 1 3 1 1 1 3 4 1 5 5 3 3 3 3 3
+##  [38] 3 3 3 2 3 3 3 3 1 3 2 1 1 1 6 6 1 3 3 3 1 6 4 4 4 4 4 6 6 5 6 6 6 4 5 5 5
+##  [75] 5 5 5 4 4 4 4 4 4 4 5 6 5 4 4 4 4 4 4 4 4 4 4 4 4 5 5 4 4 6 6</code></pre>
+<p>Les clustering obtenus par <code>graph-tool</code> et sbm (<code>blockmodels</code>) sont très proche pour le sbm simple.</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true"></a>igraph<span class="op">::</span><span class="kw">graph_from_adjacency_matrix</span>(</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true"></a>  A, <span class="dt">mode =</span> <span class="st">&quot;directed&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>igraph<span class="op">::</span><span class="kw">write_graph</span>(<span class="dt">file =</span> <span class="st">&quot;graph_test.graphml&quot;</span>, <span class="dt">format =</span> <span class="st">&quot;graphml&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb51"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true"></a>gr <span class="op">=</span> gt.load_graph(file_name<span class="op">=</span><span class="st">&quot;~/Documents/StateOfTheR/FinistR2020/graph_test.graphml&quot;</span>, fmt<span class="op">=</span><span class="st">&quot;graphml&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb52"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true"></a>gr.set_directed <span class="op">=</span> <span class="va">False</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true"></a>gt.minimize_blockmodel_dl(gr, deg_corr<span class="op">=</span><span class="va">False</span>)</span></code></pre></div>
+</div>
+<div id="reste-à-faire" class="section level2">
+<h2>Reste à faire</h2>
+<ul>
+<li>Trouver une meilleur méthode pour passer un objet de type graph de <code>python</code> vers <code>R</code>. Une solution serait peut-être d’utiliser le module <code>igraph</code> de <code>python</code>.</li>
+<li>Est-il possible de capturer une fenêtre interactive <code>python</code> pour la mettre dans la sortie html du <code>rmarkdown</code> ?</li>
+</ul>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

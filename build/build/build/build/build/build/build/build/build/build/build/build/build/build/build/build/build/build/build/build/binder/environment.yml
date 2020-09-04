@@ -19,25 +19,28 @@ dependencies:
   - r-edgebundler
   - r-fda
   - r-forcats
+  - r-gplots
   - r-ggally
   - r-ggdist
   - r-ggforce
 #  - r-learnr
   - r-igraph
   - r-irkernel
+  - r-jpeg
   - r-networkd3
   - r-oaqc
+  - r-reshape2
   - r-rlang
   - r-plotly
   - r-purrr
-  - r-rnaturalearth
+#  - r-rnaturalearth
   - r-rcpp
   - r-rcpparmadillo
   - r-readods
   - r-reticulate
   - r-rmarkdown
   - r-scatterd3
-  - r-sf
+#  - r-sf
   - r-skimr
   - r-stringi
   - r-swirl

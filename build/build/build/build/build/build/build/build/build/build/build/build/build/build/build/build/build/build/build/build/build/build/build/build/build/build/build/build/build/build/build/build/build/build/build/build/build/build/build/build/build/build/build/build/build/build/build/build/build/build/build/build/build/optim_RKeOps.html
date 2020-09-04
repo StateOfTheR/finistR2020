@@ -345,7 +345,7 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">FinistR 2020</a>
+      <a class="navbar-brand" href="index.html">Finist'R 2020</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -410,6 +410,12 @@ $(document).ready(function () {
     <li>
       <a href="widget_ggiraph.html">ggiraph, plotly</a>
     </li>
+    <li>
+      <a href="widget_heatmaps.html">Heatmaps</a>
+    </li>
+    <li>
+      <a href="widget_scatterplots.html">(3D) Scatterplots</a>
+    </li>
     <li class="dropdown-header">Cartogrammes</li>
   </ul>
 </li>
@@ -422,7 +428,9 @@ $(document).ready(function () {
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-header">R et Python</li>
+    <li>
+      <a href="r_python.html">R et Python</a>
+    </li>
     <li>
       <a href="r_tidy_prog.html">Progammation avec le tidyverse</a>
     </li>
@@ -433,7 +441,7 @@ $(document).ready(function () {
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa fas fa-biohazard"></span>
+    <span class="fas fa fas fa-angle-double-right"></span>
      
     Optimisation
      
@@ -514,7 +522,7 @@ $(document).ready(function () {
 <p>KeOps allows you to compute efficiently the array <span class="math inline">\((a_i)_{i=1}^M \in \mathbb R^{M}\)</span> given by</p>
 <p><span class="math display">\[ a_i =  \sum_j K(x_i,y_j) b_j,  \qquad i=1,\cdots,M,\]</span> where <span class="math inline">\(K\)</span> is e.g. the Gaussian Kernel: <span class="math inline">\(K(x,y) = \exp\left(-\Vert x_i - y_j \Vert^2/(2\sigma^2) \right)\)</span>.</p>
 <p>These types of operations involve <em>reductions</em> of very large arrays e.g. row-wise or column-wise matrix sums:</p>
-<p><img src="img/rkeops_fig-1.png" /><!-- --></p>
+<p><img src="img/rkeops_fig-1.png" width="449" /></p>
 <div id="automatic-differentiation" class="section level3">
 <h3>Automatic differentiation</h3>
 <p>Thanks to KeOps’ <strong>automatic differentiation</strong> module, you can also get access to the gradient of the <span class="math inline">\(a_i\)</span>’s with respect to the <span class="math inline">\(x_i\)</span>’s:</p>
@@ -523,7 +531,7 @@ $(document).ready(function () {
 </div>
 <div id="one-slide-summary" class="section level3">
 <h3>One-slide summary</h3>
-<p><img src="img/rkeops_take-home.png" /><!-- --></p>
+<p><img src="img/rkeops_take-home.png" width="836" /></p>
 </div>
 </div>
 <div id="installation" class="section level2">
@@ -542,7 +550,7 @@ $(document).ready(function () {
 <h2>Getting started</h2>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="kw">library</span>(<span class="st">&quot;rkeops&quot;</span>)</span></code></pre></div>
 <pre><code>## 
-## You are using rkeops version 1.4.1</code></pre>
+## You are using rkeops version 1.4.1.1</code></pre>
 <p>RKeOps allows to define and compile new operators that run computations on GPU.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="co"># implementation of a convolution with a Gaussian kernel</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a>formula =<span class="st"> &quot;Sum_Reduction(Exp(-s * SqNorm2(x - y)) * b, 0)&quot;</span></span>
@@ -596,7 +604,7 @@ $(document).ready(function () {
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] rkeops_1.4.1         optimLibR_0.1.0      vip_0.2.2           
+##  [1] rkeops_1.4.1.1       optimLibR_0.1.0      vip_0.2.2           
 ##  [4] skimr_2.1.2          yardstick_0.0.7      workflows_0.1.3     
 ##  [7] tune_0.1.1           rsample_0.0.7        recipes_0.1.13      
 ## [10] parsnip_0.1.3        modeldata_0.0.2      infer_0.5.3         
@@ -617,30 +625,30 @@ $(document).ready(function () {
 ## [13] fansi_0.4.1           lubridate_1.7.9       xml2_1.3.2           
 ## [16] codetools_0.2-16      splines_3.6.3         knitr_1.29           
 ## [19] jsonlite_1.7.0        pROC_1.16.2           dbplyr_1.4.4         
-## [22] compiler_3.6.3        httr_1.4.2            backports_1.1.9      
-## [25] assertthat_0.2.1      cli_2.0.2             prettyunits_1.1.1    
-## [28] htmltools_0.5.0.9000  tools_3.6.3           gtable_0.3.0         
-## [31] glue_1.4.2            Rcpp_1.0.5            cellranger_1.1.0     
-## [34] DiceDesign_1.8-1      vctrs_0.3.4           iterators_1.0.12     
-## [37] crosstalk_1.1.0.1     timeDate_3043.102     gower_0.2.2          
-## [40] xfun_0.16             globals_0.12.5        readODS_1.7.0        
-## [43] rvest_0.3.6           lifecycle_0.2.0       future_1.18.0        
-## [46] ipred_0.9-9           hms_0.5.3             parallel_3.6.3       
-## [49] RColorBrewer_1.1-2    yaml_2.2.1            gridExtra_2.3        
-## [52] rpart_4.1-15          reshape_0.8.8         stringi_1.4.6        
-## [55] highr_0.8             foreach_1.5.0         lhs_1.0.2            
-## [58] hardhat_0.1.4         lava_1.6.7            repr_1.1.0           
-## [61] rlang_0.4.7           pkgconfig_2.0.3       evaluate_0.14        
-## [64] lattice_0.20-41       htmlwidgets_1.5.1     labeling_0.3         
-## [67] tidyselect_1.1.0      plyr_1.8.6            magrittr_1.5         
-## [70] R6_2.4.1              generics_0.0.2        DBI_1.1.0            
-## [73] pillar_1.4.6          haven_2.3.1           withr_2.2.0          
-## [76] survival_3.2-3        nnet_7.3-14           modelr_0.1.8         
-## [79] crayon_1.3.4          utf8_1.1.4            rmarkdown_2.3        
-## [82] grid_3.6.3            readxl_1.3.1          blob_1.2.1           
-## [85] reprex_0.3.0          digest_0.6.25         openssl_1.4.2        
-## [88] munsell_0.5.0         GPfit_1.0-8           viridisLite_0.3.0    
-## [91] askpass_1.1</code></pre>
+## [22] png_0.1-7             compiler_3.6.3        httr_1.4.2           
+## [25] backports_1.1.9       assertthat_0.2.1      cli_2.0.2            
+## [28] prettyunits_1.1.1     htmltools_0.5.0.9000  tools_3.6.3          
+## [31] gtable_0.3.0          glue_1.4.2            Rcpp_1.0.5           
+## [34] cellranger_1.1.0      DiceDesign_1.8-1      vctrs_0.3.4          
+## [37] iterators_1.0.12      crosstalk_1.1.0.1     timeDate_3043.102    
+## [40] xfun_0.16             gower_0.2.2           globals_0.12.5       
+## [43] readODS_1.7.0         rvest_0.3.6           lifecycle_0.2.0      
+## [46] future_1.18.0         ipred_0.9-9           hms_0.5.3            
+## [49] parallel_3.6.3        RColorBrewer_1.1-2    yaml_2.2.1           
+## [52] gridExtra_2.3         rpart_4.1-15          reshape_0.8.8        
+## [55] stringi_1.4.6         highr_0.8             foreach_1.5.0        
+## [58] lhs_1.0.2             hardhat_0.1.4         lava_1.6.7           
+## [61] repr_1.1.0            rlang_0.4.7           pkgconfig_2.0.3      
+## [64] evaluate_0.14         lattice_0.20-41       htmlwidgets_1.5.1    
+## [67] labeling_0.3          tidyselect_1.1.0      plyr_1.8.6           
+## [70] magrittr_1.5          R6_2.4.1              generics_0.0.2       
+## [73] DBI_1.1.0             pillar_1.4.6          haven_2.3.1          
+## [76] withr_2.2.0           survival_3.2-3        nnet_7.3-14          
+## [79] modelr_0.1.8          crayon_1.3.4          utf8_1.1.4           
+## [82] rmarkdown_2.3         jpeg_0.1-8.1          grid_3.6.3           
+## [85] readxl_1.3.1          blob_1.2.1            reprex_0.3.0         
+## [88] digest_0.6.25         openssl_1.4.2         munsell_0.5.0        
+## [91] GPfit_1.0-8           viridisLite_0.3.0     askpass_1.1</code></pre>
 </div>
 
 

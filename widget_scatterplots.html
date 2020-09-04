@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="State of the R" />
+
+
+<title>3D scatterplots for PLNPCA</title>
+
+<script src="site_libs/header-attrs-2.3/header-attrs.js"></script>
+<script src="site_libs/jquery-1.12.4/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="site_libs/datatables-binding-0.15/datatables.js"></script>
+<link href="site_libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="site_libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="site_libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
+<link href="site_libs/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
+<script src="site_libs/d3v5-5.9.2/d3.v5.min.js"></script>
+<script src="site_libs/d3v5-5.9.2/d3-legend.min.js"></script>
+<script src="site_libs/d3v5-5.9.2/d3-labeler.js"></script>
+<link href="site_libs/d3.lasso-plugin-1.0.0/lasso.css" rel="stylesheet" />
+<script src="site_libs/d3.lasso-plugin-1.0.0/lasso.js"></script>
+<link href="site_libs/scatterD3-0.8.2/scatterD3.css" rel="stylesheet" />
+<script src="site_libs/scatterD3-0.8.2/scatterD3-utils.js"></script>
+<script src="site_libs/scatterD3-0.8.2/scatterD3-scales.js"></script>
+<script src="site_libs/scatterD3-0.8.2/scatterD3-dims.js"></script>
+<script src="site_libs/scatterD3-0.8.2/scatterD3-menu.js"></script>
+<script src="site_libs/scatterD3-0.8.2/scatterD3-axes.js"></script>
+<script src="site_libs/scatterD3-0.8.2/scatterD3-dots.js"></script>
+<script src="site_libs/scatterD3-0.8.2/scatterD3-arrows.js"></script>
+<script src="site_libs/scatterD3-0.8.2/scatterD3-labels.js"></script>
+<script src="site_libs/scatterD3-0.8.2/scatterD3-lines.js"></script>
+<script src="site_libs/scatterD3-0.8.2/scatterD3-ellipses.js"></script>
+<script src="site_libs/scatterD3-0.8.2/scatterD3-zoom.js"></script>
+<script src="site_libs/scatterD3-0.8.2/scatterD3-legend.js"></script>
+<script src="site_libs/scatterD3-0.8.2/scatterD3-lasso.js"></script>
+<script src="site_libs/scatterD3-0.8.2/scatterD3-exports.js"></script>
+<script src="site_libs/scatterD3-binding-0.9/scatterD3.js"></script>
+<script src="site_libs/plotly-binding-4.9.2.1/plotly.js"></script>
+<script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="site_libs/plotly-htmlwidgets-css-1.52.2/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="site_libs/plotly-main-1.52.2/plotly-latest.min.js"></script>
+<script src="site_libs/threejs-111/three.min.js"></script>
+<script src="site_libs/threejs-111/Detector.js"></script>
+<script src="site_libs/threejs-111/Projector.js"></script>
+<script src="site_libs/threejs-111/CanvasRenderer.js"></script>
+<script src="site_libs/threejs-111/TrackballControls.js"></script>
+<script src="site_libs/threejs-111/StateOrbitControls.js"></script>
+<script src="site_libs/scatterplotThree-binding-0.3.3/scatterplotThree.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #c4a000; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #000000; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #000000; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #000000; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Finist'R 2020</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="https://github.com/StateOfTheR/finistR2020">
+    <span class="fa fa-github"></span>
+     
+    
+  </a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fas fa fas fa-chalkboard-teacher"></span>
+     
+    Enseignement
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="teach_learnr_gradethis.html">LearnR and gradethis</a>
+    </li>
+    <li>
+      <a href="teach_swirl.html">Swirl</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fas fa fas fa-gear"></span>
+     
+    Intégration Continue
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="ci_github_actions.html">GithubActions</a>
+    </li>
+    <li>
+      <a href="ci_binderetal.html">Binder</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fas fa fas fa-mouse-pointer"></span>
+     
+    Widgets
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="widget_timevis.html">Timevis</a>
+    </li>
+    <li>
+      <a href="widget_graph_visualization.html">Network viz</a>
+    </li>
+    <li>
+      <a href="widget_ggiraph.html">ggiraph, plotly</a>
+    </li>
+    <li>
+      <a href="widget_heatmaps.html">Heatmaps</a>
+    </li>
+    <li>
+      <a href="widget_scatterplots.html">(3D) Scatterplots</a>
+    </li>
+    <li class="dropdown-header">Cartogrammes</li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="far fa far fa-keyboard"></span>
+     
+    R avancé
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="r_python.html">R et Python</a>
+    </li>
+    <li>
+      <a href="r_tidy_prog.html">Progammation avec le tidyverse</a>
+    </li>
+    <li>
+      <a href="r_citr.html">Bibliographie</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fas fa fas fa-angle-double-right"></span>
+     
+    Optimisation
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="optim_optimLib.html">Bibliothèque OptimLib</a>
+    </li>
+    <li class="dropdown-header">Interface avec torch (plante)</li>
+    <li>
+      <a href="optim_RKeOps.html">Interface avec KeOps</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fas fa fas fa-chart-bar"></span>
+     
+    Modélisation
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="model_gam.html">Modèles additifs - GAM</a>
+    </li>
+    <li>
+      <a href="model_edo.html">Équations différentielles avec R</a>
+    </li>
+    <li>
+      <a href="model_distributions.html">Manipulation des distributions</a>
+    </li>
+    <li>
+      <a href="model_tidymodels.html">Introduction à Tidymodels</a>
+    </li>
+    <li class="dropdown-header">Introduction à Tidyverts</li>
+  </ul>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">3D scatterplots for PLNPCA</h1>
+<h4 class="author">State of the R</h4>
+<h4 class="date">24-28/08/2020</h4>
+
+</div>
+
+
+<div id="preliminaries" class="section level2">
+<h2>Preliminaries</h2>
+<p>We will illustrate some widgets for 3D scatterplots to enhance output of PCA in <strong>PLNmodels</strong>. The packages required for the analysis are <strong>PLNmodels</strong> plus some others for data manipulation and representation:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="kw">library</span>(PLNmodels)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="kw">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a><span class="kw">library</span>(ggplot2)</span></code></pre></div>
+<p>Here are a collection of packages implementing various JS widgets:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="kw">library</span>(DT)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a><span class="kw">library</span>(scatterD3)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a><span class="kw">library</span>(plotly)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a><span class="kw">library</span>(edgebundleR)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a><span class="kw">library</span>(threejs)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a><span class="kw">library</span>(networkD3)</span></code></pre></div>
+<p>The <em>oaks amplicon data set</em> at play gives the abundance of 114 taxa (66 bacterial OTU, 48 fungal OTUs) in 116 samples. For each sample, 11 additional covariates are known</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="kw">data</span>(oaks)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="kw">datatable</span>(oaks<span class="op">$</span>Abundance[, <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>] )</span></code></pre></div>
+<div id="htmlwidget-00cdccd928b8f120c5fa" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-00cdccd928b8f120c5fa">{"x":{"filter":"none","data":[["A1.02","A1.03","A1.04","A1.05","A1.06","A1.07","A1.08","A1.09","A1.10","A1.11","A1.12","A1.13","A1.14","A1.15","A1.16","A1.17","A1.18","A1.19","A1.20","A1.21","A1.22","A1.23","A1.24","A1.25","A1.26","A1.28","A1.29","A1.30","A1.31","A1.32","A1.33","A1.34","A1.35","A1.36","A1.37","A1.38","A1.39","A1.40","A2.01","A2.02","A2.03","A2.04","A2.05","A2.06","A2.07","A2.08","A2.09","A2.10","A2.11","A2.12","A2.13","A2.14","A2.15","A2.16","A2.17","A2.18","A2.19","A2.20","A2.21","A2.22","A2.23","A2.24","A2.25","A2.26","A2.28","A2.29","A2.30","A2.31","A2.32","A2.33","A2.34","A2.35","A2.36","A2.37","A2.38","A2.39","A2.40","A3.01","A3.02","A3.03","A3.04","A3.05","A3.06","A3.08","A3.09","A3.10","A3.11","A3.12","A3.13","A3.14","A3.15","A3.16","A3.17","A3.18","A3.19","A3.20","A3.21","A3.22","A3.23","A3.24","A3.25","A3.26","A3.27","A3.28","A3.29","A3.30","A3.31","A3.32","A3.33","A3.34","A3.35","A3.36","A3.37","A3.38","A3.39","A3.40"],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,18,42,54,35,2,0,0,21,1,170,7,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,4,2,0,1,0,0,53,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,10],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,93,1,178,4,0,0,1,0,0,0,0,10,6,0,0,0,0,0,7,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,15,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,2,2,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,297,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],[6,0,2,1,4,77,21,27,7,7,2,4,0,29,3,99,41,6,1,13,15,10,17,11,25,50,4,9,249,6,11,9,6,8,15,7,13,15,44,258,451,176,12,14,26,219,11,1267,203,5,8,4,4,10,137,119,95,1388,4,16,17,39,321,343,43,134,2228,683,8,437,386,5,6,5,98,188,32,13,2,3,4,3,310,8,2,9,1,0,0,2,32,6,5,0,15,5,0,3,8,0,4,3,4,9,26,71,6,1,7,14,1,6,3,5,2,151],[146,0,0,1,1,2,2,4,42,2,11,2,3,0,0,1,0,0,0,0,5,0,1,0,0,0,2,2,6,1,0,1,4,0,0,0,1,0,0,0,0,0,0,0,0,2,1,1,0,0,0,0,0,1,0,0,0,0,4,0,0,1,1,0,1,0,0,2,0,0,0,0,0,1,0,2,0,1,1,9,0,0,1,1,2,6,4,0,0,0,3,1,1,0,0,1,0,0,0,0,0,0,0,0,2,0,0,0,0,0,3,1,2,1,0,2]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>b_OTU_1045<\/th>\n      <th>b_OTU_109<\/th>\n      <th>b_OTU_1093<\/th>\n      <th>b_OTU_11<\/th>\n      <th>b_OTU_112<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="plnmodels-analyses" class="section level2">
+<h2>PLNmodels Analyses</h2>
+<div id="pca-analysis" class="section level3">
+<h3>PCA analysis</h3>
+<p>We only fit two PCA models, which we know are in the right range for ICL</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a>my_PCAs &lt;-<span class="st"> </span><span class="kw">PLNPCA</span>(Abundance <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="kw">offset</span>(<span class="kw">log</span>(Offset)), <span class="dt">data =</span> oaks, <span class="dt">ranks =</span> <span class="dv">27</span><span class="op">:</span><span class="dv">28</span>)</span></code></pre></div>
+</div>
+</div>
+<div id="outputs-and-vizualisation" class="section level2">
+<h2>Outputs and Vizualisation</h2>
+<div id="principal-components-map" class="section level3">
+<h3>Principal Components Map</h3>
+<p>We explore various scatterplot solutions to represent the individual factor map of the PLN PCA.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a>coord &lt;-<span class="st"> </span>my_PCAs<span class="op">$</span><span class="kw">getBestModel</span>()<span class="op">$</span>scores[, <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>] <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">as.data.frame</span>() <span class="op">%&gt;%</span><span class="st">   </span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">setNames</span>(<span class="kw">c</span>(<span class="st">&quot;PC1&quot;</span>, <span class="st">&quot;PC2&quot;</span>, <span class="st">&quot;PC3&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">add_column</span>(<span class="dt">tree =</span> oaks<span class="op">$</span>tree, <span class="dt">names =</span> <span class="kw">rownames</span>(oaks<span class="op">$</span>Abundance))</span></code></pre></div>
+<div id="scatterd3-another-fancy-scatterplot" class="section level4">
+<h4>ScatterD3 (Another fancy scatterplot)</h4>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="kw">scatterD3</span>(<span class="dt">data =</span> coord, <span class="dt">x =</span> PC1, <span class="dt">y =</span> PC2, <span class="dt">lab =</span> names,</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a>          <span class="dt">col_var =</span> tree, <span class="dt">symbol_var =</span> tree,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a>          <span class="dt">xlab =</span> <span class="st">&quot;PC1&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;PC2&quot;</span>, <span class="dt">col_lab =</span> <span class="st">&quot;tree&quot;</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true"></a>          <span class="dt">symbol_lab =</span> <span class="st">&quot;tree&quot;</span>, <span class="dt">lasso =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<div id="htmlwidget-bc3a8e86e9c4718aaf16" style="width:960px;height:960px;" class="scatterD3 html-widget"></div>
+<script type="application/json" data-for="htmlwidget-bc3a8e86e9c4718aaf16">{"x":{"data":{"x":[-15.8783788496925,-12.3800871172322,-9.26927795272043,-7.96145948561452,-11.3969567855224,-11.5926630070601,-7.70303827386516,-11.402880474443,-11.5063721931646,-14.189738416292,-14.4315223659986,-12.2430690625954,-14.9164381752469,-11.850104306712,-11.950020426155,-5.52006914649304,-7.63013313160036,-14.5613015652792,-12.3702067797876,-2.4053756426437,-9.32069869910979,-12.8047365396059,-9.74837675595946,-11.7314420059933,-11.4454189054871,-10.3374679571223,-15.049437380069,-12.0967917544631,-7.74802622191214,-12.0955249572891,-10.91121014255,-12.5426902695498,-11.1237192663463,-17.1453166714862,-14.3008685641033,-15.3286914480195,-12.1436723516122,-5.07865326121722,17.1803696362719,18.2070792264303,19.7707462635097,18.7586774141069,11.7401997191752,12.1037880871568,10.7995384475765,19.8750848503975,17.5138826289155,30.4963666340986,17.0735497771663,9.76474000806928,8.9093720232916,9.61229776528609,10.3639405972189,10.4279379194699,12.2980230382324,14.7251912741704,12.0859872879103,20.6582891853763,8.16407480856303,5.21755725744423,9.86699139778272,9.12969955104621,12.4740980117019,17.5131114626891,8.80239109793918,10.2999079554602,18.1419118766452,11.4274092823285,3.46903237248606,17.2769727247023,14.1639261982227,2.5455510513459,-1.81625652887765,5.19482336275457,8.86206213155211,8.73965910141469,10.6698144417448,1.60325998863124,-2.05648519222711,-1.40306435264491,-1.20665376043763,0.825497362303108,5.75782693300833,-1.12146667185956,-1.04074843359534,-0.730060624714587,-2.77020688884868,-6.68254058429226,2.5133333575256,1.81709506474499,-0.829240010175387,-6.27167739576166,-2.52645479283927,-2.94413616950789,-3.59059560857984,0.648100046906103,-0.0822003397934311,-3.95368985925875,3.13439583511354,-3.22560372599386,-5.24146229176811,-1.6105632225591,1.14498859555954,-2.48686960444514,-1.77967382911417,0.759759862217584,-3.43275142568088,-2.67765026482074,-4.2095401091793,-0.326638703806653,-2.83605219510833,-1.4517472023569,-0.144464545281733,-4.00774195872946,-3.76407872037566,5.80383840698485],"y":[0.393282969308746,-6.61442071533196,-5.86918909041366,-0.900307289195314,-2.44523613193542,-4.80033882664569,-1.31726151392601,-3.05830860408342,-2.0856155168892,-7.45066615469002,-8.42862624585799,-8.42763288784717,-8.89951344297264,-9.97180844412443,-13.3284940230529,-15.8483332565924,-8.63551659524894,-9.73133017554738,-7.54824470894581,-7.62684317635792,-7.71544992253279,-4.43052067899889,-4.03577369197156,-1.3054302444932,-1.29866267178603,-3.4827253760134,-8.80480267476075,-3.61199667209565,-0.274680681526779,-8.04803494649893,-9.31094584008947,-7.52591958297057,-8.87339258946221,-7.94559955968924,-5.92935201572448,-5.13302878113168,-3.54287877549391,-0.765602488846815,0.715323805206531,-1.97941196171162,-0.628771615931449,-0.994770047142229,-6.28463208336961,-3.30489623282075,-6.81546088432303,-1.77378182734349,3.20019073503119,-1.2614529957547,-9.17115856932686,-1.3162719744641,-3.6943862740534,-2.62195825829626,-4.80785918630758,-6.71127879415492,-8.69509903117421,-8.49568197119571,-3.25205276218102,-3.16317639236201,-3.84995613509737,-4.41423378385359,-2.7627325530721,-3.92073597104546,-4.69307613726228,-6.71763010201698,-6.31908851559006,-8.03111211445501,-4.41777768899388,-10.3558827245239,-9.93995955010451,-10.1018564241992,-10.7293750987051,-9.34685355955322,-11.1005399301882,-2.02381842908801,-12.6779036564227,-13.3229507047223,-0.423446851152852,10.5896340872716,9.71274133955011,11.6325153019891,11.8166632247547,10.4524144253767,16.067604788713,13.6911877685294,16.6354587656665,13.0205973073525,10.308626068027,-0.362740587574433,7.79187906928519,6.11766039669045,8.21045317163331,9.99027006900939,12.264415200012,11.7784943220554,10.9510713568542,11.2517835220329,16.6413255008183,11.2247371483555,12.3890054324237,10.821035157921,8.18590197917155,10.9627993208231,11.5578076035659,11.6766284390228,11.6788429994873,12.3889242150213,10.1357554715594,9.34879632504587,11.9306195211668,14.4746315383411,11.1037008056472,5.36069501765587,12.1575265999838,10.0929797031514,10.2354144133148,16.546860486452],"lab":["A1.02","A1.03","A1.04","A1.05","A1.06","A1.07","A1.08","A1.09","A1.10","A1.11","A1.12","A1.13","A1.14","A1.15","A1.16","A1.17","A1.18","A1.19","A1.20","A1.21","A1.22","A1.23","A1.24","A1.25","A1.26","A1.28","A1.29","A1.30","A1.31","A1.32","A1.33","A1.34","A1.35","A1.36","A1.37","A1.38","A1.39","A1.40","A2.01","A2.02","A2.03","A2.04","A2.05","A2.06","A2.07","A2.08","A2.09","A2.10","A2.11","A2.12","A2.13","A2.14","A2.15","A2.16","A2.17","A2.18","A2.19","A2.20","A2.21","A2.22","A2.23","A2.24","A2.25","A2.26","A2.28","A2.29","A2.30","A2.31","A2.32","A2.33","A2.34","A2.35","A2.36","A2.37","A2.38","A2.39","A2.40","A3.01","A3.02","A3.03","A3.04","A3.05","A3.06","A3.08","A3.09","A3.10","A3.11","A3.12","A3.13","A3.14","A3.15","A3.16","A3.17","A3.18","A3.19","A3.20","A3.21","A3.22","A3.23","A3.24","A3.25","A3.26","A3.27","A3.28","A3.29","A3.30","A3.31","A3.32","A3.33","A3.34","A3.35","A3.36","A3.37","A3.38","A3.39","A3.40"],"col_var":["intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant"],"symbol_var":["intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","intermediate","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","susceptible","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant","resistant"],"key_var":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116]},"settings":{"x_log":false,"y_log":false,"labels_size":10,"labels_positions":null,"point_size":64,"point_opacity":1,"opacities":null,"hover_size":1,"hover_opacity":null,"xlab":"PC1","ylab":"PC2","has_labels":true,"col_lab":"tree","col_continuous":false,"col_levels":["susceptible","intermediate","resistant"],"colors":null,"ellipses":false,"ellipses_data":[],"symbol_lab":"tree","symbol_levels":["susceptible","intermediate","resistant"],"symbols":null,"size_range":[10,300],"size_lab":"NULL","sizes":null,"opacity_lab":"NULL","opacities.1":null,"unit_circle":false,"has_color_var":true,"has_symbol_var":true,"has_size_var":false,"has_opacity_var":false,"has_url_var":false,"has_legend":true,"has_tooltips":true,"tooltip_text":null,"tooltip_position_x":"right","tooltip_position_y":"bottom","has_custom_tooltips":false,"click_callback":null,"zoom_callback":null,"zoom_on":null,"zoom_on_level":null,"disable_wheel":false,"fixed":false,"legend_width":150,"left_margin":30,"html_id":"scatterD3-KSDRWCYM","xlim":null,"ylim":null,"x_categorical":false,"y_categorical":false,"menu":true,"lasso":true,"lasso_callback":null,"dom_id_reset_zoom":"scatterD3-reset-zoom","dom_id_svg_export":"scatterD3-svg-export","dom_id_lasso_toggle":"scatterD3-lasso-toggle","transitions":false,"axes_font_size":"100%","legend_font_size":"100%","caption":null,"lines":{"slope":[0,null],"intercept":[0,0],"stroke_dasharray":[5,5]},"hashes":[]}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="native-plotly-3d-scatterplot" class="section level4">
+<h4>Native plotly (3D scatterplot)</h4>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a>fig &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a>  coord, <span class="dt">x =</span> <span class="op">~</span>PC1, <span class="dt">y =</span> <span class="op">~</span>PC2, <span class="dt">z =</span> <span class="op">~</span>PC3, <span class="dt">color =</span> <span class="op">~</span>tree, <span class="dt">size =</span> <span class="fl">.35</span>,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a>  <span class="dt">text =</span> <span class="op">~</span><span class="kw">paste</span>(<span class="st">&#39;status:&#39;</span>, tree), <span class="dt">type =</span> <span class="st">&quot;scatter3d&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">layout</span>(<span class="dt">title =</span> <span class="st">&quot;Individual Factor Map of the Oaks powdery Mildew data set&quot;</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true"></a>         <span class="dt">scene =</span> <span class="kw">list</span>(<span class="dt">xaxis =</span> <span class="kw">list</span>(<span class="dt">title =</span> <span class="st">&#39;PC1&#39;</span>),</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true"></a>                      <span class="dt">yaxis =</span> <span class="kw">list</span>(<span class="dt">title =</span> <span class="st">&#39;PC2&#39;</span>),</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true"></a>                      <span class="dt">zaxis =</span> <span class="kw">list</span>(<span class="dt">title =</span> <span class="st">&#39;PC3&#39;</span>))</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true"></a>  )</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true"></a>fig</span></code></pre></div>
+<div id="htmlwidget-d075d3bc94ef7635d306" style="width:960px;height:960px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-d075d3bc94ef7635d306">{"x":{"visdat":{"60196229edce":["function () ","plotlyVisDat"]},"cur_data":"60196229edce","attrs":{"60196229edce":{"x":{},"y":{},"z":{},"text":{},"color":{},"size":0.35,"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter3d"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Individual Factor Map of the Oaks powdery Mildew data set","scene":{"xaxis":{"title":"PC1"},"yaxis":{"title":"PC2"},"zaxis":{"title":"PC3"}},"hovermode":"closest","showlegend":true},"source":"A","config":{"showSendToCloud":false},"data":[{"x":[17.1803696362719,18.2070792264303,19.7707462635097,18.7586774141069,11.7401997191752,12.1037880871568,10.7995384475765,19.8750848503975,17.5138826289155,30.4963666340986,17.0735497771663,9.76474000806928,8.9093720232916,9.61229776528609,10.3639405972189,10.4279379194699,12.2980230382324,14.7251912741704,12.0859872879103,20.6582891853763,8.16407480856303,5.21755725744423,9.86699139778272,9.12969955104621,12.4740980117019,17.5131114626891,8.80239109793918,10.2999079554602,18.1419118766452,11.4274092823285,3.46903237248606,17.2769727247023,14.1639261982227,2.5455510513459,-1.81625652887765,5.19482336275457,8.86206213155211,8.73965910141469,10.6698144417448],"y":[0.715323805206531,-1.97941196171162,-0.628771615931449,-0.994770047142229,-6.28463208336961,-3.30489623282075,-6.81546088432303,-1.77378182734349,3.20019073503119,-1.2614529957547,-9.17115856932686,-1.3162719744641,-3.6943862740534,-2.62195825829626,-4.80785918630758,-6.71127879415492,-8.69509903117421,-8.49568197119571,-3.25205276218102,-3.16317639236201,-3.84995613509737,-4.41423378385359,-2.7627325530721,-3.92073597104546,-4.69307613726228,-6.71763010201698,-6.31908851559006,-8.03111211445501,-4.41777768899388,-10.3558827245239,-9.93995955010451,-10.1018564241992,-10.7293750987051,-9.34685355955322,-11.1005399301882,-2.02381842908801,-12.6779036564227,-13.3229507047223,-0.423446851152852],"z":[7.28552497491581,9.55128300805768,6.90685454529904,4.43497267738573,5.30224242224588,3.59919334301502,-3.49608538350411,5.74084821793183,2.14099161339144,-0.572283157782282,-4.02008527124165,-9.81822862510655,-10.0496287085947,-7.1317255236235,-15.04055793072,-4.69836002330866,8.19779928944629,8.25836460651486,9.47201034373782,4.52678304439743,-4.02822875946827,-1.38488292194946,1.4823915991192,1.58544513905164,8.14414931014105,1.91791345865457,5.41021113145411,4.77393763421435,7.52174907535707,-9.52410114078494,-8.01056042782648,-3.63929872066984,-5.53239252258074,-11.4786486586099,-14.9558495191572,-2.20812282930204,-7.27107798129193,-5.19913962543915,6.1247999694475],"text":["status: susceptible","status: susceptible","status: susceptible","status: susceptible","status: susceptible","status: susceptible","status: susceptible","status: susceptible","status: susceptible","status: susceptible","status: susceptible","status: susceptible","status: susceptible","status: susceptible","status: susceptible","status: susceptible","status: susceptible","status: susceptible","status: susceptible","status: susceptible","status: susceptible","status: susceptible","status: susceptible","status: susceptible","status: susceptible","status: susceptible","status: susceptible","status: susceptible","status: susceptible","status: susceptible","status: susceptible","status: susceptible","status: susceptible","status: susceptible","status: susceptible","status: susceptible","status: susceptible","status: susceptible","status: susceptible"],"type":"scatter3d","mode":"markers","name":"susceptible","marker":{"color":"rgba(102,194,165,1)","size":[55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55],"sizemode":"area","line":{"color":"rgba(102,194,165,1)"}},"textfont":{"color":"rgba(102,194,165,1)","size":55},"error_y":{"color":"rgba(102,194,165,1)","width":55},"error_x":{"color":"rgba(102,194,165,1)","width":55},"line":{"color":"rgba(102,194,165,1)","width":55},"frame":null},{"x":[-15.8783788496925,-12.3800871172322,-9.26927795272043,-7.96145948561452,-11.3969567855224,-11.5926630070601,-7.70303827386516,-11.402880474443,-11.5063721931646,-14.189738416292,-14.4315223659986,-12.2430690625954,-14.9164381752469,-11.850104306712,-11.950020426155,-5.52006914649304,-7.63013313160036,-14.5613015652792,-12.3702067797876,-2.4053756426437,-9.32069869910979,-12.8047365396059,-9.74837675595946,-11.7314420059933,-11.4454189054871,-10.3374679571223,-15.049437380069,-12.0967917544631,-7.74802622191214,-12.0955249572891,-10.91121014255,-12.5426902695498,-11.1237192663463,-17.1453166714862,-14.3008685641033,-15.3286914480195,-12.1436723516122,-5.07865326121722],"y":[0.393282969308746,-6.61442071533196,-5.86918909041366,-0.900307289195314,-2.44523613193542,-4.80033882664569,-1.31726151392601,-3.05830860408342,-2.0856155168892,-7.45066615469002,-8.42862624585799,-8.42763288784717,-8.89951344297264,-9.97180844412443,-13.3284940230529,-15.8483332565924,-8.63551659524894,-9.73133017554738,-7.54824470894581,-7.62684317635792,-7.71544992253279,-4.43052067899889,-4.03577369197156,-1.3054302444932,-1.29866267178603,-3.4827253760134,-8.80480267476075,-3.61199667209565,-0.274680681526779,-8.04803494649893,-9.31094584008947,-7.52591958297057,-8.87339258946221,-7.94559955968924,-5.92935201572448,-5.13302878113168,-3.54287877549391,-0.765602488846815],"z":[-9.14721061681734,-9.57835054421595,-4.56086018125015,1.45135445358477,3.23175747977092,8.08461152398836,6.27853559903681,8.92801610317147,1.75391800901836,2.01080042083811,-0.547638968907111,5.17348065952129,0.514410215816133,6.57201351685288,-4.52199991845553,0.831719237441829,8.03936493417276,2.8384315130167,1.20730895375118,-0.804664583747466,4.15842491078804,4.11373227814908,2.09430653556951,3.15352119498448,10.0170146205783,7.2577478169391,6.3173630537111,9.39701320928475,5.36334298721341,-9.04822987061113,-8.90596544931545,-6.44250864948551,-2.87912616036595,0.454833691537808,0.82079524032279,4.57946097600625,5.55350656144785,4.88598256137905],"text":["status: intermediate","status: intermediate","status: intermediate","status: intermediate","status: intermediate","status: intermediate","status: intermediate","status: intermediate","status: intermediate","status: intermediate","status: intermediate","status: intermediate","status: intermediate","status: intermediate","status: intermediate","status: intermediate","status: intermediate","status: intermediate","status: intermediate","status: intermediate","status: intermediate","status: intermediate","status: intermediate","status: intermediate","status: intermediate","status: intermediate","status: intermediate","status: intermediate","status: intermediate","status: intermediate","status: intermediate","status: intermediate","status: intermediate","status: intermediate","status: intermediate","status: intermediate","status: intermediate","status: intermediate"],"type":"scatter3d","mode":"markers","name":"intermediate","marker":{"color":"rgba(252,141,98,1)","size":[55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55],"sizemode":"area","line":{"color":"rgba(252,141,98,1)"}},"textfont":{"color":"rgba(252,141,98,1)","size":55},"error_y":{"color":"rgba(252,141,98,1)","width":55},"error_x":{"color":"rgba(252,141,98,1)","width":55},"line":{"color":"rgba(252,141,98,1)","width":55},"frame":null},{"x":[1.60325998863124,-2.05648519222711,-1.40306435264491,-1.20665376043763,0.825497362303108,5.75782693300833,-1.12146667185956,-1.04074843359534,-0.730060624714587,-2.77020688884868,-6.68254058429226,2.5133333575256,1.81709506474499,-0.829240010175387,-6.27167739576166,-2.52645479283927,-2.94413616950789,-3.59059560857984,0.648100046906103,-0.0822003397934311,-3.95368985925875,3.13439583511354,-3.22560372599386,-5.24146229176811,-1.6105632225591,1.14498859555954,-2.48686960444514,-1.77967382911417,0.759759862217584,-3.43275142568088,-2.67765026482074,-4.2095401091793,-0.326638703806653,-2.83605219510833,-1.4517472023569,-0.144464545281733,-4.00774195872946,-3.76407872037566,5.80383840698485],"y":[10.5896340872716,9.71274133955011,11.6325153019891,11.8166632247547,10.4524144253767,16.067604788713,13.6911877685294,16.6354587656665,13.0205973073525,10.308626068027,-0.362740587574433,7.79187906928519,6.11766039669045,8.21045317163331,9.99027006900939,12.264415200012,11.7784943220554,10.9510713568542,11.2517835220329,16.6413255008183,11.2247371483555,12.3890054324237,10.821035157921,8.18590197917155,10.9627993208231,11.5578076035659,11.6766284390228,11.6788429994873,12.3889242150213,10.1357554715594,9.34879632504587,11.9306195211668,14.4746315383411,11.1037008056472,5.36069501765587,12.1575265999838,10.0929797031514,10.2354144133148,16.546860486452],"z":[2.40488394738979,-1.60616814367819,-10.1903009171796,-2.57362727174352,-4.25238459296163,-6.79959420892159,-4.80578632889058,2.27899842476976,4.46159566578637,-14.9727095162847,-9.56351957652889,-1.32188947667121,-16.182953690508,-8.6846645494424,-1.66594945208706,-1.4347368749178,1.34107124500874,6.32049723260124,3.47027889993272,1.07222771448819,2.12421119936132,-0.999315605694004,-3.93528853925378,4.69309862959758,0.91295056866167,-4.21513443557599,4.8703118915111,3.95425245995042,4.74776743211348,2.77108919103434,-2.9559809125327,-3.09556070968957,-2.86981489697019,-1.03056626044647,-3.6746317953058,6.14150500782099,2.03654516936509,-3.03511298599743,3.29998507434994],"text":["status: resistant","status: resistant","status: resistant","status: resistant","status: resistant","status: resistant","status: resistant","status: resistant","status: resistant","status: resistant","status: resistant","status: resistant","status: resistant","status: resistant","status: resistant","status: resistant","status: resistant","status: resistant","status: resistant","status: resistant","status: resistant","status: resistant","status: resistant","status: resistant","status: resistant","status: resistant","status: resistant","status: resistant","status: resistant","status: resistant","status: resistant","status: resistant","status: resistant","status: resistant","status: resistant","status: resistant","status: resistant","status: resistant","status: resistant"],"type":"scatter3d","mode":"markers","name":"resistant","marker":{"color":"rgba(141,160,203,1)","size":[55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55],"sizemode":"area","line":{"color":"rgba(141,160,203,1)"}},"textfont":{"color":"rgba(141,160,203,1)","size":55},"error_y":{"color":"rgba(141,160,203,1)","width":55},"error_x":{"color":"rgba(141,160,203,1)","width":55},"line":{"color":"rgba(141,160,203,1)","width":55},"frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="threejs-3d-scatterplot" class="section level4">
+<h4>threejs (3D scatterplot)</h4>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a>group &lt;-<span class="st"> </span><span class="kw">rainbow</span>(<span class="dv">3</span>)[<span class="kw">as.numeric</span>(oaks<span class="op">$</span>tree)]</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a>coord <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.matrix</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true"></a><span class="kw">scatterplot3js</span>(<span class="dt">col =</span> group, <span class="dt">size =</span> <span class="fl">0.25</span>, <span class="dt">pch =</span> <span class="st">&quot;.&quot;</span>, <span class="dt">grid =</span> <span class="ot">FALSE</span>, <span class="dt">bg =</span> <span class="st">&quot;black&quot;</span>)</span></code></pre></div>
+<div id="9JDrqw0R7U" style="width:960px;height:960px;" class="scatterplotThree html-widget"></div>
+<script type="application/json" data-for="9JDrqw0R7U">{"x":{"NROW":116,"height":null,"width":null,"axis":true,"numticks":[6,6,6],"xticklabs":null,"yticklabs":null,"zticklabs":null,"color":[["#00FF00","#00FF00","#00FF00","#00FF00","#00FF00","#00FF00","#00FF00","#00FF00","#00FF00","#00FF00","#00FF00","#00FF00","#00FF00","#00FF00","#00FF00","#00FF00","#00FF00","#00FF00","#00FF00","#00FF00","#00FF00","#00FF00","#00FF00","#00FF00","#00FF00","#00FF00","#00FF00","#00FF00","#00FF00","#00FF00","#00FF00","#00FF00","#00FF00","#00FF00","#00FF00","#00FF00","#00FF00","#00FF00","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#FF0000","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF","#0000FF"]],"size":0.25,"stroke":"black","flipy":true,"grid":false,"renderer":"auto","signif":8,"bg":"black","cexsymbols":1,"xlim":{},"ylim":{},"zlim":{},"axisscale":[1,1,1],"pch":[".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".",".","."],"elementId":"9JDrqw0R7U","axisLabels":["PC1","PC3","PC2"],"linealpha":1,"alpha":[[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]],"vertices":[[0.026593053,0.26854014,0.5000989,0.10002228,0.25208439,0.71578918,0.16531823,0.44359189,0.69285168,0.19276937,0.67306601,0.53991434,0.1206582,0.74102041,0.58746575,0.11655032,0.92624407,0.65995351,0.19819364,0.85730979,0.55274779,0.12053386,0.95843512,0.60633552,0.11836157,0.68461425,0.57639697,0.062037654,0.69441894,0.741528,0.056962603,0.59676846,0.77162866,0.10289829,0.81513207,0.77159808,0.04678421,0.63730474,0.78612211,0.11114663,0.86851125,0.8191263,0.10904938,0.44507511,0.92244181,0.24401421,0.64941578,1,0.19972392,0.9245171,0.77799654,0.054238535,0.72600795,0.81172461,0.10022966,0.66375129,0.74453137,0.30939169,0.58695831,0.74695056,0.16423891,0.77638944,0.74967779,0.091108874,0.77468361,0.64857087,0.15526193,0.6976062,0.63642094,0.11363735,0.73803429,0.55238363,0.11964098,1,0.55217533,0.1428969,0.89468435,0.61939865,0.043992553,0.85879175,0.783207,0.10596865,0.9763358,0.6233775,0.19724934,0.82237873,0.52065817,0.10599524,0.27231803,0.75991443,0.13085404,0.27774798,0.79878559,0.096609231,0.37177316,0.74384423,0.12639346,0.50778029,0.78531813,0,0.63503082,0.75676157,0.05970503,0.64899884,0.69470343,0.038131004,0.79245953,0.67019338,0.10498463,0.82963689,0.62125012,0.25327954,0.80415884,0.53576826,0.72049692,0.89574454,0.49018679,0.74204758,0.98222396,0.57312813,0.77486899,0.88129146,0.53155674,0.75362564,0.78694471,0.54282182,0.60630764,0.82004665,0.70563861,0.61393936,0.75504469,0.61392525,0.58656314,0.4842322,0.721977,0.77705906,0.83678734,0.56679904,0.72749737,0.69938807,0.41370502,1,0.59582784,0.55103006,0.71825477,0.46423218,0.79448308,0.56484269,0.24292873,0.55271733,0.5468885,0.23409666,0.62591337,0.56164293,0.34546714,0.59290508,0.57741993,0.043602944,0.66018498,0.57876323,0.4383438,0.71877038,0.61801636,0.93056422,0.77983043,0.66896268,0.93287587,0.77369257,0.61356573,0.97919828,0.61229878,0.79349853,0.79044892,0.60956325,0.53124469,0.46392136,0.63070166,0.46939722,0.56481254,0.64806957,0.56698895,0.67425064,0.59723798,0.55151318,0.67818398,0.63288019,0.62171218,0.9285165,0.65665207,0.72748118,0.69087363,0.71896586,0.54464297,0.82416759,0.70669914,0.57607588,0.79988232,0.75939356,0.74067972,0.90476074,0.64817865,0.59974216,0.25415498,0.83094773,0.43269565,0.31192378,0.81814602,0.72252463,0.47876604,0.82312905,0.65718171,0.40651046,0.84244346,0.41331175,0.17955384,0.7998908,0.32175732,0.046836094,0.85386755,0.46892004,0.53339114,0.57449492,0.54589546,0.34014834,0.90241727,0.54332622,0.41923005,0.92227119,0.58384023,0.85144201,0.52523704,0.39353304,0.70946031,0.18626516,0.31671491,0.55636653,0.21325506,0.33043023,0.22872748,0.15416629,0.33455289,0.51944057,0.1484984,0.37720779,0.45536578,0.19048865,0.4807375,0.35814392,0.017658564,0.33634097,0.43424355,0.090802361,0.33803525,0.70465551,0.00018057238,0.34455659,0.78796085,0.11144248,0.30173388,0.046192582,0.19491431,0.2196139,0.25265046,0.52336857,0.4126355,0.56721688,0.27237733,0.39802145,0,0.32390815,0.34247481,0.28619459,0.25949403,0.22823793,0.5540848,0.204713,0.30685024,0.56290972,0.13471703,0.2980831,0.66885672,0.1496732,0.2845139,0.85891138,0.17514047,0.37348422,0.75012429,0.16588484,0.35815519,0.65859551,0,0.27689254,0.6987476,0.16671731,0.42567162,0.57952887,0.13088226,0.29217509,0.4674687,0.17914286,0.24986217,0.79679685,0.26024969,0.32607482,0.65251622,0.1747795,0.38391392,0.45678755,0.15646572,0.30768113,0.80356073,0.15280853,0.32252519,0.76859658,0.15274037,0.37582796,0.79888345,0.13088476,0.28782705,0.72343763,0.2002351,0.30367664,0.5048469,0.22445693,0.27152224,0.49951942,0.14499093,0.35302443,0.50813568,0.066688726,0.30035178,0.5783361,0.17044269,0.32940837,0.47741744,0.3472068,0.35684827,0.85207961,0.13800696,0.27575799,0.69540156,0.2015517,0.28087248,0.50182659,0.19716769,0.48170328,0.74362452,0.002907541]],"xticklab":["-17.15","-7.62","1.91","11.44","20.97","30.50"],"yticklab":["-16.18","-10.94","-5.70","-0.46","4.78","10.02"],"zticklab":["16.64","10.14","3.65","-2.85","-9.35","-15.85"],"xtick":[0,0.2,0.4,0.6,0.8,1],"ytick":[0,0.2,0.4,0.6,0.8,1],"ztick":[0,0.2,0.4,0.6,0.8,1],"axislength":[1,1,1]},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
