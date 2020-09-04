@@ -424,7 +424,7 @@ De plus, on peut spécifier des caratérisqiques globales ou locales pour les ne
 On essaie donc sur un réseaux petit mais avec plus de contraintes. 
 
 ```{r plot2 data}
-load('myDataNetwork.rda')
+load('data/myDataNetwork.rda')
 
 list_Net <- resMBM$list_Net
 whichModel = 1
