@@ -11,54 +11,56 @@ navbar:
     icon: fas fa-chalkboard-teacher
     menu:
         - text: "LearnR and gradethis"
-          href: learnr_gradethis.html     
+          href: teach_learnr_gradethis.html     
         - text: "Swirl"
-          href: swirl.html     
+          href: teach_swirl.html     
   - text: "Intégration Continue"
     icon: fas fa-gear
     menu:
         - text: "GithubActions"
-          href: github_actions.html     
+          href: ci_github_actions.html     
         - text: "Binder"
-          href: binderetal.html     
+          href: ci_binderetal.html     
   - text: "Widgets"
     icon: far fa-
     menu:
-        - text: "Cartogrammes"
-        #   href: topogram.html
         - text: "Timevis"
-          href: timevis.html
+          href: widget_timevis.html
+        - text: "Network viz"
+          href: widget_graph_visualization.html
         - text: "ggiraph, plotly"
-          href: ggiraph.html
+          href: widget_ggiraph.html
+        - text: "Cartogrammes"
+        #   href: widget_topogram.html
   - text: "R avancé"
     icon: far fa-keyboard
     menu:
         - text: "R et Python"
           # href: r_python.html
         - text: "Progammation avec le tidyverse"
-          href: advanced_r.html
+          href: r_tidy_prog.html
         - text: "Bibliographie"
-          href: citr.html     
+          href: r_citr.html     
   - text: "Optimisation"
     icon: fas fa-biohazard
     menu:
         - text: "Bibliothèque OptimLib"
-          href: optimLib.html     
+          href: optim_optimLib.html     
         - text: "Interface avec torch (plante)"
-          # href: torch.html     
+          # href: optim_torch.html     
         - text: "Interface avec KeOps"
-          href: RKeOps.html     
+          href: optim_RKeOps.html     
   - text: "Modélisation"
     icon: fas fa-chart-bar
     menu:
         - text: "Modèles additifs - GAM"
-          href: gam.html     
+          href: model_gam.html     
         - text: "Équations différentielles avec R"
-          href: edo.html
+          href: model_edo.html
         - text: "Manipulation des distributions"
-          href: distributions.html
+          href: model_distributions.html
         - text: "Introduction à Tidymodels"
-          href: tidymodels.html
+          href: model_tidymodels.html
 output:
   html_document:
     theme: flatly
