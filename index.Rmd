@@ -22,41 +22,30 @@ La station biologique de Roscoff va accueillir  la quatrième édition du R Boot
 
 ## Qui
 
-```{r picture_group, echo = FALSE}
+```{r picture_group, echo = FALSE, fig.cap="The COVID Survivors"}
 knitr::include_graphics("img/groupe2020.jpeg")
 ```
 
-- 1er rang: Pierre Navaro, Pierre Gloaguen, Julie Aubert, Julien Chiquet, Baptiste Alglave, Gaspar Massiot, Tam Le Mihn
-- 2ème rang: Pierre Neuvial, Pierre Barbillon, Saint-Clair Chabert Liddell, Antoine Bichat, Mahendra Mariadassou, Marie-Pierre Étienne, Sophie Donnet
+### 1er rang
 
-<!-- ![Équipe finistR2019](img/finistr_team_2019.jpeg) -->
+- [Pierre Navaro](https://irmar.univ-rennes1.fr/interlocuteurs/pierre-navaro) (IRMAR - CNRS)
+- [Pierre Gloaguen](https://papayoun.github.io/) (UMR MIA Paris - AgroParisTech)
+- [Julie Aubert](https://www6.inra.fr/mia-paris/Equipes/Membres/Julie-Aubert) (UMR MIA Paris - INRAE),
+- [Julien Chiquet](https://jchiquet.github.io) (UMR MIA Paris - INRAE),
+- [Baptiste Alglave](https://halieutique.agrocampus-ouest.fr/fr/personne/303) (AgroCampusOuest ),
+- [Gaspar Massiot](https://gasparmassiot.wordpress.com/) (UMR MIA Paris - INRAE),
+- [Tâm Le Mihn](https://www.linkedin.com/in/tamleminh/?originalSubdomain=fr) (UMR MIA Paris - INRAE),
 
-<!-- ### 1er rang -->
+### 2ème rang
 
-<!-- - [Timothée Tabouy](https://tabouyt.github.io/) (UMR MIA Paris) -->
-<!-- - [Marie Perrot](https://www6.inra.fr/mia-paris/Equipes/Membres/Marie-Perrot-Dockes) (UMR MIA Paris) -->
-<!-- - [Martina  Sundqvist](https://www6.inra.fr/mia-paris/Equipes/Membres/Martina-Sundqvist) (UMR MIA Paris) -->
-<!-- - [Raphaëlle Momal](https://rmomal.github.io/)(UMR MIA Paris) -->
+- [Pierre Neuvial](https://www.math.univ-toulouse.fr/~pneuvial/) (IMT - CNRS)
+- [Pierre Barbillon](https://www6.inra.fr/mia-paris/Equipes/Membres/Pierre-Barbillon) (UMR MIA Paris - AgroParisTech)
+- [Saint-Clair Chabber-Liddell](https://github.com/Chabert-Liddell) (UMR MIA Paris - INRAE)
+- [Antoine Bichat](https://abichat.github.io/) (UMR MaIAGE - INRA)
+- [Mahendra Maridassou](https://mahendra-mariadassou.github.io/) (UMR MaIAGE - INRAE)
+- [Marie-Pierre Étienne](https://marieetienne.github.io/) (IRMAR - Agrocampus Ouest)
+- [Sophie Donnet](https://www6.inra.fr/mia-paris/Equipes/Membres/Sophie-Donnet) (UMR MIA Paris - INRAE),
 
-<!-- ### 2ème rang -->
-
-<!-- - [Félix Cheysson](Félix Cheysson • Research - Institut Pasteur) (UMR MIA Paris) -->
-<!-- - [Antoine Bichat](https://github.com/abichat) (UMR Maiage - INRA) -->
-<!-- - [Marie-Pierre Étienne](https://marieetienne.github.io/) (IRMAR - Agrocampus Ouest) -->
-<!-- - [Sophie Donnet](https://www6.inra.fr/mia-paris/Equipes/Membres/Sophie-Donnet) (UMR MIA Paris - INRA),  -->
-<!-- - [Julie Aubert](https://www6.inra.fr/mia-paris/Equipes/Membres/Julie-Aubert) (UMR MIA Paris - INRA),  -->
-<!-- - [Marie Morvan](https://irmar.univ-rennes1.fr/interlocuteurs/marie-morvan) (IRMAR - Université de Rennes 1),  -->
-<!-- - [Marine Marjou](https://informatique-mia.inra.fr/biosp/homepage-marine-marjou) (UMR BioSP - INRA),  -->
-<!-- - [Claire Gayral](http://pbil.univ-lyon1.fr/members/cgayral) (UMR CNRS 5558 - LBBE),  -->
-
-
-<!-- ### 3ème rang -->
-
-<!-- - [Gabriel Lang](https://www6.inra.fr/mia-paris/Equipes/Membres/Gabriel-Lang) (UMR MIA Paris - Agroparistech) -->
-<!-- - [Pierre Barbillon](https://www6.inra.fr/mia-paris/Equipes/Membres/Pierre-Barbillon) (UMR MIA Paris - Agroparistech) -->
-<!-- - [Pierre Gestraud](https://science.curie.fr/members/pierre-gestraud/) (Institut Curie) -->
-<!-- - [Pierre Gloaguen](https://papayoun.github.io/) (UMR MIA Paris - Agroparistech) -->
-<!-- - [Pierre Navaro](https://irmar.univ-rennes1.fr/interlocuteurs/pierre-navaro) (IRMAR - CNRS) -->
 
 ## Quoi
 

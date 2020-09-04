@@ -1,7 +1,7 @@
-name: "FinistR, édition 2020"
+name: "Finist'R, édition 2020"
 output_dir: "./build"
 navbar:
- title: "FinistR 2020"
+ title: "Finist'R 2020"
  left:
   - text: ""
     icon: fa-github
