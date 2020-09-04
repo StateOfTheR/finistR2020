@@ -26,6 +26,7 @@ dependencies:
   - r-igraph
   - r-irkernel
   - r-networkd3
+  - r-oaqc
   - r-rlang
   - r-plotly
   - r-purrr
@@ -43,4 +44,5 @@ dependencies:
   - r-threejs
   - r-tidyverse
   - r-tidymodels
+  - r-visnetwork
   - r-vip

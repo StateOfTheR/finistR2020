@@ -8,6 +8,8 @@ local({
 remotes::install_github("https://github.com/rstudio-education/gradethis")
 remotes::install_github("StateOfTheR/optimLibR")
 remotes::install_github("mlverse/torch")
+remotes::install_github("Chabert-Liddell/MLVSBM")
+remotes::install_github("Demiperimetre/GREMLIN")
 ## remotes::install_github("RamiKrispin/coronavirus")
 ## remotes::install_github("dreamRs/topogram")
 ## remotes::install_github("ropensci/rnaturalearthhires")
@@ -19,6 +21,8 @@ install.packages("swirlify")
 install.packages("palmerpenguins")
 install.packages("ggiraph")
 install.packages("timevis")
+install.packages("ggraph")
+
 ## install.packages("PLNmodels")
 
 ## Julia and co

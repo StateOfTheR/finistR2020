@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="State of the R" />
+
+
+<title>GitHub Actions avec R</title>
+
+<script src="site_libs/header-attrs-2.3/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #c4a000; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #000000; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #000000; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #000000; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">FinistR 2020</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="https://github.com/StateOfTheR/finistR2020">
+    <span class="fa fa-github"></span>
+     
+    
+  </a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fas fa fas fa-chalkboard-teacher"></span>
+     
+    Enseignement
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="teach_learnr_gradethis.html">LearnR and gradethis</a>
+    </li>
+    <li>
+      <a href="teach_swirl.html">Swirl</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fas fa fas fa-gear"></span>
+     
+    Intégration Continue
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="ci_github_actions.html">GithubActions</a>
+    </li>
+    <li>
+      <a href="ci_binderetal.html">Binder</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fas fa fas fa-mouse-pointer"></span>
+     
+    Widgets
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="widget_timevis.html">Timevis</a>
+    </li>
+    <li>
+      <a href="widget_graph_visualization.html">Network viz</a>
+    </li>
+    <li>
+      <a href="widget_ggiraph.html">ggiraph, plotly</a>
+    </li>
+    <li class="dropdown-header">Cartogrammes</li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="far fa far fa-keyboard"></span>
+     
+    R avancé
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">R et Python</li>
+    <li>
+      <a href="r_tidy_prog.html">Progammation avec le tidyverse</a>
+    </li>
+    <li>
+      <a href="r_citr.html">Bibliographie</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fas fa fas fa-biohazard"></span>
+     
+    Optimisation
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="optim_optimLib.html">Bibliothèque OptimLib</a>
+    </li>
+    <li class="dropdown-header">Interface avec torch (plante)</li>
+    <li>
+      <a href="optim_RKeOps.html">Interface avec KeOps</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fas fa fas fa-chart-bar"></span>
+     
+    Modélisation
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="model_gam.html">Modèles additifs - GAM</a>
+    </li>
+    <li>
+      <a href="model_edo.html">Équations différentielles avec R</a>
+    </li>
+    <li>
+      <a href="model_distributions.html">Manipulation des distributions</a>
+    </li>
+    <li>
+      <a href="model_tidymodels.html">Introduction à Tidymodels</a>
+    </li>
+    <li class="dropdown-header">Introduction à Tidyverts</li>
+  </ul>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">GitHub Actions avec R</h1>
+<h4 class="author">State of the R</h4>
+<h4 class="date">24-28/08/2020</h4>
+
+</div>
+
+
+<p>Les GitHub Actions permettent de déclencher des actions lorsque l’on pousse sur une branche, lorsque la documentation d’un package a changé, lorsqu’il ya une demande de Pull request. Par exemple, dans le cadre de l’intégration continue, on veut lancer un R CMD check systématiquement lorsque l’on pousse sur la branche de développement.</p>
+<p>Une action se compose de jobs, chaque job se compose d’une suite de steps.</p>
+<div id="une-première-github-action-créée-depuis-github" class="section level2">
+<h2>Une première GitHub Action créée depuis Github</h2>
+<p>Il suffit d’aller dans le dépôt du projet et de cliquer sur Actions. Il est alors possible de choisir un workflow par défaut. Ceci consiste à créer un ficher .yml dans le répertoire .github/workflows.</p>
+<p>Par défaut dans le repo d’un package, le fichier .yml créé ressemble à</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a>name<span class="op">:</span><span class="st"> </span>R</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a>on<span class="op">:</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a><span class="st">  </span>push<span class="op">:</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a><span class="st">    </span>branches<span class="op">:</span><span class="st"> </span>[ master ]</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a>  pull_request<span class="op">:</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a><span class="st">    </span>branches<span class="op">:</span><span class="st"> </span>[ master ]</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true"></a>jobs<span class="op">:</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true"></a><span class="st">  </span>build<span class="op">:</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true"></a><span class="st">    </span>runs<span class="op">-</span>on<span class="op">:</span><span class="st"> </span>macOS<span class="op">-</span>latest</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true"></a>    strategy<span class="op">:</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true"></a><span class="st">      </span>matrix<span class="op">:</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true"></a><span class="st">        </span>r<span class="op">-</span>version<span class="op">:</span><span class="st"> </span>[<span class="fl">3.5</span>, <span class="fl">3.6</span>]</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true"></a>    steps<span class="op">:</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true"></a><span class="st">      </span><span class="op">-</span><span class="st"> </span>uses<span class="op">:</span><span class="st"> </span>actions<span class="op">/</span>checkout<span class="op">@</span>v2</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true"></a>      <span class="op">-</span><span class="st"> </span>name<span class="op">:</span><span class="st"> </span>Set up R <span class="op">$</span>{{ matrix.r<span class="op">-</span>version }}</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true"></a>        uses<span class="op">:</span><span class="st"> </span>r<span class="op">-</span>lib<span class="op">/</span>actions<span class="op">/</span>setup<span class="op">-</span>r<span class="op">@</span>ffe45a39586f073cc2e9af79c4ba563b657dc6e3</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true"></a>        with<span class="op">:</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true"></a><span class="st">          </span>r<span class="op">-</span>version<span class="op">:</span><span class="st"> </span><span class="er">$</span>{{ matrix.r<span class="op">-</span>version }}</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true"></a>      <span class="op">-</span><span class="st"> </span>name<span class="op">:</span><span class="st"> </span>Install dependencies</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true"></a>        run<span class="op">:</span><span class="st"> </span><span class="er">|</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true"></a><span class="st">          </span><span class="kw">install.packages</span>(<span class="kw">c</span>(<span class="st">&quot;remotes&quot;</span>, <span class="st">&quot;rcmdcheck&quot;</span>))</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true"></a>          remotes<span class="op">::</span><span class="kw">install_deps</span>(<span class="dt">dependencies =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true"></a>        shell<span class="op">:</span><span class="st"> </span>Rscript {<span class="dv">0</span>}</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true"></a>      <span class="op">-</span><span class="st"> </span>name<span class="op">:</span><span class="st"> </span>Check</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true"></a>        run<span class="op">:</span><span class="st"> </span>rcmdcheck<span class="op">::</span><span class="kw">rcmdcheck</span>(<span class="dt">args =</span> <span class="st">&quot;--no-manual&quot;</span>, <span class="dt">error_on =</span> <span class="st">&quot;error&quot;</span>)</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true"></a>        shell<span class="op">:</span><span class="st"> </span>Rscript {<span class="dv">0</span>}</span></code></pre></div>
+<p>Ce script signifie, à chaque push ou pull request sur la branche master, on va exécuter le job build sur la dernière plateforme macOS. Ce job est constitué des steps suivants.</p>
+<ul>
+<li><code>uses: actions/checkout@v2</code> checkout du package du dernier commit.</li>
+<li>Le step suivant est exécuté autant de fois que de versions de R spécifiée dans la variable <code>${{ matrix.r-version }}</code> il installe la version de R spécifiée</li>
+<li>Le step suivant installe les packages <code>remotes</code> et <code>cmdcheck</code></li>
+<li>Enfin le dernier step check le package.</li>
+</ul>
+</div>
+<div id="utiliser-des-actions-classiques-pour-r-grâce-à-usethis" class="section level2">
+<h2>Utiliser des actions classiques pour R grâce à usethis</h2>
+<p>L’idée pour un package serait de lancer la vérification du package chaque fois que l’on pousse sur la branche <code>dev</code> et déployer le site web chaque fois que l’on pousse sur la branche master.</p>
+<p>Le package <code>usethis</code> est là pour nous aider, on va définir deux worflows : le premier pour les check, le second pour déployer le site.</p>
+<div id="pour-les-check-sur-la-branche-de-développement" class="section level3">
+<h3>Pour les check sur la branche de développement</h3>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="kw">library</span>(usethis)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a>usethis<span class="op">::</span><span class="kw">use_github_action_check_standard</span>()</span></code></pre></div>
+<p>Cette commande va créer le fichier <code>R-CMD-check.yaml</code> que l’on peut éditer pour spécifier que l’on fait les check sur la branche développement plutôt que sur la branche master. Il suffit de remplacer</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a>on<span class="op">:</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="st">  </span>push<span class="op">:</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a><span class="st">    </span>branches<span class="op">:</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a><span class="st">      </span><span class="op">-</span><span class="st"> </span>master</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a>  pull_request<span class="op">:</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a><span class="st">    </span>branches<span class="op">:</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a><span class="st">      </span><span class="op">-</span><span class="st"> </span>master</span></code></pre></div>
+<p>par</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a>on<span class="op">:</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a><span class="st">  </span>push<span class="op">:</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a><span class="st">    </span>branches<span class="op">:</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a><span class="st">      </span><span class="op">-</span><span class="st"> </span>dev</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a>  pull_request<span class="op">:</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a><span class="st">    </span>branches<span class="op">:</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true"></a><span class="st">      </span><span class="op">-</span><span class="st"> </span>dev</span></code></pre></div>
+<p>Dans l’exemple ci-dessus la matrice de check est la suivante:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a>  R<span class="op">-</span>CMD<span class="op">-</span>check<span class="op">:</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a><span class="st">    </span>runs<span class="op">-</span>on<span class="op">:</span><span class="st"> </span><span class="er">$</span>{{ matrix.config.os }}</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a>    name<span class="op">:</span><span class="st"> </span><span class="er">$</span>{{ matrix.config.os }} (<span class="op">$</span>{{ matrix.config.r }})</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true"></a>    strategy<span class="op">:</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true"></a><span class="st">      </span>fail<span class="op">-</span>fast<span class="op">:</span><span class="st"> </span>false</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true"></a>      matrix<span class="op">:</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true"></a><span class="st">        </span>config<span class="op">:</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true"></a><span class="st">          </span><span class="op">-</span><span class="st"> </span>{os<span class="op">:</span><span class="st"> </span>windows<span class="op">-</span>latest, r<span class="op">:</span><span class="st"> &#39;release&#39;</span>}</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true"></a>          <span class="op">-</span><span class="st"> </span>{os<span class="op">:</span><span class="st"> </span>macOS<span class="op">-</span>latest, r<span class="op">:</span><span class="st"> &#39;release&#39;</span>}</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true"></a>          <span class="op">-</span><span class="st"> </span>{os<span class="op">:</span><span class="st"> </span>ubuntu<span class="fl">-20.04</span>, r<span class="op">:</span><span class="st"> &#39;release&#39;</span>, rspm<span class="op">:</span><span class="st"> &quot;https://packagemanager.rstudio.com/cran/__linux__/focal/latest&quot;</span>}</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true"></a>          <span class="op">-</span><span class="st"> </span>{os<span class="op">:</span><span class="st"> </span>ubuntu<span class="fl">-20.04</span>, r<span class="op">:</span><span class="st"> &#39;devel&#39;</span>, rspm<span class="op">:</span><span class="st"> &quot;https://packagemanager.rstudio.com/cran/__linux__/focal/latest&quot;</span>}</span></code></pre></div>
+<p>que l’on peut modifier à souhait.</p>
+<p>Remarque: les dépendances autres que celles de CRAN seront bien installées si elles sont correctement décrites dans le fichier DESCRIPTION du package. Par exemple, les dépendances de Bioconductor doivent être spécifiées dans le champ <code>biocViews:</code> du fichier DESCRIPTION.</p>
+</div>
+<div id="pour-le-déploiement-du-site-web" class="section level3">
+<h3>Pour le déploiement du site web</h3>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="kw">use_github_action</span>(<span class="st">&quot;pkgdown.yaml&quot;</span>)</span></code></pre></div>
+<p>et c’est tout</p>
+</div>
+</div>
+<div id="ressources" class="section level2">
+<h2>Ressources</h2>
+<ul>
+<li><a href="https://ropenscilabs.github.io/actions_sandbox/">Le site ropensci</a></li>
+<li><a href="https://www.jimhester.com/talk/2020-rsc-github-actions">une petit vidéo utile de Jim Hester</a></li>
+</ul>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
