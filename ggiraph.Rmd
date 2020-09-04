@@ -6,7 +6,7 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+knitr::opts_chunk$set(echo = TRUE,  message = FALSE, warning = FALSE)
 ```
 
 ## Un premier exemple: nuages de points
@@ -66,7 +66,7 @@ girafe(ggobj = plot_grid(p1, p2))
 ```
 
 
-## Un dexième exemple: "les volcano plot"
+## Un deuxième exemple: "volcano plot"
 
 Our goal is to add some interactivity to a "volcano plot": 
 
