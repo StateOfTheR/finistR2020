@@ -26,6 +26,7 @@ dependencies:
 #  - r-learnr
   - r-igraph
   - r-irkernel
+  - r-jpeg
   - r-networkd3
   - r-oaqc
   - r-reshape2
