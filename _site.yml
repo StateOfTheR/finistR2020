@@ -66,6 +66,7 @@ navbar:
         - text: "Introduction à Tidymodels"
           href: model_tidymodels.html
         - text: "Introduction à Tidyverts"
+          href: model_tidyverts.html
 output:
   html_document:
     theme: flatly
