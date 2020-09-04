@@ -1,13 +1,10 @@
 cmake
-libgdal-dev
 libgtk-3-dev
 libicu-dev
 libjq-dev
 libprotobuf-dev
 libstdc++6
 libudunits2-dev
-libv8-dev
 libxcursor-dev
 libxfixes3
 libxi6
-protobuf-compiler

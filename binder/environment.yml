@@ -30,14 +30,14 @@ dependencies:
   - r-rlang
   - r-plotly
   - r-purrr
-  - r-rnaturalearth
+#  - r-rnaturalearth
   - r-rcpp
   - r-rcpparmadillo
   - r-readods
   - r-reticulate
   - r-rmarkdown
   - r-scatterd3
-  - r-sf
+#  - r-sf
   - r-skimr
   - r-stringi
   - r-swirl

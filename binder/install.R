@@ -22,8 +22,7 @@ install.packages("palmerpenguins")
 install.packages("ggiraph")
 install.packages("timevis")
 install.packages("ggraph")
-
-## install.packages("PLNmodels")
+install.packages("PLNmodels")
 
 ## Julia and co
 devtools::install_github("Non-Contradiction/JuliaCall")
