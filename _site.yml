@@ -22,7 +22,7 @@ navbar:
         - text: "Binder"
           href: ci_binderetal.html     
   - text: "Widgets"
-    icon: far fa-
+    icon: fas fa-mouse-pointer
     menu:
         - text: "Timevis"
           href: widget_timevis.html
@@ -63,6 +63,7 @@ navbar:
           href: model_distributions.html
         - text: "Introduction à Tidymodels"
           href: model_tidymodels.html
+        - text: "Introduction à Tidyverts"
 output:
   html_document:
     theme: flatly
