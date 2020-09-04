@@ -2,3 +2,11 @@
 libgdal-dev
 protobuf-compiler
 libv8-dev
+libjq-dev
+libudunits2-dev
+libgtk-3-dev
+libprotobuf-dev
+libxcursor-dev
+libxfixes3
+libxi6
+
