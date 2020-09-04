@@ -14,9 +14,15 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-![img](img/GAM.jpg)
+![](img/GAM.jpg)
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/stateofther/finistR2020/website?filepath=finistR2020_website/gam.Rmd)
+
+## Références
+
+Dans son livre, *Generalized Additive Models, An Introduction with R*, S. Wood commence par des rappels sur les modèles de régression linéaire simples et les GLM avant de présenter les modèles additifs généralisés (GAM) et différentes bases de splines ainsi que leur utilisation. Le livre coexiste avec le package R `mgcv` que nous avons utilisé dans la suite.
+
+Une [formation GAM en R](https://noamross.github.io/gams-in-r-course/) est disponible sur le site RStudio Education et utilise également le package `mgcv`.
 
 ## Modèles additifs généralisés
 
@@ -31,13 +37,13 @@ avec $\beta_{jk}$ inconnu.
 
 ## Base de splines 
 
-On veut construire une base de $k$ fonctions splines $(s_1, \ldots, s_k)$. Pour ceci, ondéfinit $k$ noeuds, par défaut les extréminités correspondent à $x_{min}$ et $x_{max}$.
+On veut construire une base de $k$ fonctions splines $(s_1, \ldots, s_k)$. Pour ceci, on définit $k$ n\oe{}uds, par défaut les extrémités correspondent à $x_{min}$ et $x_{max}$.
 
-Chaque fonction $s_i$ vaut 1 au noeud $i$ et 0 aux autres noeuds. En outre. Chaque fonction spline (cublique) est le recollement de $k$ polynomes de degré 3 assurant une fonction  de classe $C^2$  sur l'intervalle, comme illustré ci-dessous (extrait du livre de S. Wood).
+Chaque fonction $s_i$ vaut 1 au noeud $i$ et $0$ aux autres n\oe{}uds. En outre. Chaque fonction spline (cubique) est le recollement de $k$ polynomes de degré 3 assurant une fonction  de classe $C^2$  sur l'intervalle, comme illustré ci-dessous (extrait du livre de S. Wood).
 
 
 
-![img](img/spline.jpg)
+![](img/spline.jpg)
 
 
 ```{r}
@@ -61,7 +67,7 @@ summary(Mods3)
 $$Y_i = Z_i^T\theta + \sum_{j=1}^p \beta_j f_j(x_{i}) + \epsilon_i$$
 où les $f_j$ forment une base de spline, $Z_i$ des variables utilisées comme dans un modèle linéaire, et $x_i$ la variable pour laquelle on utilise une spline. Notons qu'on peut avoir des splines multivariés et plusieurs splines dépendant de différentes variables.
 
-Dans le tableau, Parametric Coefficients correspond à la partie des effets linéaires et la partie smooth terms correspond au test sur la variable dont dépend le spline.
+Dans le tableau, `Parametric Coefficients` correspond à la partie des effets linéaires et la partie smooth terms correspond au test sur la variable dont dépend le spline.
 
 La dernière partie contient des informations sur la qualité d'ajustement du modèle type $R^2$ et variance estimée.
 
@@ -75,7 +81,8 @@ coef(Mods3)
 
   - Elements of Statistical learning. Hastie et al.
   - [Site avec exemple](https://m-clark.github.io/generalized-additive-models), les données sont [ici](https://github.com/m-clark/generalized-additive-models/tree/master/data) 
-  - [Livre de Simon Wood](https://b-ok.cc/book/2945925/6817d4)
+  - Generalized Additive Models, An Introduction with R, S. Wood
+  <!-- [Livre de Simon Wood](https://b-ok.cc/book/2945925/6817d4) -->
   - [autre ref](http://environmentalcomputing.net/intro-to-gams/)
   - [formation GAM en R](https://noamross.github.io/gams-in-r-course/)
 
