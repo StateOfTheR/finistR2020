@@ -17,14 +17,14 @@ Les éléments de l'introduction proviennent du site d'aide de [dplyr](https://c
 
 L'évaluation tidy est un type d'évaluation utilisée dans tout le tidyverse. Les verbes dplyr utilise d'une manière ou d'une autre l'évaluation tidy. Il en existe essentiellement 2 formes :
 
-- `arrange()`, `count()`, `filter()`, `group_by()`, `mutate()`, and `summarise()` : ces verbes utilisent le masquage de données (data masking). De cette facon, les variables dans des données peuvent être utilisées comme si elles étaient dans l'environnement. Plus besoin d'écrire `df$var` mais simplement `var` dans le verbe dplyr.
+- `arrange()`, `count()`, `filter()`, `group_by()`, `mutate()`, et `summarise()` : ces verbes utilisent le masquage de données (data masking). De cette façon, les variables dans des données peuvent être utilisées comme si elles étaient dans l'environnement. Plus besoin d'écrire `df$var` mais simplement `var` dans le verbe dplyr.
 
-- `across()`, `relocate()`, `rename()`, `select()`, and `pull()` : ces verbes utilisent la sélection tidy (tidy selection) et permettent de choisir facilement des variables en se basant sur leur position, leur nom ou leur type  (e.g. `starts_with("x")` or `is.numeric()`).
+- `across()`, `relocate()`, `rename()`, `select()`, et `pull()` : ces verbes utilisent la sélection tidy (tidy selection) et permettent de choisir facilement des variables en se basant sur leur position, leur nom ou leur type  (e.g. `starts_with("x")` or `is.numeric()`).
 
 Ces verbes rendent l'exploration de données rapide et fluide mais ils peuvent poser des problèmes dans le cas où ils sont utilisés dans des boucles ou des fonctions.
 
 Par exemple, une fonction qui utilise le data masking peut notamment poser problème lorsqu'elle appelle le nom d'une variable dans un tableau à partir d'une variable de l'environnement sans taper explicitement la variable du tableau (des exemples précis sont donnés par la suite). [rlang](https://cran.r-project.org/web/packages/rlang/index.html) fournit des outils pour écrire des codes génériques tout en utilisant dplyr.
-La séléction tidy est un outil complémentaire qui facilite le travaille sur les colonnes d'un jeu de données.
+La sélection tidy est un outil complémentaire qui facilite le travaille sur les colonnes d'un jeu de données.
 
 La suite du document donnent quelques exemple d'utilisation de rlang.
 
@@ -59,7 +59,7 @@ my_plot(species)
 
 Le problème vient de l'évaluation de `var` dans l'appel à `my_plot()`: R cherche `species` dans l'environnement parent de la fonction plutôt que dans le contexte du data.frame `penguins`. 
 
-On peut remédier au problème à l'aide de l'opérateur `{{` qui permet de remplacer `var` par `species` dans l'appel à `ggplot` via le mécanisme de `quosure`. 
+On peut remédier au problème à l'aide de l'opérateur `{{` qui permet de remplacer `var` par `species` dans l'appel à `ggplot` via le mécanisme de `quosure`, détaillé dans la [vignette}(https://rlang.r-lib.org/reference/nse-defuse.html) sur l'évaluation non-standard de rlang. 
 
 ```{r}
 ## This works
@@ -81,7 +81,7 @@ my_plot <- function(var) {
 my_plot(species)
 ```
 
-Si on veut afficher le titre de façon programmatique, il faut `ensym()` (conversion en symbole de l'expression passée en argument à une fonction) pour qu'il soit reconnu comme une chaîne de caractères
+Si on veut afficher le titre de façon programmatique, il faut le protéger avec `ensym()` (conversion en symbole de l'expression passée en argument à une fonction) pour qu'il puisse être interprété comme une chaîne de caractères dans l'expression `glue::glue()`.
 
 ```{r}
 ## This works
@@ -128,7 +128,7 @@ ggplot(penguins %>% filter(species == "Adelie"),
     ggtitle("Penguins of species Adelie, colored by island")
 ```
 
-On peut essayer de fonctionaliser ce graphique
+On peut écrire une fonction qui produit ce graphique pour n'importe quelle espèce de manchot: 
 
 ```{r}
 ## This seems to works
@@ -161,7 +161,7 @@ my_plot <- function(species) {
 my_plot("Adelie")
 ```
 
-On peut alors itérer sur les espèces de penguins
+On peut alors itérer sur les espèces de manchots
 ```{r}
 unique(penguins$species) %>% map(my_plot) %>% cowplot::plot_grid(plotlist = .)
 ```
@@ -239,13 +239,13 @@ cowplot::plot_grid(plotlist = plot_list)
 
 ## Utilisation de `:=`
 
-On peut évidemment utiliser l'opérateur `{{` à d'autres verbes du tidyverse:
+On peut évidemment utiliser l'opérateur `{{` d'autres verbes du tidyverse:
 ```{r}
 summarize_penguins <- function(filter_condition, group, summary_var, summary_fun, ...) {
   penguins %>% 
     filter({{ filter_condition }}) %>% 
     group_by({{ group }}) %>% 
-    summarize(my_summary := summary_fun({{summary_var}}, ...))
+    summarize(my_summary = summary_fun({{summary_var}}, ...))
 }
 ```
 
@@ -253,7 +253,22 @@ summarize_penguins <- function(filter_condition, group, summary_var, summary_fun
 summarize_penguins(species == "Adelie", island, bill_depth_mm, mean, na.rm = TRUE)
 ```
 
-Mais le fait de devoir spécifier dès le départ le nom de colonne est désagréable et peu informatif. L'opérateur `:=` permet de créer des variables *nommées de façon dynamique* dans des verbes du tidyverse
+Mais le fait de devoir spécifier dès le départ le nom de colonne est désagréable et peu informatif. L'opérateur `:=` permet de créer des variables *nommées de façon dynamique* (à partir des arguments de la fonction) dans des verbes du tidyverse. Il faut utiliser la syntaxe de `glue::glue()` pour construire les nouveaux noms de variables à la volée. 
+
+```{r}
+summarize_penguins <- function(filter_condition, group, summary_var, summary_fun, ...) {
+  penguins %>% 
+    filter({{ filter_condition }}) %>% 
+    group_by({{ group }}) %>% 
+    summarize("{{summary_var}}" := summary_fun({{summary_var}}, ...))
+}
+```
+
+```{r}
+summarize_penguins(species == "Adelie", island, bill_depth_mm, mean, na.rm = TRUE)
+```
+
+On peut évidemment, toujours à l'aide de la syntaxe `glue::glue()`, construire des noms complexes qui intègrent à la fois le nom de variable et le nom de la statistique descriptive:
 
 ```{r}
 summarize_penguins <- function(filter_condition, group, summary_var, summary_fun, ...) {
@@ -289,7 +304,7 @@ plot_VMS_data <- function(data,species,unit){
     mutate(species = str_remove(species, paste0(.env$unit,"_"))) %>% # modifier le nom de la colonne species
     group_by(layer,long,lati,species) %>% # moyenner les valeurs par espèce par cellule
     summarise("{unit}" := mean(.data[[unit]])) %>%
-    ggplot() + #  ploter les données
+    ggplot() + #  afficher les données
     geom_point(aes(x=long,y=lati,col = log(.data[[unit]]+1)),size = 0.5,shape=15) +
     scale_color_gradient(low = "white", high = "red")+xlab("")+ylab("")+
     coord_equal() + 
