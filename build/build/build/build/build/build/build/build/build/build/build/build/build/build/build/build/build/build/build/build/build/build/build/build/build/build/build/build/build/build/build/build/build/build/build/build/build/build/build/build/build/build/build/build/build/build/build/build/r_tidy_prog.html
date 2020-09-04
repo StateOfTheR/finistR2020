@@ -501,13 +501,14 @@ $(document).ready(function () {
 <div id="eléments-généraux" class="section level1">
 <h1>Eléments généraux</h1>
 <p>Les éléments de l’introduction proviennent du site d’aide de <a href="https://cran.r-project.org/web/packages/dplyr/vignettes/programming.html">dplyr</a>.</p>
-<p>L’évaluation tidy est un type d’évaluation utilisée dans tout le tidyverse. Les verbes dplyr utilise d’une manière ou d’une autre l’évaluation tidy. Il en existe essentiellement 2 formes :</p>
+<p>L’évaluation tidy est un type d’évaluation utilisée dans tout le tidyverse et les verbes <code>dplyr</code> utilise d’une manière ou d’une autre l’évaluation tidy. Il en existe essentiellement de 2 formes :</p>
 <ul>
-<li><p><code>arrange()</code>, <code>count()</code>, <code>filter()</code>, <code>group_by()</code>, <code>mutate()</code>, and <code>summarise()</code> : ces verbes utilisent le masquage de données (data masking). De cette facon, les variables dans des données peuvent être utilisées comme si elles étaient dans l’environnement. Plus besoin d’écrire <code>df$var</code> mais simplement <code>var</code> dans le verbe dplyr.</p></li>
-<li><p><code>across()</code>, <code>relocate()</code>, <code>rename()</code>, <code>select()</code>, and <code>pull()</code> : ces verbes utilisent la sélection tidy (tidy selection) et permettent de choisir facilement des variables en se basant sur leur position, leur nom ou leur type (e.g. <code>starts_with("x")</code> or <code>is.numeric()</code>).</p></li>
+<li><p><code>arrange()</code>, <code>count()</code>, <code>filter()</code>, <code>group_by()</code>, <code>mutate()</code>, et <code>summarise()</code> : ces verbes utilisent le masquage de données (data masking). De cette façon, les variables des données peuvent être utilisées sans avoir recours au <code>$</code>. Plus besoin d’écrire <code>df$var</code> mais simplement <code>var</code> dans le verbe dplyr.</p></li>
+<li><p><code>across()</code>, <code>relocate()</code>, <code>rename()</code>, <code>select()</code>, et <code>pull()</code> : ces verbes utilisent la sélection tidy (tidy selection) et permettent de choisir facilement des variables en se basant sur leur position, leur nom ou leur type (e.g. <code>starts_with("x")</code> or <code>is.numeric()</code>).</p></li>
 </ul>
-<p>Ces verbes rendent l’exploration de données rapide et fluide mais ils peuvent poser des problèmes dans le cas où ils sont utilisés dans des boucles ou des fonctions.</p>
-<p>Par exemple, une fonction qui utilise le data masking peut notamment poser problème lorsqu’elle appelle le nom d’une variable dans un tableau à partir d’une variable de l’environnement sans taper explicitement la variable du tableau (des exemples précis sont donnés par la suite). <a href="https://cran.r-project.org/web/packages/rlang/index.html">rlang</a> fournit des outils pour écrire des codes génériques tout en utilisant dplyr. La séléction tidy est un outil complémentaire qui facilite le travaille sur les colonnes d’un jeu de données.</p>
+<p>Ces verbes rendent l’exploration de données rapide et fluide, mais ils peuvent poser des problèmes dans le cas où ils sont utilisés dans des boucles ou des fonctions.</p>
+<p>Par exemple, une fonction qui utilise le data masking peut notamment poser problème lorsqu’elle appelle le nom d’une variable dans un tableau à partir d’une variable de l’environnement sans taper explicitement la variable du tableau (des exemples précis sont donnés par la suite). Ces problèmes peuvent limiter la généricité des codes utilisant le langage dplyr. <a href="https://cran.r-project.org/web/packages/rlang/index.html">rlang</a> fournit justement des outils pour pallier aux limitations introduites par le data masking.</p>
+<p>Par ailleurs, la sélection tidy est un outil complémentaire qui facilite le travail sur les colonnes d’un jeu de données.</p>
 <p>La suite du document donnent quelques exemple d’utilisation de rlang.</p>
 </div>
 <div id="examples-dutilisation-de-rlang" class="section level1">
@@ -532,7 +533,7 @@ $(document).ready(function () {
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a><span class="kw">my_plot</span>(species)</span></code></pre></div>
 <pre><code>## Error in eval(parse(text = text, keep.source = FALSE), envir): object &#39;species&#39; not found</code></pre>
 <p>Le problème vient de l’évaluation de <code>var</code> dans l’appel à <code>my_plot()</code>: R cherche <code>species</code> dans l’environnement parent de la fonction plutôt que dans le contexte du data.frame <code>penguins</code>.</p>
-<p>On peut remédier au problème à l’aide de l’opérateur <code>{{</code> qui permet de remplacer <code>var</code> par <code>species</code> dans l’appel à <code>ggplot</code> via le mécanisme de <code>quosure</code>.</p>
+<p>On peut remédier au problème à l’aide de l’opérateur <code>{{</code> qui permet de remplacer <code>var</code> par <code>species</code> dans l’appel à <code>ggplot</code> via le mécanisme de <code>quosure</code>, détaillé dans la [vignette}(<a href="https://rlang.r-lib.org/reference/nse-defuse.html" class="uri">https://rlang.r-lib.org/reference/nse-defuse.html</a>) sur l’évaluation non-standard de rlang.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="co">## This works</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a>my_plot &lt;-<span class="st"> </span><span class="cf">function</span>(var) {</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a>  <span class="kw">ggplot</span>(penguins, <span class="kw">aes</span>(<span class="dt">x =</span> bill_length_mm, <span class="dt">y =</span> bill_depth_mm, <span class="dt">color =</span> {{ var }})) <span class="op">+</span><span class="st"> </span></span>
@@ -548,7 +549,7 @@ $(document).ready(function () {
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true"></a>}</span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true"></a><span class="kw">my_plot</span>(species)</span></code></pre></div>
 <p><img src="r_tidy_prog_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
-<p>Si on veut afficher le titre de façon programmatique, il faut <code>ensym()</code> (conversion en symbole de l’expression passée en argument à une fonction) pour qu’il soit reconnu comme une chaîne de caractères</p>
+<p>Si on veut afficher le titre de façon programmatique, il faut le protéger avec <code>ensym()</code> (conversion en symbole de l’expression passée en argument à une fonction) pour qu’il puisse être interprété comme une chaîne de caractères dans l’expression <code>glue::glue()</code>.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a><span class="co">## This works</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a>my_plot &lt;-<span class="st"> </span><span class="cf">function</span>(var) {</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a>  <span class="kw">ggplot</span>(penguins, <span class="kw">aes</span>(<span class="dt">x =</span> bill_length_mm, <span class="dt">y =</span> bill_depth_mm, <span class="dt">color =</span> {{ var }})) <span class="op">+</span><span class="st"> </span></span>
@@ -581,7 +582,7 @@ $(document).ready(function () {
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true"></a><span class="st">    </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span></span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true"></a><span class="st">    </span><span class="kw">ggtitle</span>(<span class="st">&quot;Penguins of species Adelie, colored by island&quot;</span>)</span></code></pre></div>
 <p><img src="r_tidy_prog_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
-<p>On peut essayer de fonctionaliser ce graphique</p>
+<p>On peut écrire une fonction qui produit ce graphique pour n’importe quelle espèce de manchot:</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a><span class="co">## This seems to works</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true"></a>my_plot &lt;-<span class="st"> </span><span class="cf">function</span>(species) {</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true"></a>  <span class="kw">ggplot</span>(penguins <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(species <span class="op">==</span><span class="st"> </span>species), </span>
@@ -602,7 +603,7 @@ $(document).ready(function () {
 <span id="cb14-7"><a href="#cb14-7" aria-hidden="true"></a>}</span></code></pre></div>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true"></a><span class="kw">my_plot</span>(<span class="st">&quot;Adelie&quot;</span>)</span></code></pre></div>
 <p><img src="r_tidy_prog_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
-<p>On peut alors itérer sur les espèces de penguins</p>
+<p>On peut alors itérer sur les espèces de manchots</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true"></a><span class="kw">unique</span>(penguins<span class="op">$</span>species) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">map</span>(my_plot) <span class="op">%&gt;%</span><span class="st"> </span>cowplot<span class="op">::</span><span class="kw">plot_grid</span>(<span class="dt">plotlist =</span> .)</span></code></pre></div>
 <p><img src="r_tidy_prog_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
 <p>On peut évidemment combiner la sélection d’une espèce avec le coloriage par une variable catégorielle.</p>
@@ -659,12 +660,12 @@ $(document).ready(function () {
 </div>
 <div id="utilisation-de" class="section level2">
 <h2>Utilisation de <code>:=</code></h2>
-<p>On peut évidemment utiliser l’opérateur <code>{{</code> à d’autres verbes du tidyverse:</p>
+<p>On peut évidemment utiliser l’opérateur <code>{{</code> d’autres verbes du tidyverse:</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true"></a>summarize_penguins &lt;-<span class="st"> </span><span class="cf">function</span>(filter_condition, group, summary_var, summary_fun, ...) {</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true"></a>  penguins <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true"></a><span class="st">    </span><span class="kw">filter</span>({{ filter_condition }}) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb25-4"><a href="#cb25-4" aria-hidden="true"></a><span class="st">    </span><span class="kw">group_by</span>({{ group }}) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true"></a><span class="st">    </span><span class="kw">summarize</span>(<span class="dt">my_summary :=</span> <span class="kw">summary_fun</span>({{summary_var}}, ...))</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true"></a><span class="st">    </span><span class="kw">summarize</span>(<span class="dt">my_summary =</span> <span class="kw">summary_fun</span>({{summary_var}}, ...))</span>
 <span id="cb25-6"><a href="#cb25-6" aria-hidden="true"></a>}</span></code></pre></div>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true"></a><span class="kw">summarize_penguins</span>(species <span class="op">==</span><span class="st"> &quot;Adelie&quot;</span>, island, bill_depth_mm, mean, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
@@ -674,14 +675,29 @@ $(document).ready(function () {
 ## 1 Biscoe          18.4
 ## 2 Dream           18.3
 ## 3 Torgersen       18.4</code></pre>
-<p>Mais le fait de devoir spécifier dès le départ le nom de colonne est désagréable et peu informatif. L’opérateur <code>:=</code> permet de créer des variables <em>nommées de façon dynamique</em> dans des verbes du tidyverse</p>
+<p>Mais le fait de devoir spécifier dès le départ le nom de colonne est désagréable et peu informatif. L’opérateur <code>:=</code> permet de créer des variables <em>nommées de façon dynamique</em> (à partir des arguments de la fonction) dans des verbes du tidyverse. Il faut utiliser la syntaxe de <code>glue::glue()</code> pour construire les nouveaux noms de variables à la volée.</p>
 <div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true"></a>summarize_penguins &lt;-<span class="st"> </span><span class="cf">function</span>(filter_condition, group, summary_var, summary_fun, ...) {</span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true"></a>  penguins <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true"></a><span class="st">    </span><span class="kw">filter</span>({{ filter_condition }}) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb29-4"><a href="#cb29-4" aria-hidden="true"></a><span class="st">    </span><span class="kw">group_by</span>({{ group }}) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true"></a><span class="st">    </span><span class="kw">summarize</span>(<span class="st">&quot;{{summary_var}}_{{summary_fun}}&quot;</span> <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">summary_fun</span>({{summary_var}}, ...))</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true"></a><span class="st">    </span><span class="kw">summarize</span>(<span class="st">&quot;{{summary_var}}&quot;</span> <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">summary_fun</span>({{summary_var}}, ...))</span>
 <span id="cb29-6"><a href="#cb29-6" aria-hidden="true"></a>}</span></code></pre></div>
 <div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true"></a><span class="kw">summarize_penguins</span>(species <span class="op">==</span><span class="st"> &quot;Adelie&quot;</span>, island, bill_depth_mm, mean, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
+<pre><code>## # A tibble: 3 x 2
+##   island    bill_depth_mm
+##   &lt;fct&gt;             &lt;dbl&gt;
+## 1 Biscoe             18.4
+## 2 Dream              18.3
+## 3 Torgersen          18.4</code></pre>
+<p>On peut évidemment, toujours à l’aide de la syntaxe <code>glue::glue()</code>, construire des noms complexes qui intègrent à la fois le nom de variable et le nom de la statistique descriptive:</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true"></a>summarize_penguins &lt;-<span class="st"> </span><span class="cf">function</span>(filter_condition, group, summary_var, summary_fun, ...) {</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true"></a>  penguins <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true"></a><span class="st">    </span><span class="kw">filter</span>({{ filter_condition }}) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true"></a><span class="st">    </span><span class="kw">group_by</span>({{ group }}) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true"></a><span class="st">    </span><span class="kw">summarize</span>(<span class="st">&quot;{{summary_var}}_{{summary_fun}}&quot;</span> <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">summary_fun</span>({{summary_var}}, ...))</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true"></a><span class="kw">summarize_penguins</span>(species <span class="op">==</span><span class="st"> &quot;Adelie&quot;</span>, island, bill_depth_mm, mean, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
 <pre><code>## # A tibble: 3 x 2
 ##   island    bill_depth_mm_mean
@@ -695,35 +711,34 @@ $(document).ready(function () {
 </div>
 <div id="un-exemple-sur-un-jeu-de-données-de-pêche" class="section level2">
 <h2>Un exemple sur un jeu de données de pêche</h2>
-<p>Le jeu de données VMS_data contient les données spatialisées des captures (<code>LE_KG</code>), des efforts (<code>HF</code>) et des indices d’abondance (<code>CPUE</code>) par navire (<code>aggreg_level</code>) des chalutiers ciblant les espèces démersales (<code>OTB_DEF</code>) dans le golfe de Gascogne. La donnée est aggrégée à l’échelle des cellules (<code>layer</code>) d’une grille de résolution 0.05°. Les captures et les indices d’abondance pour chaque espèce sont en colonne.</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true"></a><span class="kw">load</span>(<span class="st">&quot;data/VMS_data.RData&quot;</span>)</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true"></a>VMS_data &lt;-<span class="st"> </span><span class="kw">as_tibble</span>(VMS_data)</span></code></pre></div>
-<p>On peut chercher à créer une fonction représentant les captures de deux navires pour 3 espèces (la sole, le merlu, la langoustine). La fonction suivante utilise les différentes commandes vues précédemment (<code>{{}}</code>, <code>.Data</code>, <code>.env$</code>, <code>:=</code>).</p>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true"></a>plot_VMS_data &lt;-<span class="st"> </span><span class="cf">function</span>(data,species,unit){</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true"></a>  data <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true"></a><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(aggreg_level<span class="op">:</span>lati,<span class="kw">contains</span>(<span class="kw">paste0</span>(.env<span class="op">$</span>unit,<span class="st">&quot;_&quot;</span>,.env<span class="op">$</span>species))) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># aller chercher l&#39;unité et les espèces dans l&#39;environnement </span></span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true"></a><span class="st">    </span><span class="kw">pivot_longer</span>(<span class="kw">contains</span>(<span class="kw">paste0</span>(.env<span class="op">$</span>unit,<span class="st">&quot;_&quot;</span>,.env<span class="op">$</span>species)),<span class="dt">names_to =</span> <span class="st">&quot;species&quot;</span>,<span class="dt">values_to =</span> {{unit}}) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># passer les colonnes valeurs en une seule colonne</span></span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">species =</span> <span class="kw">str_remove</span>(species, <span class="kw">paste0</span>(.env<span class="op">$</span>unit,<span class="st">&quot;_&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># modifier le nom de la colonne species</span></span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true"></a><span class="st">    </span><span class="kw">group_by</span>(layer,long,lati,species) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># moyenner les valeurs par espèce par cellule</span></span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true"></a><span class="st">    </span><span class="kw">summarise</span>(<span class="st">&quot;{unit}&quot;</span> <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">mean</span>(.data[[unit]])) <span class="op">%&gt;%</span></span>
-<span id="cb34-8"><a href="#cb34-8" aria-hidden="true"></a><span class="st">    </span><span class="kw">ggplot</span>() <span class="op">+</span><span class="st"> </span><span class="co">#  ploter les données</span></span>
-<span id="cb34-9"><a href="#cb34-9" aria-hidden="true"></a><span class="st">    </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x=</span>long,<span class="dt">y=</span>lati,<span class="dt">col =</span> <span class="kw">log</span>(.data[[unit]]<span class="op">+</span><span class="dv">1</span>)),<span class="dt">size =</span> <span class="fl">0.5</span>,<span class="dt">shape=</span><span class="dv">15</span>) <span class="op">+</span></span>
-<span id="cb34-10"><a href="#cb34-10" aria-hidden="true"></a><span class="st">    </span><span class="kw">scale_color_gradient</span>(<span class="dt">low =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">high =</span> <span class="st">&quot;red&quot;</span>)<span class="op">+</span><span class="kw">xlab</span>(<span class="st">&quot;&quot;</span>)<span class="op">+</span><span class="kw">ylab</span>(<span class="st">&quot;&quot;</span>)<span class="op">+</span></span>
-<span id="cb34-11"><a href="#cb34-11" aria-hidden="true"></a><span class="st">    </span><span class="kw">coord_equal</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb34-12"><a href="#cb34-12" aria-hidden="true"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">panel.border =</span> <span class="kw">element_blank</span>(),</span>
-<span id="cb34-13"><a href="#cb34-13" aria-hidden="true"></a>          <span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(),</span>
-<span id="cb34-14"><a href="#cb34-14" aria-hidden="true"></a>          <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>(),</span>
-<span id="cb34-15"><a href="#cb34-15" aria-hidden="true"></a>          <span class="dt">panel.background =</span> <span class="kw">element_rect</span>(<span class="dt">fill =</span> <span class="st">&quot;skyblue&quot;</span>),</span>
-<span id="cb34-16"><a href="#cb34-16" aria-hidden="true"></a>          <span class="dt">panel.spacing.x =</span> <span class="kw">unit</span>(<span class="dv">6</span>, <span class="st">&quot;mm&quot;</span>))<span class="op">+</span></span>
-<span id="cb34-17"><a href="#cb34-17" aria-hidden="true"></a><span class="st">    </span><span class="kw">facet_wrap</span>(.<span class="op">~</span>species)</span>
-<span id="cb34-18"><a href="#cb34-18" aria-hidden="true"></a>}</span>
-<span id="cb34-19"><a href="#cb34-19" aria-hidden="true"></a></span>
-<span id="cb34-20"><a href="#cb34-20" aria-hidden="true"></a>data_<span class="dv">2</span> &lt;-<span class="st"> </span>VMS_data</span>
-<span id="cb34-21"><a href="#cb34-21" aria-hidden="true"></a>species_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Solea_solea&quot;</span>,<span class="st">&quot;Merluccius_merluccius&quot;</span>,<span class="st">&quot;Nephrops_norvegicus&quot;</span>)</span>
-<span id="cb34-22"><a href="#cb34-22" aria-hidden="true"></a>unit_<span class="dv">2</span> &lt;-<span class="st">&quot;CPUE&quot;</span></span>
-<span id="cb34-23"><a href="#cb34-23" aria-hidden="true"></a><span class="kw">plot_VMS_data</span>(data_<span class="dv">2</span>,species_<span class="dv">2</span>,unit_<span class="dv">2</span>)</span></code></pre></div>
+<p>Le jeu de données VMS_data contient les données spatialisées des captures (<code>LE_KG</code>), des efforts (<code>HF</code>) et des indices d’abondance (<code>CPUE</code>) par navire (<code>aggreg_level</code>) des chalutiers ciblant les espèces démersales (<code>OTB_DEF</code>) dans le golfe de Gascogne. La donnée est agrégée à l’échelle des cellules (<code>layer</code>) d’une grille de résolution 0.05°. Les captures et les indices d’abondance pour chaque espèce sont en colonne.</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true"></a><span class="kw">load</span>(<span class="st">&quot;data/VMS_data.RData&quot;</span>)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true"></a>VMS_data &lt;-<span class="st"> </span><span class="kw">as_tibble</span>(VMS_data)</span></code></pre></div>
+<p>On peut chercher à créer une fonction représentant les captures de deux navires pour 3 espèces (ici la sole, le merlu, la langoustine). La fonction suivante utilise les différentes commandes vues précédemment (<code>{{}}</code>, <code>.Data</code>, <code>.env$</code>, <code>:=</code>).</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true"></a>plot_VMS_data &lt;-<span class="st"> </span><span class="cf">function</span>(data,species,unit){</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true"></a>  data <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true"></a><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(aggreg_level<span class="op">:</span>lati,<span class="kw">contains</span>(<span class="kw">paste0</span>(.env<span class="op">$</span>unit,<span class="st">&quot;_&quot;</span>,.env<span class="op">$</span>species))) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># aller chercher l&#39;unité et les espèces dans l&#39;environnement </span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true"></a><span class="st">    </span><span class="kw">pivot_longer</span>(<span class="kw">contains</span>(<span class="kw">paste0</span>(.env<span class="op">$</span>unit,<span class="st">&quot;_&quot;</span>,.env<span class="op">$</span>species)),<span class="dt">names_to =</span> <span class="st">&quot;species&quot;</span>,<span class="dt">values_to =</span> {{unit}}) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># passer les colonnes de valeurs en une seule colonne</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">species =</span> <span class="kw">str_remove</span>(species, <span class="kw">paste0</span>(.env<span class="op">$</span>unit,<span class="st">&quot;_&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># modifier le nom de la colonne species</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true"></a><span class="st">    </span><span class="kw">group_by</span>(layer,long,lati,species) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># moyenner les valeurs par espèce par cellule</span></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true"></a><span class="st">    </span><span class="kw">summarise</span>(<span class="st">&quot;{unit}&quot;</span> <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">mean</span>(.data[[unit]])) <span class="op">%&gt;%</span></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true"></a><span class="st">    </span><span class="kw">ggplot</span>() <span class="op">+</span><span class="st"> </span><span class="co">#  ploter les données</span></span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true"></a><span class="st">    </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x=</span>long,<span class="dt">y=</span>lati,<span class="dt">col =</span> <span class="kw">log</span>(.data[[unit]]<span class="op">+</span><span class="dv">1</span>)),<span class="dt">size =</span> <span class="fl">0.5</span>,<span class="dt">shape=</span><span class="dv">15</span>) <span class="op">+</span></span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true"></a><span class="st">    </span><span class="kw">scale_color_gradient</span>(<span class="dt">low =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">high =</span> <span class="st">&quot;red&quot;</span>)<span class="op">+</span><span class="kw">xlab</span>(<span class="st">&quot;&quot;</span>)<span class="op">+</span><span class="kw">ylab</span>(<span class="st">&quot;&quot;</span>)<span class="op">+</span></span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">panel.border =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true"></a>          <span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true"></a>          <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true"></a>          <span class="dt">panel.background =</span> <span class="kw">element_rect</span>(<span class="dt">fill =</span> <span class="st">&quot;skyblue&quot;</span>),</span>
+<span id="cb38-15"><a href="#cb38-15" aria-hidden="true"></a>          <span class="dt">panel.spacing.x =</span> <span class="kw">unit</span>(<span class="dv">6</span>, <span class="st">&quot;mm&quot;</span>))<span class="op">+</span></span>
+<span id="cb38-16"><a href="#cb38-16" aria-hidden="true"></a><span class="st">    </span><span class="kw">facet_wrap</span>(.<span class="op">~</span>species) <span class="co"># pour représenter la côte regarder le package `rnaturalearth`</span></span>
+<span id="cb38-17"><a href="#cb38-17" aria-hidden="true"></a>}</span>
+<span id="cb38-18"><a href="#cb38-18" aria-hidden="true"></a></span>
+<span id="cb38-19"><a href="#cb38-19" aria-hidden="true"></a>data_<span class="dv">2</span> &lt;-<span class="st"> </span>VMS_data</span>
+<span id="cb38-20"><a href="#cb38-20" aria-hidden="true"></a>species_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Solea_solea&quot;</span>,<span class="st">&quot;Merluccius_merluccius&quot;</span>,<span class="st">&quot;Nephrops_norvegicus&quot;</span>)</span>
+<span id="cb38-21"><a href="#cb38-21" aria-hidden="true"></a>unit_<span class="dv">2</span> &lt;-<span class="st">&quot;CPUE&quot;</span></span>
+<span id="cb38-22"><a href="#cb38-22" aria-hidden="true"></a><span class="kw">plot_VMS_data</span>(data_<span class="dv">2</span>,species_<span class="dv">2</span>,unit_<span class="dv">2</span>)</span></code></pre></div>
 <pre><code>## `summarise()` regrouping output by &#39;layer&#39;, &#39;long&#39;, &#39;lati&#39; (override with `.groups` argument)</code></pre>
-<p><img src="r_tidy_prog_files/figure-html/unnamed-chunk-29-1.png" width="864" /></p>
+<p><img src="r_tidy_prog_files/figure-html/unnamed-chunk-31-1.png" width="864" /></p>
 </div>
 </div>
 

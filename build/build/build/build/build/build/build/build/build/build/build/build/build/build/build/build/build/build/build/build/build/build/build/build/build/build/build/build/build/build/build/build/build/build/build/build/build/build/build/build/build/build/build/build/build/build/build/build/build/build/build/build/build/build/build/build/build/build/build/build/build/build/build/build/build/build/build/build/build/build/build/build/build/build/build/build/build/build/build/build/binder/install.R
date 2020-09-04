@@ -26,6 +26,9 @@ install.packages("ggiraph")
 install.packages("timevis")
 install.packages("ggraph")
 install.packages("fields")
+install.packages("slider")
+install.packages("fable")
+install.packages("fabletools")
 
 ## Julia and co
 devtools::install_github("Non-Contradiction/JuliaCall")

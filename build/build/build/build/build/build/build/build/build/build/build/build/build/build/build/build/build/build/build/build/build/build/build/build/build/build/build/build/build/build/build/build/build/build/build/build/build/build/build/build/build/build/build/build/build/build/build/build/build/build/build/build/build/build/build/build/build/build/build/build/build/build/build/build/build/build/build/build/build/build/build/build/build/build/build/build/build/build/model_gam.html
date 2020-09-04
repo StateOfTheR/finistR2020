@@ -497,11 +497,13 @@ $(document).ready(function () {
 </div>
 
 
-<div class="figure">
-<img src="img/GAM.jpg" alt="" />
-<p class="caption">img</p>
-</div>
+<p><img src="img/GAM.jpg" /></p>
 <p><a href="https://mybinder.org/v2/gh/stateofther/finistR2020/website?filepath=finistR2020_website/gam.Rmd"><img src="https://mybinder.org/badge_logo.svg" alt="Binder" /></a></p>
+<div id="références" class="section level2">
+<h2>Références</h2>
+<p>Dans son livre, <em>Generalized Additive Models, An Introduction with R</em>, S. Wood commence par des rappels sur les modèles de régression linéaire simples et les GLM avant de présenter les modèles additifs généralisés (GAM) et différentes bases de splines ainsi que leur utilisation. Le livre coexiste avec le package R <code>mgcv</code> que nous avons utilisé dans la suite.</p>
+<p>Une <a href="https://noamross.github.io/gams-in-r-course/">formation GAM en R</a> est disponible sur le site RStudio Education et utilise également le package <code>mgcv</code>.</p>
+</div>
 <div id="modèles-additifs-généralisés" class="section level2">
 <h2>Modèles additifs généralisés</h2>
 <p>Un modèle additif généralisé est un GLM dans lequel le prédicteur linéaire fait intervenir une somme de fonctions régulières des covariables. Les modèles additifs généralisés ont une structure de la forme suivante <span class="math display">\[g(\mu_i)=A_i\theta+\sum_j f_j(x_{ji}),\, Y_i\sim\text{EF}(\mu_i,\phi)\]</span> où <span class="math inline">\(Y_i\)</span> est la variable réponse et <span class="math inline">\(\text{EF}(\mu_i,\phi)\)</span> est une distribution de famille exponentielle de moyenne <span class="math inline">\(\mu_i\)</span> et de paramètre d’échelle <span class="math inline">\(\phi\)</span> et <span class="math inline">\(A_i\theta\)</span> représente une componente paramétrique dans la modélisation.</p>
@@ -509,12 +511,9 @@ $(document).ready(function () {
 </div>
 <div id="base-de-splines" class="section level2">
 <h2>Base de splines</h2>
-<p>On veut construire une base de <span class="math inline">\(k\)</span> fonctions splines <span class="math inline">\((s_1, \ldots, s_k)\)</span>. Pour ceci, ondéfinit <span class="math inline">\(k\)</span> noeuds, par défaut les extréminités correspondent à <span class="math inline">\(x_{min}\)</span> et <span class="math inline">\(x_{max}\)</span>.</p>
-<p>Chaque fonction <span class="math inline">\(s_i\)</span> vaut 1 au noeud <span class="math inline">\(i\)</span> et 0 aux autres noeuds. En outre. Chaque fonction spline (cublique) est le recollement de <span class="math inline">\(k\)</span> polynomes de degré 3 assurant une fonction de classe <span class="math inline">\(C^2\)</span> sur l’intervalle, comme illustré ci-dessous (extrait du livre de S. Wood).</p>
-<div class="figure">
-<img src="img/spline.jpg" alt="" />
-<p class="caption">img</p>
-</div>
+<p>On veut construire une base de <span class="math inline">\(k\)</span> fonctions splines <span class="math inline">\((s_1, \ldots, s_k)\)</span>. Pour ceci, on définit <span class="math inline">\(k\)</span> nuds, par défaut les extrémités correspondent à <span class="math inline">\(x_{min}\)</span> et <span class="math inline">\(x_{max}\)</span>.</p>
+<p>Chaque fonction <span class="math inline">\(s_i\)</span> vaut 1 au noeud <span class="math inline">\(i\)</span> et <span class="math inline">\(0\)</span> aux autres nuds. En outre. Chaque fonction spline (cubique) est le recollement de <span class="math inline">\(k\)</span> polynomes de degré 3 assurant une fonction de classe <span class="math inline">\(C^2\)</span> sur l’intervalle, comme illustré ci-dessous (extrait du livre de S. Wood).</p>
+<p><img src="img/spline.jpg" /></p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="kw">library</span>(mgcv)</span></code></pre></div>
 <pre><code>## Loading required package: nlme</code></pre>
 <pre><code>## 
@@ -544,7 +543,7 @@ $(document).ready(function () {
 ## indicate that k is too low, especially if edf is close to k&#39;.
 ## 
 ##            k&#39;  edf k-index p-value
-## s(times) 9.00 8.39    1.15    0.94</code></pre>
+## s(times) 9.00 8.39    1.15    0.97</code></pre>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true"></a><span class="kw">summary</span>(Mods3)</span></code></pre></div>
 <pre><code>## 
 ## Family: gaussian 
@@ -568,7 +567,7 @@ $(document).ready(function () {
 ## R-sq.(adj) =  0.783   Deviance explained = 79.7%
 ## GCV = 544.48  Scale est. = 506.04    n = 133</code></pre>
 <p><span class="math display">\[Y_i = Z_i^T\theta + \sum_{j=1}^p \beta_j f_j(x_{i}) + \epsilon_i\]</span> où les <span class="math inline">\(f_j\)</span> forment une base de spline, <span class="math inline">\(Z_i\)</span> des variables utilisées comme dans un modèle linéaire, et <span class="math inline">\(x_i\)</span> la variable pour laquelle on utilise une spline. Notons qu’on peut avoir des splines multivariés et plusieurs splines dépendant de différentes variables.</p>
-<p>Dans le tableau, Parametric Coefficients correspond à la partie des effets linéaires et la partie smooth terms correspond au test sur la variable dont dépend le spline.</p>
+<p>Dans le tableau, <code>Parametric Coefficients</code> correspond à la partie des effets linéaires et la partie smooth terms correspond au test sur la variable dont dépend le spline.</p>
 <p>La dernière partie contient des informations sur la qualité d’ajustement du modèle type <span class="math inline">\(R^2\)</span> et variance estimée.</p>
 <p>Ce tableau contient les <span class="math inline">\(\beta_j\)</span> devant les splines :</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a><span class="kw">coef</span>(Mods3)</span></code></pre></div>
@@ -582,7 +581,7 @@ $(document).ready(function () {
 <ul>
 <li>Elements of Statistical learning. Hastie et al.</li>
 <li><a href="https://m-clark.github.io/generalized-additive-models">Site avec exemple</a>, les données sont <a href="https://github.com/m-clark/generalized-additive-models/tree/master/data">ici</a></li>
-<li><a href="https://b-ok.cc/book/2945925/6817d4">Livre de Simon Wood</a></li>
+<li>Generalized Additive Models, An Introduction with R, S. Wood <!-- [Livre de Simon Wood](https://b-ok.cc/book/2945925/6817d4) --></li>
 <li><a href="http://environmentalcomputing.net/intro-to-gams/">autre ref</a></li>
 <li><a href="https://noamross.github.io/gams-in-r-course/">formation GAM en R</a></li>
 </ul>

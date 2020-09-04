@@ -28,6 +28,7 @@ dependencies:
   - r-irkernel
   - r-jpeg
   - r-networkd3
+  - r-nycflights13
   - r-oaqc
   - r-reshape2
   - r-rlang
