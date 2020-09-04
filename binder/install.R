@@ -26,7 +26,6 @@ install.packages("ggiraph")
 install.packages("timevis")
 install.packages("ggraph")
 install.packages("fields")
-install.packages("factoextra")
 
 ## Julia and co
 devtools::install_github("Non-Contradiction/JuliaCall")

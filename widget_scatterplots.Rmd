@@ -67,21 +67,6 @@ coord <- my_PCAs$getBestModel()$scores[, 1:3] %>%
   add_column(tree = oaks$tree, names = rownames(oaks$Abundance))
 ```
 
-#### Direct "plotlyfication"
-
-```{r biplot factoextra1}
-my_PCA <- my_PCAs$getBestModel()
-t(tcrossprod(my_PCA$model_par$B, my_PCA$var_par$M)) %>%
-  prcomp(center = FALSE, scale. = FALSE) %>%
-  factoextra::fviz_pca_biplot(select.var = list(contrib = 10), col.ind  = oaks$tree,
-                              title = "Biplot after correction (10 most contributing species, samples colored by distance to ground)") +
-  labs(col = "distance (cm)") + scale_color_viridis_d()
-```
-
-```{r factoextra}
-ggplotly()
-```
-
 #### ScatterD3 (Another fancy scatterplot)
 
 ```{r scatterD3}
@@ -112,30 +97,4 @@ group <- rainbow(3)[as.numeric(oaks$tree)]
 coord %>% select(1:3) %>% as.matrix() %>% 
 scatterplot3js(col = group, size = 0.25, pch = ".", grid = FALSE, bg = "black")
 ```
-
-<!-- ### Networks -->
-
-<!-- ```{r net selection} -->
-<!-- my_net <- my_networks$getBestModel('EBIC') -->
-<!-- ``` -->
-
-<!-- #### EdgebundleR -->
-
-
-<!-- ```{r edgbundle, results='asis', fig.show='asis'} -->
-<!-- g <- my_net$plot_network(output = "igraph", plot = FALSE) -->
-<!-- edgebundle(g) -->
-<!-- ``` -->
-
-<!-- #### networkD3 -->
-
-<!-- ```{r networkD3, results='asis', fig.show='asis'} -->
-<!-- # Convert to object suitable for networkD3 -->
-<!-- d3 <- igraph_to_networkD3(g, group = sapply(strsplit(colnames(oaks$Abundance), "_"), function(x) x[[1]])) -->
-
-<!-- # Create force directed network plot -->
-<!-- forceNetwork(Links = d3$links, Nodes = d3$nodes,  -->
-<!--              Source = 'source', Target = 'target',  -->
-<!--              NodeID = 'name', Group = 'group', opacity = 0.4) -->
-<!-- ``` -->
 
