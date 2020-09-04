@@ -2,17 +2,13 @@
 title: "Représentation et inférence de réseaux avec R et Python"
 author: "State of the R"
 date: "24-28/08/2020"
-output: 
-  html_document: 
-    df_print: tibble
-editor_options: 
-  chunk_output_type: inline
+output: html_document
 ---
 
 ## Utilisation de Python dans rmarkdown
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 ```
 
 Pour pouvoir utiliser `Python` dans `Rmarkdown` il faut utiliser le package `reticulate`.
@@ -113,7 +109,7 @@ for e in g.edges():
 gt.graph_draw(g, pos=pos, vertex_size=deg, vertex_fill_color=deg, vorder=deg,
               edge_color=ebet, eorder=eorder, edge_pen_width=ebet,
               edge_control_points=control, # some curvy edges
-              output="graph-draw.png")
+              output="img/graph-draw.png")
 ```
 
 ![graph1500](img/graph-draw.png)

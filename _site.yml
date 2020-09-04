@@ -40,7 +40,7 @@ navbar:
     icon: far fa-keyboard
     menu:
         - text: "R et Python"
-          # href: r_python.html
+          href: r_python.html
         - text: "Progammation avec le tidyverse"
           href: r_tidy_prog.html
         - text: "Bibliographie"
