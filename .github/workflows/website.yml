@@ -14,7 +14,7 @@ jobs:
       - name: apt install
         run: xargs -a binder/apt.txt sudo apt-get install
       - name: Install Julia
-        run: julia -e 'using Pkg; Pkg.add("DifferentialEquations")'
+        run: julia -e 'using Pkg; Pkg.add(["DifferentialEquations","Plots"])'
       - uses: goanpeca/setup-miniconda@v1
         with:
           auto-update-conda: true
