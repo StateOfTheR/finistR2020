@@ -400,37 +400,30 @@ ggplot(df_out) +
 
 ## diffeqr
 
-Il s'agit d'une interface R pour utiliser le package Julia [DifferentialEquations.jl](https://diffeq.sciml.ai/dev/)
-
-Sites du package sur le [CRAN](https://CRAN.R-project.org/package=diffeqr) et sur [GitHub](https://github.com/SciML)
+Il s'agit d'une interface R pour utiliser le package Julia [DifferentialEquations.jl](https://diffeq.sciml.ai/dev/). Le package est disponible sur le [CRAN](https://CRAN.R-project.org/package=diffeqr) et sur [GitHub](https://github.com/SciML).
 
 ### Installation
 
-Pour l'utiliser il faut installer Julia, en le téléchargeant [ici](https://julialang.org/downloads/)
-
-Utiliser le package DifferentialEquations.jl depuis R. Le package ne fonctionne pas avec la version 4.0 donc j'installe la version 3.6 avec [conda](https://docs.conda.io/en/latest/miniconda.html).
-
-Installation de R avec conda
-
-```bash
-conda create r=3.6 -n diffeqr -c r
-conda activate diffeqr
-conda install r-irkernel
-conda install jupyter
-```
+Pour l'utiliser il faut installer Julia, en le téléchargeant [ici](https://julialang.org/downloads/) et le package DifferentialEquations.jl. Attention le package R JuliaCall qui permet d'appeler des fonctions julia depuis R ne fonctionne pas avec la version 4.0 de R au moment du test donc utilisez la version 3.6.
 
 ## Installation des packages Julia
 
-Cela peut prendre beaucoup de temps (10 minutes):
+Je conseille de tester le package Julia dans un premier temps. L'instruction
+qui suit permet d'exécuter du code julia dans un fichier Rmarkdown:
+
+```{r}
+julia <- JuliaCall::julia_markdown_setup()
+```
+- Installation de DifferentialEquations.jl et Plots.jl
 
 ```{julia, eval=F}
 using Pkg
-Pkg.add(["Plots", "DifferentialEquations", "RCall"])
+Pkg.add(["Plots", "DifferentialEquations"])
 ```
-Test du code Julia
 
-```{julia, eval=F}
-using OrdinaryDiffEq
+- Résolution du système de Lorenz
+```{julia}
+using DifferentialEquations, Plots
 
 function lorenz(du,u,p,t)
      du[1] = p[1]*(u[2]-u[1])
@@ -440,47 +433,22 @@ end
 
 u0 = [1.0;0.0;0.0]
 tspan = (0.0,100.0)
-prob = ODEProblem(lorenz,u0,tspan)
-sol = solve(prob)
+p = [10.0,28.0,8/3]
+prob = ODEProblem(lorenz,u0,tspan,p)
+sol = solve(prob, saveat=0.01)
 plot(sol,vars=(1,2,3))
-```
-
-## Installation des packages R
-
-
-```{r, eval=F}
-install.packages("JuliaCall")
-library(JuliaCall)
-julia <- julia_setup()
-```
-
-```{r, eval=F}
-julia_call("sqrt", 2)
-```
-
-```{r, eval=F}
-julia_installed_package("DifferentialEquations")
-```
-
-```{r, eval=F}
-julia_library("DifferentialEquations")
-```
-
-```{r, eval = FALSE}
-install.packages("diffeqr")
-install.packages("plotly")
 ```
 
 ### Modèle de Lorenz
 
-
-```{r, eval = FALSE}
+Le package diffeqr permet d'utiliser le package julia depuis R:
+```{r}
 de <- diffeqr::diffeq_setup()
 ```
 
-Définition de la dérivée
+Définition de la fonction dérivée:
 
-```{r, eval = FALSE}
+```{r}
 f <- function(u,p,t) {
   du1 = p[1]*(u[2]-u[1])
   du2 = u[1]*(p[2]-u[3]) - u[2]
@@ -491,55 +459,44 @@ f <- function(u,p,t) {
 
 Les paramètres sont contenus dans un vecteur `p`.
 
-```{r, eval = FALSE}
+```{r}
 u0 <- c(1.0,0.0,0.0)
 tspan <- c(0.0,100.0)
 p <- c(10.0,28.0,8/3)
 prob <- de$ODEProblem(f, u0, tspan, p)
-sol <- de$solve(prob)
+sol <- de$solve(prob, saveat=0.01)
 ```
 
 Les méthodes numériques pour la résolution sont très nombreuses. Voir la page [ODE solvers](https://diffeq.sciml.ai/dev/solvers/ode_solve/).
 
 La solution `sol$u` est une liste de vecteurs, et `sol$u[i]` est le vecteur u[i] au temps `sol$t[i]`. On peut le transformer en matrice R avec `sapply`:
 
-```{r, eval = FALSE}
+```{r}
 mat <- sapply(sol$u,identity)
 ```
 
-Chaque ligne est une série temporelle.  Transformation en data.frame
+Chaque ligne est une série temporelle, on peut transformer la solution en data.frame
 
-```{r, eval = FALSE}
+```{r}
 udf <- as.data.frame(t(mat))
-```
-
-```{r, eval = FALSE}
 matplot(sol$t,udf,"l",col=1:3)
 ```
 
-![timeseries](https://user-images.githubusercontent.com/1814174/39012314-ef7a8fe2-43c8-11e8-9dde-1a8b87d3cfa4.png)
-
-
-```{r, eval = FALSE}
+```{r}
 plotly::plot_ly(udf, x = ~V1, y = ~V2, z = ~V3, type = 'scatter3d', mode = 'lines')
 ```
 
-![plotly_plot](https://user-images.githubusercontent.com/1814174/39012384-27ee7262-43c9-11e8-84d2-1edf937288ae.png)
+### Ameliorer les performances
 
-```{r, eval = FALSE}
-abstol <- 1e-8
-reltol <- 1e-8
-saveat <- 0:10000/100
-sol <- de$solve(prob,abstol=abstol,reltol=reltol,saveat=saveat)
-udf <- as.data.frame(t(sapply(sol$u,identity)))
-plotly::plot_ly(udf, x = ~V1, y = ~V2, z = ~V3, type = 'scatter3d', mode = 'lines')
+- Compilation de la fonction dérivée: Chaque calcul de la dérivée est un appel d'une fonction R. `diffeqr` propose une fonction qui permet de compiler cette fonction. La fonction R sera traduite en Julia et compilée dans le langage LLVM qui est un dialecte du langage C. Ce langage et sa compilation sont le "moteur" de Julia qui lui permet d'avoir des performances comparables aux langages compilés comme le C++ ou le Fortran.
+
+```{r}
+prob2 <- diffeqr::jitoptimize_ode(de,prob)
 ```
 
-![precise_solution](https://user-images.githubusercontent.com/1814174/39012651-e03124e6-43c9-11e8-8496-bbee87987a37.png)
+Pour améliorer un peu plus les performances, on peut utiliser la version Julia de la fonction dérivée. On peut transformer toutes les variables R en variables Julia:
 
-### Transformation de toutes la variables en variables Julia
-
-```{r, eval=F}
+```{r}
 julf <- JuliaCall::julia_eval("
 function julf(du,u,p,t)
   du[1] = 10.0*(u[2]-u[1])
@@ -553,26 +510,27 @@ prob3 = JuliaCall::julia_eval("ODEProblem(julf, u0, tspan, p)")
 sol = de$solve(prob3,de$Tsit5())
 ```
 
-```{r, eval=F}
-system.time({ for (i in 1:100){ de$solve(prob    ,de$Tsit5()) }})
+```{r}
+system.time({ for (i in 1:100){ de$solve(prob, de$Tsit5()) }})
 ```
 
-```{r, eval=F}
-system.time({ for (i in 1:100){ de$solve(fastprob,de$Tsit5()) }})
+```{r}
+system.time({ for (i in 1:100){ de$solve(prob2, de$Tsit5()) }})
 ```
 
-```{r, eval=F}
-system.time({ for (i in 1:100){ de$solve(prob3   ,de$Tsit5()) }})
+```{r}
+system.time({ for (i in 1:100){ de$solve(prob3, de$Tsit5()) }})
 ```
 
 ### Stochastic Differential Equation (SDE) Examples
 
+Les performances de `diffeqr` seront plus intéressantes dans le cas des EDS. En effet, pour résoudre numériquement ce type d'équation, nous avons besoin de calculer la solution d'une EDO plusieurs milliers de fois. Le gain qui peut paraître minime pour une EDO devient mille fois plus intéressant pour une EDS.
 
 On utilise deux fonctions `f` et `g`, où `du = f(u,t)dt + g(u,t)dW_t`
 
 ## Résolution d'une SDE
 
-```{r, eval=F}
+```{r}
 f <- function(u,p,t) {
   du1 = p[1]*(u[2]-u[1])
   du2 = u[1]*(p[2]-u[3]) - u[2]
@@ -594,11 +552,9 @@ udf <- as.data.frame(t(sapply(sol$u,identity)))
 plotly::plot_ly(udf, x = ~V1, y = ~V2, z = ~V3, type = 'scatter3d', mode = 'lines')
 ```
 
-![solution sde](https://user-images.githubusercontent.com/1814174/39019723-216c3210-43df-11e8-82c0-2e676f53e235.png)
-
 ### Version avec `desolve` 
 
-```{r, eval=F}
+```{r}
 library(deSolve)
 Lorenz <- function(t, state, parameters) {
   with(as.list(c(state, parameters)), {
@@ -620,21 +576,22 @@ lorenz_solve <- function (i){
   out <- ode(y = state, times = times, func = Lorenz, parms = parameters)
 }
 ```
-```{r, eval=F}
+```{r}
 system.time({ lapply(1:1000,lorenz_solve) })
 ```
 
-```{r, eval=F}
+```{r}
 prob_func <- function (prob,i,rep){
   de$remake(prob,u0=runif(3)*u0,p=runif(3)*p)
 }
 ensembleprob = de$EnsembleProblem(fastprob, prob_func = prob_func, safetycopy=FALSE)
 ```
 
-```{r, eval=F}
+```{r}
 system.time({ de$solve(ensembleprob,de$Tsit5(),de$EnsembleSerial(),trajectories=1000,saveat=0.01) })
-
 ```
+
+Le package `diffeqr` fonctionne également sur GPU, vous pouvez voir un exemple dans ce [billet de blog](http://www.stochasticlifestyle.com/gpu-accelerated-ode-solving-in-r-with-julia-the-language-of-libraries/).
 
 ## Estimation des paramètres
 
@@ -684,10 +641,6 @@ pcode.result <- pcode(data = observ, time = times, ode.model = closed.sir.model,
                       par.initial = c(100,1), par.names = c('beta','gamma'),state.names = c('S','I','R'),
                       basis.list = basis, lambda = 1e2)
 ```
-
-
-
-
 
 ## Jeton de reproductilité
 
