@@ -416,7 +416,7 @@ julia <- JuliaCall::julia_markdown_setup()
 ```
 - Installation de DifferentialEquations.jl et Plots.jl
 
-```{julia, eval=F}
+```{julia}
 using Pkg
 Pkg.add(["Plots", "DifferentialEquations"])
 ```
