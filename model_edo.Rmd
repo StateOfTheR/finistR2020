@@ -492,7 +492,7 @@ plotly::plot_ly(udf, x = ~V1, y = ~V2, z = ~V3, type = 'scatter3d', mode = 'line
 
 ```{r}
 prob2 <- diffeqr::jitoptimize_ode(de,prob)
-sol = de$solve(prob2, de$Tsit5() )
+sol <- de$solve(prob2, de$Tsit5() )
 ```
 On fixe ici la méthode de résolution avec Tsit5 (Tsitouras 5/4 Runge-Kutta).
 
@@ -508,8 +508,8 @@ end")
 JuliaCall::julia_assign("u0", u0)
 JuliaCall::julia_assign("p", p)
 JuliaCall::julia_assign("tspan", tspan)
-prob3 = JuliaCall::julia_eval("ODEProblem(julf, u0, tspan, p)")
-sol = de$solve(prob3,de$Tsit5())
+prob3 <- JuliaCall::julia_eval("ODEProblem(julf, u0, tspan, p)")
+sol <- de$solve(prob3,de$Tsit5())
 ```
 
 ```{r}
