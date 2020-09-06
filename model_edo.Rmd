@@ -492,9 +492,11 @@ plotly::plot_ly(udf, x = ~V1, y = ~V2, z = ~V3, type = 'scatter3d', mode = 'line
 
 ```{r}
 prob2 <- diffeqr::jitoptimize_ode(de,prob)
+sol = de$solve(prob2, de$Tsit5() )
 ```
+On fixe ici la méthode de résolution avec Tsit5 (Tsitouras 5/4 Runge-Kutta).
 
-Pour améliorer un peu plus les performances, on peut utiliser la version Julia de la fonction dérivée. On peut transformer toutes les variables R en variables Julia:
+Pour améliorer un peu plus les performances, on peut utiliser la version Julia de la fonction dérivée. Transformons toutes les variables R en variables Julia:
 
 ```{r}
 julf <- JuliaCall::julia_eval("
