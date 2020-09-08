@@ -34,7 +34,6 @@ dependencies:
   - r-rlang
   - r-plotly
   - r-purrr
-  - r-ranger
 #  - r-rnaturalearth
   - r-rcpp
   - r-rcpparmadillo
