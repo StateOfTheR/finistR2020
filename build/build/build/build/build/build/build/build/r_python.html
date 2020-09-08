@@ -547,7 +547,7 @@ $(document).ready(function () {
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true"></a><span class="im">import</span> time</span></code></pre></div>
 <div class="sourceCode" id="cb14"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true"></a>g <span class="op">=</span> gt.collection.data[<span class="st">&quot;football&quot;</span>]</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true"></a><span class="bu">print</span>(g)</span></code></pre></div>
-<pre><code>## &lt;Graph object, undirected, with 115 vertices and 613 edges, 4 internal vertex properties, 2 internal graph properties, at 0x7f74e63ec0d0&gt;</code></pre>
+<pre><code>## &lt;Graph object, undirected, with 115 vertices and 613 edges, 4 internal vertex properties, 2 internal graph properties, at 0x7fe89413f190&gt;</code></pre>
 <div class="sourceCode" id="cb16"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true"></a>state <span class="op">=</span> gt.minimize_blockmodel_dl(g)</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true"></a>m <span class="op">=</span> state.get_matrix()</span></code></pre></div>
 <p>Les plots <code>matplotlib</code> sortent très bien dans le notebook, mais ce n’est pas le cas des plots interactifs. Ceux-ci ouvrent une fenêtre <code>python</code> interactive et bloquent la compilation du document.</p>
@@ -558,7 +558,7 @@ $(document).ready(function () {
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true"></a>     ret <span class="op">=</span> state.mcmc_sweep(niter<span class="op">=</span><span class="dv">10</span>)</span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true"></a>     pv <span class="op">=</span> state.collect_vertex_marginals(pv)</span>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true"></a>gt.mf_entropy(g, pv)</span></code></pre></div>
-<pre><code>## 3.0882995994590687</code></pre>
+<pre><code>## 3.101857666590992</code></pre>
 <div class="sourceCode" id="cb20"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true"></a>p <span class="op">=</span> gt.graph_draw(g, pos<span class="op">=</span>g.vp[<span class="st">&quot;pos&quot;</span>], vertex_shape<span class="op">=</span><span class="st">&quot;pie&quot;</span>,</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true"></a>                  vertex_pie_fractions<span class="op">=</span>pv, inline<span class="op">=</span> <span class="va">True</span>, output <span class="op">=</span> <span class="st">&quot;img/hier.png&quot;</span>)</span></code></pre></div>
 <div class="figure">
@@ -583,7 +583,7 @@ $(document).ready(function () {
 <span id="cb22-12"><a href="#cb22-12" aria-hidden="true"></a>              edge_color<span class="op">=</span>ebet, eorder<span class="op">=</span>eorder, edge_pen_width<span class="op">=</span>ebet,</span>
 <span id="cb22-13"><a href="#cb22-13" aria-hidden="true"></a>              edge_control_points<span class="op">=</span>control, <span class="co"># some curvy edges</span></span>
 <span id="cb22-14"><a href="#cb22-14" aria-hidden="true"></a>              output<span class="op">=</span><span class="st">&quot;img/graph-draw.png&quot;</span>)</span></code></pre></div>
-<pre><code>## &lt;VertexPropertyMap object with value type &#39;vector&lt;double&gt;&#39;, for Graph 0x7f74e631bd00, at 0x7f74e633be20&gt;</code></pre>
+<pre><code>## &lt;VertexPropertyMap object with value type &#39;vector&lt;double&gt;&#39;, for Graph 0x7fe892d59790, at 0x7fe892d50970&gt;</code></pre>
 <div class="figure">
 <img src="img/graph-draw.png" alt="" />
 <p class="caption">graph1500</p>
@@ -616,7 +616,7 @@ $(document).ready(function () {
 <div class="sourceCode" id="cb27"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true"></a>g <span class="op">=</span> gt.collection.data[<span class="st">&quot;celegansneural&quot;</span>]</span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true"></a>state <span class="op">=</span> gt.minimize_nested_blockmodel_dl(g, deg_corr<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true"></a>gt.draw_hierarchy(state, output<span class="op">=</span><span class="st">&quot;img/celegansneural_hier.png&quot;</span>)</span></code></pre></div>
-<pre><code>## (&lt;VertexPropertyMap object with value type &#39;vector&lt;double&gt;&#39;, for Graph 0x7f74e634abb0, at 0x7f74e6343dc0&gt;, &lt;Graph object, directed, with 320 vertices and 319 edges, at 0x7f74e633ba60&gt;, &lt;VertexPropertyMap object with value type &#39;vector&lt;double&gt;&#39;, for Graph 0x7f74e633ba60, at 0x7f74e6343af0&gt;)</code></pre>
+<pre><code>## (&lt;VertexPropertyMap object with value type &#39;vector&lt;double&gt;&#39;, for Graph 0x7fe892d326a0, at 0x7fe892cecac0&gt;, &lt;Graph object, directed, with 317 vertices and 316 edges, at 0x7fe892d4cc40&gt;, &lt;VertexPropertyMap object with value type &#39;vector&lt;double&gt;&#39;, for Graph 0x7fe892d4cc40, at 0x7fe892d59d90&gt;)</code></pre>
 <div class="figure">
 <img src="img/celegansneural_hier.png" alt="" />
 <p class="caption">plot hierarchique</p>
@@ -633,11 +633,11 @@ $(document).ready(function () {
 <span id="cb29-9"><a href="#cb29-9" aria-hidden="true"></a></span>
 <span id="cb29-10"><a href="#cb29-10" aria-hidden="true"></a>t <span class="op">=</span> t0 <span class="op">-</span> time.time()</span>
 <span id="cb29-11"><a href="#cb29-11" aria-hidden="true"></a><span class="bu">print</span>(t)</span></code></pre></div>
-<pre><code>## -12.30022144317627</code></pre>
+<pre><code>## -16.440711975097656</code></pre>
 <div class="sourceCode" id="cb31"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true"></a>state.entropy()</span></code></pre></div>
-<pre><code>## 1324.0038976405094</code></pre>
+<pre><code>## 1321.9479136333077</code></pre>
 <div class="sourceCode" id="cb33"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true"></a>state.draw(pos<span class="op">=</span>g.vp[<span class="st">&quot;pos&quot;</span>], vertex_shape<span class="op">=</span>state.get_blocks(), output<span class="op">=</span><span class="st">&quot;img/polbooks_blocks_mdl.svg&quot;</span>)</span></code></pre></div>
-<pre><code>## &lt;VertexPropertyMap object with value type &#39;vector&lt;double&gt;&#39;, for Graph 0x7f74e634abe0, at 0x7f74e6343d00&gt;</code></pre>
+<pre><code>## &lt;VertexPropertyMap object with value type &#39;vector&lt;double&gt;&#39;, for Graph 0x7fe892cec760, at 0x7fe892cecc70&gt;</code></pre>
 <div class="figure">
 <img src="img/polbooks_blocks_mdl.svg" alt="" />
 <p class="caption">Image graph tools</p>
@@ -654,9 +654,9 @@ $(document).ready(function () {
 <!-- g <- igraph::read.graph("/home/stc/Documents/StateOfTheR/FinistR2020/graph_gt.graphml",                         format = "graphml") -->
 <!-- ``` -->
 <div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true"></a>py<span class="op">$</span>blocks <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span></code></pre></div>
-<pre><code>##   [1] 1 1 1 2 1 1 1 6 2 2 2 2 2 2 1 1 1 3 1 1 1 3 1 3 1 1 1 3 4 1 5 4 3 3 3 3 3
-##  [38] 3 3 3 2 3 3 3 3 1 1 2 1 1 1 6 6 1 3 1 1 1 6 4 4 4 4 4 6 6 5 6 6 6 4 5 5 5
-##  [75] 5 5 4 4 4 4 4 4 4 4 5 6 5 4 4 4 4 4 4 4 4 4 4 4 4 4 5 4 4 6 6</code></pre>
+<pre><code>##   [1] 1 1 6 2 6 1 1 6 2 1 2 2 2 2 1 3 3 3 1 3 1 3 1 3 1 1 1 3 4 1 5 5 3 3 3 3 3
+##  [38] 3 3 3 2 3 3 3 3 1 3 2 1 6 1 6 6 1 3 3 3 1 6 4 4 4 4 4 6 6 5 6 6 6 4 5 5 5
+##  [75] 5 5 5 4 4 4 4 4 4 4 5 6 5 4 4 4 4 4 4 4 4 4 4 4 4 5 5 4 4 6 6</code></pre>
 <div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true"></a>A &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(py<span class="op">$</span>A)</span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true"></a><span class="kw">isSymmetric</span>(A)</span></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
@@ -665,17 +665,17 @@ $(document).ready(function () {
 <span id="cb41-2"><a href="#cb41-2" aria-hidden="true"></a>my_sbm<span class="op">$</span><span class="kw">estimate</span>()</span></code></pre></div>
 <div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true"></a>t &lt;-<span class="st"> </span>t0 <span class="op">-</span><span class="st"> </span><span class="kw">Sys.time</span>()</span>
 <span id="cb42-2"><a href="#cb42-2" aria-hidden="true"></a>t</span></code></pre></div>
-<pre><code>## Time difference of -6.158875 secs</code></pre>
+<pre><code>## Time difference of -6.823365 secs</code></pre>
 <div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true"></a>aricode<span class="op">::</span><span class="kw">ARI</span>(<span class="dt">c1 =</span> py<span class="op">$</span>blocks <span class="op">+</span><span class="dv">1</span>, <span class="dt">c2 =</span> my_sbm<span class="op">$</span>memberships[[<span class="dv">5</span>]]<span class="op">$</span><span class="kw">map</span>()<span class="op">$</span>C)</span></code></pre></div>
-<pre><code>## [1] 0.6428741</code></pre>
+<pre><code>## [1] 0.7586591</code></pre>
 <div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true"></a>my_sbm<span class="op">$</span>memberships[[<span class="dv">5</span>]]<span class="op">$</span><span class="kw">map</span>()<span class="op">$</span>C</span></code></pre></div>
 <pre><code>##   [1] 3 3 3 2 3 3 3 3 2 2 2 2 2 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 4 3 5 5 1 1 1 1 1
 ##  [38] 1 1 1 2 1 1 1 1 1 1 2 1 3 1 3 3 1 1 1 1 1 3 4 4 4 4 4 3 3 5 3 3 3 4 5 5 5
 ##  [75] 5 5 5 4 4 4 4 4 4 4 5 3 5 4 4 4 4 4 4 4 4 4 4 4 4 5 5 4 4 3 3</code></pre>
 <div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true"></a>py<span class="op">$</span>blocks <span class="op">+</span><span class="dv">1</span></span></code></pre></div>
-<pre><code>##   [1] 1 1 1 2 1 1 1 6 2 2 2 2 2 2 1 1 1 3 1 1 1 3 1 3 1 1 1 3 4 1 5 4 3 3 3 3 3
-##  [38] 3 3 3 2 3 3 3 3 1 1 2 1 1 1 6 6 1 3 1 1 1 6 4 4 4 4 4 6 6 5 6 6 6 4 5 5 5
-##  [75] 5 5 4 4 4 4 4 4 4 4 5 6 5 4 4 4 4 4 4 4 4 4 4 4 4 4 5 4 4 6 6</code></pre>
+<pre><code>##   [1] 1 1 6 2 6 1 1 6 2 1 2 2 2 2 1 3 3 3 1 3 1 3 1 3 1 1 1 3 4 1 5 5 3 3 3 3 3
+##  [38] 3 3 3 2 3 3 3 3 1 3 2 1 6 1 6 6 1 3 3 3 1 6 4 4 4 4 4 6 6 5 6 6 6 4 5 5 5
+##  [75] 5 5 5 4 4 4 4 4 4 4 5 6 5 4 4 4 4 4 4 4 4 4 4 4 4 5 5 4 4 6 6</code></pre>
 <p>Les clustering obtenus par <code>graph-tool</code> et sbm (<code>blockmodels</code>) sont très proche pour le sbm simple.</p>
 <div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true"></a>igraph<span class="op">::</span><span class="kw">graph_from_adjacency_matrix</span>(</span>
 <span id="cb50-2"><a href="#cb50-2" aria-hidden="true"></a>  A, <span class="dt">mode =</span> <span class="st">&quot;directed&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>igraph<span class="op">::</span><span class="kw">write_graph</span>(<span class="dt">file =</span> <span class="st">&quot;graph_test.graphml&quot;</span>, <span class="dt">format =</span> <span class="st">&quot;graphml&quot;</span>)</span></code></pre></div>

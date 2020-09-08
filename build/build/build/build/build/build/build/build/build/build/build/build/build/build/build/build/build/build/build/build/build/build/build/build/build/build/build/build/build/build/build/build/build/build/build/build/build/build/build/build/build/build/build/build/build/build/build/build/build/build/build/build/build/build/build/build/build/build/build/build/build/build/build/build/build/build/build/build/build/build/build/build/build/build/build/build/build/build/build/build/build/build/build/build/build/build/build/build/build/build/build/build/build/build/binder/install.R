@@ -29,6 +29,7 @@ install.packages("fields")
 install.packages("slider")
 install.packages("fable")
 install.packages("fabletools")
+install.packages("ranger")
 
 ## Julia and co
 devtools::install_github("Non-Contradiction/JuliaCall")

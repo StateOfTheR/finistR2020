@@ -546,11 +546,11 @@ $(document).ready(function () {
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="kw">ackley_function</span>()</span></code></pre></div>
 <pre><code>## 
 ## de: solution to Ackley test:
-##   -6.9282e-17
-##    1.7041e-17</code></pre>
+##   -2.3970e-16
+##   -1.4593e-16</code></pre>
 <pre><code>##               [,1]
-## [1,] -6.928186e-17
-## [2,]  1.704119e-17</code></pre>
+## [1,] -2.397020e-16
+## [2,] -1.459261e-16</code></pre>
 <p>Avec les méthodes intégrées dans la fonction <code>optim</code>, la qualité de la minimisation est variable, selon la recherche d’un optimum local ou global et du point de départ:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a>ackley &lt;-<span class="st"> </span><span class="cf">function</span>(x0) {</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a>    x &lt;-<span class="st"> </span>x0[<span class="dv">1</span>]</span>
@@ -563,7 +563,7 @@ $(document).ready(function () {
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true"></a><span class="kw">optim</span>(x0, ackley, <span class="dt">method =</span> <span class="st">&quot;Nelder-Mead&quot;</span>)<span class="op">$</span>par</span></code></pre></div>
 <pre><code>## [1] -0.9685125  0.9685059</code></pre>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a><span class="kw">optim</span>(x0, ackley, <span class="dt">method =</span> <span class="st">&quot;SANN&quot;</span>)<span class="op">$</span>par</span></code></pre></div>
-<pre><code>## [1] -0.002547420  0.002509593</code></pre>
+<pre><code>## [1] 1.693916e-05 5.431146e-03</code></pre>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a><span class="kw">optim</span>(x0, ackley, <span class="dt">method =</span> <span class="st">&quot;L-BFGS-B&quot;</span>)<span class="op">$</span>par</span></code></pre></div>
 <pre><code>## [1] -1.104201e-16  1.104201e-16</code></pre>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true"></a><span class="kw">optim</span>(x0, ackley, <span class="dt">method =</span> <span class="st">&quot;BFGS&quot;</span>)<span class="op">$</span>par</span></code></pre></div>
@@ -575,25 +575,25 @@ $(document).ready(function () {
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true"></a><span class="kw">logit_optimLib</span>()</span></code></pre></div>
 <pre><code>## 
 ## Adam: true values vs estimates:
-##    1.7284   1.5461
-##    3.0840   2.9527
-##    3.3973   3.2167
-##    1.4163   1.4109
-##    2.8108   2.6577
+##    2.9834   2.8992
+##    1.5256   1.4851
+##    1.8980   1.8649
+##    1.6909   1.6968
+##    2.9562   2.8573
 ## 
 ## 
 ## newton: true values vs estimates:
-##    1.7284   1.5461
-##    3.0840   2.9527
-##    3.3973   3.2167
-##    1.4163   1.4109
-##    2.8108   2.6577</code></pre>
+##    2.9834   2.8992
+##    1.5256   1.4851
+##    1.8980   1.8649
+##    1.6909   1.6968
+##    2.9562   2.8573</code></pre>
 <pre><code>##          [,1]
-## [1,] 1.546145
-## [2,] 2.952694
-## [3,] 3.216710
-## [4,] 1.410887
-## [5,] 2.657740</code></pre>
+## [1,] 2.899163
+## [2,] 1.485078
+## [3,] 1.864900
+## [4,] 1.696774
+## [5,] 2.857337</code></pre>
 </div>
 </div>
 <div id="todo-à-faire" class="section level2">

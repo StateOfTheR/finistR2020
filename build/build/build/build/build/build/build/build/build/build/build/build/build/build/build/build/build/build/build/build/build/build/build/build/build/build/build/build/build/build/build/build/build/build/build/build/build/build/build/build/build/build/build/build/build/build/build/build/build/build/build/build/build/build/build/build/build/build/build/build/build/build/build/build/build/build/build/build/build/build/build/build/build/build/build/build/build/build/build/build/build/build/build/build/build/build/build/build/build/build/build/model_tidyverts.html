@@ -9,7 +9,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Antoine Bichat, Pierre Gloaguen" />
+<meta name="author" content="State of the R" />
 
 
 <title>Séries temporelles en tidy</title>
@@ -493,8 +493,8 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">Séries temporelles en tidy</h1>
-<h4 class="author">Antoine Bichat, Pierre Gloaguen</h4>
-<h4 class="date">26/08/2020</h4>
+<h4 class="author">State of the R</h4>
+<h4 class="date">24-28/08/2020</h4>
 
 </div>
 
@@ -502,7 +502,8 @@ $(document).ready(function () {
 <div id="format-tidy" class="section level1">
 <h1>Format <code>tidy</code></h1>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="kw">library</span>(tidyverse)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="kw">library</span>(tsibble) <span class="co"># Handling time series tibble</span></span></code></pre></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="kw">library</span>(tsibble) <span class="co"># Handling time series tibble</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a><span class="kw">library</span>(fable)</span></code></pre></div>
 <div id="exemple-de-série-de-températures" class="section level2">
 <h2>Exemple de série de températures</h2>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a>weather &lt;-<span class="st"> </span>nycflights13<span class="op">::</span>weather <span class="op">%&gt;%</span><span class="st"> </span></span>
@@ -528,11 +529,11 @@ $(document).ready(function () {
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">geom_path</span>(<span class="kw">aes</span>(<span class="dt">color =</span> origin))</span></code></pre></div>
 <p><img src="model_tidyverts_files/figure-html/ggplot_weather-1.png" width="672" /></p>
 <p>L’idée de <code>tsibble</code> est de créer un tableaux de série(s) temporelle(s). À partir d’un <code>tibble</code>, on utilisera la fonction <code>as_tsibble</code>. Cette fonction permet de traiter “spécialement” la colonne date.</p>
-<p><strong>Important: </strong> Dans un <code>tsibble</code>, il ne peut pas y avoir deux dates identiques. Du coup, ici, comme des dates sont répétées pour différents aéroports, on spécifiera que la colonne correspondante (<code>origin</code>) est une clé de référence.</p>
+<p><strong>Important : </strong> Dans un <code>tsibble</code>, il ne peut pas y avoir deux dates identiques. Du coup, ici, comme des dates sont répétées pour différents aéroports, on spécifiera que la colonne correspondante (<code>origin</code>) est une clé de référence.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a>weather_tsbl &lt;-<span class="st"> </span><span class="kw">as_tsibble</span>(<span class="dt">x =</span> weather, <span class="co"># Tableau </span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a>                         <span class="dt">key =</span> origin, <span class="co"># Clé d&#39;identification </span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a>                         <span class="dt">index =</span> time_hour, <span class="co"># Date </span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a>                         <span class="dt">regular =</span> <span class="ot">TRUE</span> ) <span class="co"># On spécifie que c&#39;est régulier</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a>                           <span class="dt">key =</span> origin, <span class="co"># Clé d&#39;identification </span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a>                           <span class="dt">index =</span> time_hour, <span class="co"># Date </span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a>                           <span class="dt">regular =</span> <span class="ot">TRUE</span> ) <span class="co"># On spécifie que c&#39;est régulier</span></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true"></a>weather_tsbl</span></code></pre></div>
 <pre><code>## # A tsibble: 26,115 x 5 [1h] &lt;America/New_York&gt;
 ## # Key:       origin [3]
@@ -549,6 +550,7 @@ $(document).ready(function () {
 ##  9 EWR    2013-01-01 09:00:00  39.9  62.2      0
 ## 10 EWR    2013-01-01 10:00:00  41    59.6      0
 ## # … with 26,105 more rows</code></pre>
+<p>Comme l’espacement temporel est régulier, celui-ci est indiqué entre crochets (<code>[1h]</code>) lors de l’affichage.</p>
 </div>
 <div id="groupement-et-résumé-par-période" class="section level2">
 <h2>Groupement et résumé par période</h2>
@@ -574,9 +576,7 @@ $(document).ready(function () {
 <p>On peut toujours grouper par la clé (les aéroports).</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a>weather_tsbl <span class="op">%&gt;%</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">group_by_key</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Equivalent à group_by(origin) </span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">summarise</span>(</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true"></a>    <span class="dt">temp_mean =</span> <span class="kw">mean</span>(temp, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true"></a>  )</span></code></pre></div>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">temp_mean =</span> <span class="kw">mean</span>(temp, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))</span></code></pre></div>
 <pre><code>## # A tsibble: 26,115 x 3 [1h] &lt;America/New_York&gt;
 ## # Key:       origin [3]
 ##    origin time_hour           temp_mean
@@ -596,11 +596,9 @@ $(document).ready(function () {
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true"></a>weather_tsbl <span class="op">%&gt;%</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">group_by_key</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Equivalent à group_by(origin) </span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">index_by</span>(<span class="dt">week =</span> <span class="op">~</span><span class="st"> </span><span class="kw">yearweek</span>(.)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Voir help(index_by) pour les périodes possibles</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">summarise</span>(</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true"></a>   <span class="dt">mean_temp =</span> <span class="kw">mean</span>(temp, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true"></a>  ) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> week, <span class="dt">y =</span> mean_temp)) <span class="op">+</span></span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true"></a><span class="st">  </span><span class="kw">geom_path</span>(<span class="kw">aes</span>(<span class="dt">color =</span> origin))</span></code></pre></div>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">mean_temp =</span> <span class="kw">mean</span>(temp, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> week, <span class="dt">y =</span> mean_temp)) <span class="op">+</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true"></a><span class="st">  </span><span class="kw">geom_path</span>(<span class="kw">aes</span>(<span class="dt">color =</span> origin))</span></code></pre></div>
 <p><img src="model_tidyverts_files/figure-html/index_by-1.png" width="672" /></p>
 </div>
 <div id="filtrage-par-période" class="section level2">
@@ -629,7 +627,7 @@ $(document).ready(function () {
 <div id="moyenne-mobile" class="section level2">
 <h2>Moyenne mobile</h2>
 <p>Si on veut lisser, on a les fonctions du package <code>slider</code> (qui remplace les fonctions de <code>tsibble</code> dépréciées).</p>
-<p>Par exemple, si on veut lisser sur 100 heures.</p>
+<p>Par exemple, si on veut lisser sur 101 heures (50 avant, 50 après).</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true"></a><span class="kw">library</span>(slider) </span></code></pre></div>
 <pre><code>## 
 ## Attaching package: &#39;slider&#39;</code></pre>
@@ -642,33 +640,34 @@ $(document).ready(function () {
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true"></a><span class="co"># Lissage sur 10h</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true"></a>weather_tsbl <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">group_by_key</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Groupement par aeroport</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">smoothed_temp =</span> slider<span class="op">::</span><span class="kw">slide_dbl</span>(temp, <span class="dt">.f =</span> mean,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">smoothed_temp =</span> <span class="kw">slide_dbl</span>(temp, <span class="dt">.f =</span> mean,</span>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true"></a>                                   <span class="dt">.before =</span> <span class="dv">50</span>, <span class="dt">.after =</span> <span class="dv">50</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> time_hour, <span class="dt">y =</span> smoothed_temp)) <span class="op">+</span></span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true"></a><span class="st">  </span><span class="kw">geom_path</span>(<span class="kw">aes</span>(<span class="dt">color =</span> origin))</span></code></pre></div>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true"></a><span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true"></a><span class="st">  </span><span class="kw">aes</span>(<span class="dt">x =</span> time_hour, <span class="dt">y =</span> smoothed_temp, <span class="dt">color =</span> origin)</span></code></pre></div>
 <p><img src="model_tidyverts_files/figure-html/weather_tsbl-1.png" width="672" /></p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true"></a>  <span class="kw">geom_path</span>()</span></code></pre></div>
+<pre><code>## geom_path: lineend = butt, linejoin = round, linemitre = 10, arrow = NULL, na.rm = FALSE
+## stat_identity: na.rm = FALSE
+## position_identity</code></pre>
 </div>
 </div>
 <div id="prédiction-avec-modèles-ets-ou-arima-package-fable" class="section level1">
-<h1>Prédiction avec modèles ETS ou ARIMA: package <code>fable</code></h1>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true"></a><span class="kw">library</span>(tidyverse)</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true"></a><span class="kw">library</span>(tsibble)</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true"></a><span class="kw">library</span>(fable)</span></code></pre></div>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true"></a>tourism_melb &lt;-<span class="st"> </span>tourism <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">filter</span>(Region <span class="op">==</span><span class="st"> &quot;Melbourne&quot;</span>)</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true"></a>tourism_melb <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Quarter, <span class="dt">y =</span> Trips)) <span class="op">+</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true"></a><span class="st">  </span><span class="kw">geom_path</span>(<span class="kw">aes</span>(<span class="dt">color =</span> Purpose)) </span></code></pre></div>
+<h1>Prédiction avec modèles ETS ou ARIMA : package <code>fable</code></h1>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true"></a>tourism_melb &lt;-<span class="st"> </span>tourism <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">filter</span>(Region <span class="op">==</span><span class="st"> &quot;Melbourne&quot;</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true"></a>tourism_melb <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Quarter, <span class="dt">y =</span> Trips)) <span class="op">+</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true"></a><span class="st">  </span><span class="kw">geom_path</span>(<span class="kw">aes</span>(<span class="dt">color =</span> Purpose)) </span></code></pre></div>
 <p><img src="model_tidyverts_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
 <p>On peut ajuster différents modèles de séries temporelles. Cet ajustement est fait via la fonction <code>model</code> du package <code>fabletools</code>. L’objet résultant est un <code>mable</code> (tableau de modèles).</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true"></a>fitted_mable &lt;-<span class="st"> </span>tourism_melb <span class="op">%&gt;%</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true"></a><span class="st">  </span>fabletools<span class="op">::</span><span class="kw">model</span>(</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true"></a>    <span class="dt">ets =</span> <span class="kw">ETS</span>(Trips <span class="op">~</span><span class="st"> </span><span class="kw">trend</span>(<span class="st">&quot;A&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">season</span>(<span class="st">&quot;A&quot;</span>, <span class="dt">period =</span> <span class="dv">4</span>)),</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true"></a>    <span class="dt">arima =</span> <span class="kw">ARIMA</span>(Trips)</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true"></a>fitted_mable &lt;-<span class="st"> </span>tourism_melb <span class="op">%&gt;%</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true"></a><span class="st">  </span>fabletools<span class="op">::</span><span class="kw">model</span>(</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true"></a>    <span class="dt">ets =</span> <span class="kw">ETS</span>(Trips <span class="op">~</span><span class="st"> </span><span class="kw">trend</span>(<span class="st">&quot;A&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">season</span>(<span class="st">&quot;A&quot;</span>, <span class="dt">period =</span> <span class="dv">4</span>)),</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true"></a>    <span class="dt">arima =</span> <span class="kw">ARIMA</span>(Trips)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true"></a>  )</span></code></pre></div>
 <pre><code>## Warning: 4 errors (1 unique) encountered for arima
 ## [4] The `feasts` package must be installed to use this functionality. It can be installed with install.packages(&quot;feasts&quot;)</code></pre>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true"></a>fitted_mable</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true"></a>fitted_mable</span></code></pre></div>
 <pre><code>## # A mable: 4 x 5
 ## # Key:     Region, State, Purpose [4]
 ##   Region    State    Purpose           ets        arima
@@ -677,10 +676,10 @@ $(document).ready(function () {
 ## 2 Melbourne Victoria Holiday  &lt;ETS(M,A,A)&gt; &lt;NULL model&gt;
 ## 3 Melbourne Victoria Other    &lt;ETS(A,A,A)&gt; &lt;NULL model&gt;
 ## 4 Melbourne Victoria Visiting &lt;ETS(M,A,A)&gt; &lt;NULL model&gt;</code></pre>
-<p>Pour chaque modèle, on peut analyser les coefficients:</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true"></a>fitted_mable <span class="op">%&gt;%</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(Region, State, Purpose, ets) <span class="op">%&gt;%</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">coef</span>()</span></code></pre></div>
+<p>Pour chaque modèle, on peut analyser les coefficients :</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true"></a>fitted_mable <span class="op">%&gt;%</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(Region, State, Purpose, ets) <span class="op">%&gt;%</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">coef</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 32 x 6
 ##    Region    State    Purpose  .model term    estimate
 ##    &lt;chr&gt;     &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt;      &lt;dbl&gt;
@@ -695,29 +694,29 @@ $(document).ready(function () {
 ##  9 Melbourne Victoria Holiday  ets    alpha   0.0308  
 ## 10 Melbourne Victoria Holiday  ets    beta    0.0308  
 ## # … with 22 more rows</code></pre>
-<p>On peut représenter les prédictions par le modèle:</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true"></a>fitted_mable <span class="op">%&gt;%</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">augment</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="op">-</span>Region, <span class="op">-</span>State, <span class="op">-</span>.resid) <span class="op">%&gt;%</span></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">rename</span>(<span class="dt">.observations =</span> Trips) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true"></a><span class="st">  </span><span class="kw">gather</span>(<span class="op">-</span>Purpose, <span class="op">-</span>.model, <span class="op">-</span><span class="st"> </span>Quarter, <span class="dt">key =</span> <span class="st">&quot;.method&quot;</span>, <span class="dt">value =</span> <span class="st">&quot;value&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Quarter, <span class="dt">y =</span> value, <span class="dt">color =</span> .method)) <span class="op">+</span></span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true"></a><span class="st">  </span><span class="kw">geom_path</span>() <span class="op">+</span></span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true"></a><span class="st">  </span><span class="kw">facet_grid</span>(.model <span class="op">~</span><span class="st"> </span>Purpose)</span></code></pre></div>
+<p>On peut représenter les prédictions par le modèle :</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true"></a>fitted_mable <span class="op">%&gt;%</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">augment</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="op">-</span>Region, <span class="op">-</span>State, <span class="op">-</span>.resid) <span class="op">%&gt;%</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">rename</span>(<span class="dt">.observations =</span> Trips) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true"></a><span class="st">  </span><span class="kw">gather</span>(<span class="op">-</span>Purpose, <span class="op">-</span>.model, <span class="op">-</span>Quarter, <span class="dt">key =</span> <span class="st">&quot;.method&quot;</span>, <span class="dt">value =</span> <span class="st">&quot;value&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Quarter, <span class="dt">y =</span> value, <span class="dt">color =</span> .method)) <span class="op">+</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true"></a><span class="st">  </span><span class="kw">geom_path</span>() <span class="op">+</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true"></a><span class="st">  </span><span class="kw">facet_grid</span>(.model <span class="op">~</span><span class="st"> </span>Purpose)</span></code></pre></div>
 <pre><code>## Warning: Removed 160 row(s) containing missing values (geom_path).</code></pre>
 <p><img src="model_tidyverts_files/figure-html/fitted_mable_prediction_plot-1.png" width="672" /></p>
 <p>ou encore les résidus (on remarquera ici qu’il semble y avoir une incohérence entre les prédictions ci-dessus et le calcul des résidus ci-dessous).</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true"></a>fitted_mable <span class="op">%&gt;%</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">augment</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Quarter, <span class="dt">y =</span> .resid)) <span class="op">+</span></span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">geom_path</span>() <span class="op">+</span></span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>Purpose <span class="op">+</span><span class="st"> </span>.model, <span class="dt">scale =</span> <span class="st">&quot;free_y&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true"></a>fitted_mable <span class="op">%&gt;%</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">augment</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Quarter, <span class="dt">y =</span> .resid)) <span class="op">+</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">geom_path</span>() <span class="op">+</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>Purpose <span class="op">+</span><span class="st"> </span>.model, <span class="dt">scales =</span> <span class="st">&quot;free_y&quot;</span>)</span></code></pre></div>
 <pre><code>## Warning: Removed 80 row(s) containing missing values (geom_path).</code></pre>
 <p><img src="model_tidyverts_files/figure-html/fitted_mable_residuals-1.png" width="672" /></p>
 <p>Enfin, on peut créer un tableau de prédiction (ou <code>fable</code>):</p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true"></a>forecast_fable &lt;-<span class="st"> </span>fitted_mable <span class="op">%&gt;%</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">forecast</span>(<span class="dt">h =</span> <span class="st">&quot;5 years&quot;</span>)</span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true"></a>forecast_fable</span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true"></a>forecast_fable &lt;-<span class="st"> </span>fitted_mable <span class="op">%&gt;%</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">forecast</span>(<span class="dt">h =</span> <span class="st">&quot;5 years&quot;</span>)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true"></a>forecast_fable</span></code></pre></div>
 <pre><code>## # A fable: 160 x 7 [1Q]
 ## # Key:     Region, State, Purpose, .model [8]
 ##    Region    State    Purpose  .model Quarter        Trips .mean
@@ -734,8 +733,8 @@ $(document).ready(function () {
 ## 10 Melbourne Victoria Business ets    2020 Q2 N(800, 7458)  800.
 ## # … with 150 more rows</code></pre>
 <p>On notera que la prédiction est de la classe <code>distribution</code> du package <code>distributional</code> (voir le travail d’Antoine). On peut ainsi utiliser les fonctionnalités de ce package pour obtenir les intervalles de confiance.</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true"></a>forecast_fable <span class="op">%&gt;%</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">hilo</span>(<span class="dt">level =</span> <span class="kw">c</span>(<span class="dv">70</span>, <span class="dv">95</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true"></a>forecast_fable <span class="op">%&gt;%</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">hilo</span>(<span class="dt">level =</span> <span class="kw">c</span>(<span class="dv">70</span>, <span class="dv">95</span>))</span></code></pre></div>
 <pre><code>## # A tsibble: 160 x 9 [1Q]
 ## # Key:       Region, State, Purpose, .model [8]
 ##    Region State Purpose .model Quarter        Trips .mean                  `70%`
@@ -752,8 +751,8 @@ $(document).ready(function () {
 ## 10 Melbo… Vict… Busine… ets    2020 Q2 N(800, 7458)  800. [710.5307, 889.5459]70
 ## # … with 150 more rows, and 1 more variable: `95%` &lt;hilo&gt;</code></pre>
 <p>Il existe également une représentation automatique du <code>fable</code> via <code>autoplot</code>:</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true"></a>forecast_fable <span class="op">%&gt;%</span></span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">autoplot</span>(tourism_melb, <span class="dt">level =</span> <span class="kw">c</span>(<span class="dv">50</span>, <span class="dv">95</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true"></a>forecast_fable <span class="op">%&gt;%</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">autoplot</span>(tourism_melb, <span class="dt">level =</span> <span class="kw">c</span>(<span class="dv">50</span>, <span class="dv">95</span>))</span></code></pre></div>
 <pre><code>## Warning in max(ids, na.rm = TRUE): no non-missing arguments to max; returning
 ## -Inf
 
@@ -779,6 +778,77 @@ $(document).ready(function () {
 ## -Inf</code></pre>
 <pre><code>## Warning: Removed 80 row(s) containing missing values (geom_path).</code></pre>
 <p><img src="model_tidyverts_files/figure-html/forecast_mable_autoplot-1.png" width="672" /></p>
+</div>
+<div id="jeton-de-reproductilité" class="section level1">
+<h1>Jeton de reproductilité</h1>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true"></a><span class="kw">sessionInfo</span>()</span></code></pre></div>
+<pre><code>## R version 3.6.3 (2020-02-29)
+## Platform: x86_64-conda_cos6-linux-gnu (64-bit)
+## Running under: Ubuntu 18.04.5 LTS
+## 
+## Matrix products: default
+## BLAS/LAPACK: /usr/share/miniconda/envs/finistR2020/lib/libopenblasp-r0.3.10.so
+## 
+## locale:
+##  [1] LC_CTYPE=C.UTF-8          LC_NUMERIC=C             
+##  [3] LC_TIME=C.UTF-8           LC_COLLATE=C.UTF-8       
+##  [5] LC_MONETARY=C.UTF-8       LC_MESSAGES=C.UTF-8      
+##  [7] LC_PAPER=C.UTF-8          LC_NAME=C.UTF-8          
+##  [9] LC_ADDRESS=C.UTF-8        LC_TELEPHONE=C.UTF-8     
+## [11] LC_MEASUREMENT=C.UTF-8    LC_IDENTIFICATION=C.UTF-8
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+##  [1] slider_0.1.5         fable_0.2.1          fabletools_0.2.1    
+##  [4] tsibble_0.9.2        vip_0.2.2            skimr_2.1.2         
+##  [7] yardstick_0.0.7      workflows_0.1.3      tune_0.1.1          
+## [10] rsample_0.0.7        recipes_0.1.13       parsnip_0.1.3       
+## [13] modeldata_0.0.2      infer_0.5.3          dials_0.0.8         
+## [16] scales_1.1.1         broom_0.7.0          tidymodels_0.1.1    
+## [19] MASS_7.3-52          mgcv_1.8-33          nlme_3.1-149        
+## [22] fda_5.1.5.1          Matrix_1.2-18        deSolve_1.28        
+## [25] GGally_2.0.0         ggdist_2.2.0         distributional_0.2.0
+## [28] DT_0.15              forcats_0.5.0        stringr_1.4.0       
+## [31] dplyr_1.0.2          purrr_0.3.4          readr_1.3.1         
+## [34] tidyr_1.1.2          tibble_3.0.3         ggplot2_3.3.2       
+## [37] tidyverse_1.3.0     
+## 
+## loaded via a namespace (and not attached):
+##  [1] readxl_1.3.1          backports_1.1.9       plyr_1.8.6           
+##  [4] repr_1.1.0            lazyeval_0.2.2        splines_3.6.3        
+##  [7] crosstalk_1.1.0.1     listenv_0.8.0         digest_0.6.25        
+## [10] JuliaCall_0.17.1.9000 foreach_1.5.0         htmltools_0.5.0.9000 
+## [13] fansi_0.4.1           magrittr_1.5          globals_0.12.5       
+## [16] modelr_0.1.8          gower_0.2.2           hardhat_0.1.4        
+## [19] anytime_0.3.9         prettyunits_1.1.1     jpeg_0.1-8.1         
+## [22] colorspace_1.4-1      blob_1.2.1            rvest_0.3.6          
+## [25] warp_0.1.0            haven_2.3.1           xfun_0.16            
+## [28] crayon_1.3.4          jsonlite_1.7.1        progressr_0.6.0      
+## [31] survival_3.2-3        iterators_1.0.12      glue_1.4.2           
+## [34] gtable_0.3.0          ipred_0.9-9           DBI_1.1.0            
+## [37] Rcpp_1.0.5            viridisLite_0.3.0     GPfit_1.0-8          
+## [40] lava_1.6.7            prodlim_2019.11.13    htmlwidgets_1.5.1    
+## [43] httr_1.4.2            RColorBrewer_1.1-2    ellipsis_0.3.1       
+## [46] pkgconfig_2.0.3       reshape_0.8.8         farver_2.0.3         
+## [49] nnet_7.3-14           dbplyr_1.4.4          utf8_1.1.4           
+## [52] tidyselect_1.1.0      labeling_0.3          rlang_0.4.7          
+## [55] DiceDesign_1.8-1      munsell_0.5.0         cellranger_1.1.0     
+## [58] tools_3.6.3           cli_2.0.2             generics_0.0.2       
+## [61] ranger_0.12.1         evaluate_0.14         yaml_2.2.1           
+## [64] knitr_1.29            fs_1.5.0              future_1.18.0        
+## [67] xml2_1.3.2            compiler_3.6.3        rstudioapi_0.11      
+## [70] plotly_4.9.2.1        png_0.1-7             reprex_0.3.0         
+## [73] lhs_1.0.2             stringi_1.4.6         highr_0.8            
+## [76] lattice_0.20-41       readODS_1.7.0         vctrs_0.3.4          
+## [79] diffeqr_1.0.0         nycflights13_1.0.1    pillar_1.4.6         
+## [82] lifecycle_0.2.0       furrr_0.1.0           data.table_1.12.8    
+## [85] R6_2.4.1              gridExtra_2.3         codetools_0.2-16     
+## [88] assertthat_0.2.1      withr_2.2.0           parallel_3.6.3       
+## [91] hms_0.5.3             grid_3.6.3            rpart_4.1-15         
+## [94] timeDate_3043.102     class_7.3-17          rmarkdown_2.3        
+## [97] pROC_1.16.2           lubridate_1.7.9       base64enc_0.1-3</code></pre>
 </div>
 
 
