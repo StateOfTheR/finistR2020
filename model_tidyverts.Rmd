@@ -1,7 +1,7 @@
 ---
 title: "Séries temporelles en tidy"
-author: "Antoine Bichat, Pierre Gloaguen"
-date: "26/08/2020"
+author: "State of the R"
+date: "24-28/08/2020"
 output: html_document
 ---
 
@@ -14,6 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r tsibble_packages, message = FALSE}
 library(tidyverse)
 library(tsibble) # Handling time series tibble
+library(fable)
 ```
 
 ## Exemple de série de températures
@@ -37,15 +38,17 @@ L'idée de `tsibble` est de créer un tableaux de série(s) temporelle(s).
 À partir d'un `tibble`, on utilisera la fonction `as_tsibble`.
 Cette fonction permet de traiter "spécialement" la colonne date.
 
-**Important: ** Dans un `tsibble`, il ne peut pas y avoir deux dates identiques. Du coup, ici, comme des dates sont répétées pour différents aéroports, on spécifiera que la colonne correspondante (`origin`) est une clé de référence.
+**Important : ** Dans un `tsibble`, il ne peut pas y avoir deux dates identiques. Du coup, ici, comme des dates sont répétées pour différents aéroports, on spécifiera que la colonne correspondante (`origin`) est une clé de référence.
 
 ```{r weather_ts}
 weather_tsbl <- as_tsibble(x = weather, # Tableau 
-                         key = origin, # Clé d'identification 
-                         index = time_hour, # Date 
-                         regular = TRUE ) # On spécifie que c'est régulier
+                           key = origin, # Clé d'identification 
+                           index = time_hour, # Date 
+                           regular = TRUE ) # On spécifie que c'est régulier
 weather_tsbl
 ```
+
+Comme l'espacement temporel est régulier, celui-ci est indiqué entre crochets (`[1h]`) lors de l'affichage.
 
 ## Groupement et résumé par période
 
@@ -64,9 +67,7 @@ On peut toujours grouper par la clé (les aéroports).
 ```{r group_by_key}
 weather_tsbl %>%
   group_by_key() %>% # Equivalent à group_by(origin) 
-  summarise(
-    temp_mean = mean(temp, na.rm = TRUE),
-  )
+  summarise(temp_mean = mean(temp, na.rm = TRUE))
 ```
 
 Evidemment, on peut vouloir faire des résumés sur un période donnée. Pour ça, il faut utiliser  la fonction `index_by` et la fonction de regroupement adaptée (voir `help(index_by)`).
@@ -75,9 +76,7 @@ Evidemment, on peut vouloir faire des résumés sur un période donnée. Pour ç
 weather_tsbl %>%
   group_by_key() %>% # Equivalent à group_by(origin) 
   index_by(week = ~ yearweek(.)) %>% # Voir help(index_by) pour les périodes possibles
-  summarise(
-   mean_temp = mean(temp, na.rm = TRUE),
-  ) %>% 
+  summarise(mean_temp = mean(temp, na.rm = TRUE)) %>% 
   ggplot(aes(x = week, y = mean_temp)) +
   geom_path(aes(color = origin))
 ```
@@ -98,26 +97,21 @@ weather_tsbl %>%
 
 Si on veut lisser, on a les fonctions du package `slider` (qui remplace les fonctions de `tsibble` dépréciées).
 
-Par exemple, si on veut lisser sur 100 heures.
+Par exemple, si on veut lisser sur 101 heures (50 avant, 50 après).
 
 ```{r weather_tsbl}
 library(slider) 
 # Lissage sur 10h
 weather_tsbl %>% 
   group_by_key() %>% # Groupement par aeroport
-  mutate(smoothed_temp = slider::slide_dbl(temp, .f = mean,
+  mutate(smoothed_temp = slide_dbl(temp, .f = mean,
                                    .before = 50, .after = 50)) %>% 
-  ggplot(aes(x = time_hour, y = smoothed_temp)) +
-  geom_path(aes(color = origin))
+  ggplot() +
+  aes(x = time_hour, y = smoothed_temp, color = origin)
+  geom_path()
 ```
 
-# Prédiction avec modèles ETS ou ARIMA: package `fable`
-
-```{r packages_fable, message = FALSE}
-library(tidyverse)
-library(tsibble)
-library(fable)
-```
+# Prédiction avec modèles ETS ou ARIMA : package `fable`
 
 ```{r}
 tourism_melb <- tourism %>% 
@@ -140,7 +134,7 @@ fitted_mable <- tourism_melb %>%
 fitted_mable
 ```
 
-Pour chaque modèle, on peut analyser les coefficients:
+Pour chaque modèle, on peut analyser les coefficients :
 
 ```{r fitted_mable_coefficients}
 fitted_mable %>%
@@ -148,14 +142,14 @@ fitted_mable %>%
   coef()
 ```
 
-On peut représenter les prédictions par le modèle:
+On peut représenter les prédictions par le modèle :
 
 ```{r fitted_mable_prediction_plot}
 fitted_mable %>%
   augment() %>% 
   dplyr::select(-Region, -State, -.resid) %>%
   rename(.observations = Trips) %>% 
-  gather(-Purpose, -.model, - Quarter, key = ".method", value = "value") %>% 
+  gather(-Purpose, -.model, -Quarter, key = ".method", value = "value") %>% 
   ggplot(aes(x = Quarter, y = value, color = .method)) +
   geom_path() +
   facet_grid(.model ~ Purpose)
@@ -168,7 +162,7 @@ fitted_mable %>%
   augment() %>% 
   ggplot(aes(x = Quarter, y = .resid)) +
   geom_path() +
-  facet_wrap(~ Purpose + .model, scale = "free_y")
+  facet_wrap(~ Purpose + .model, scales = "free_y")
 ```
 
 Enfin, on peut créer un tableau de prédiction (ou `fable`):
@@ -194,3 +188,8 @@ forecast_fable %>%
 ```
 
 
+# Jeton de reproductilité
+
+```{r}
+sessionInfo()
+```

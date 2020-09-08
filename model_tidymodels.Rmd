@@ -192,7 +192,7 @@ On va déterminer la région dans laquelle on va optimiser les paramètres grâc
 ```{r grid}
 grid <- grid_max_entropy(min_n(), 
                          finalize(mtry(), dplyr::select(juiced, -Salary)), 
-                         size = 20)
+                         size = 5)
 grid
 ```
 
@@ -207,15 +207,11 @@ ggplot(grid) +
 k-folds pour la cross-validation, avec `rsample`.
 
 ```{r}
-kfolds <- vfold_cv(df_train)
+kfolds <- vfold_cv(df_train, v = 5)
 kfolds
 ```
 
 On optimise avec `tune`.
-
-```{r setup2, include=FALSE}
-knitr::opts_chunk$set(eval = FALSE)
-```
 
 ```{r tune}
 tuned <- tune_grid(wkf_rf, resamples = kfolds, grid = grid,
